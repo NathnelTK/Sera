@@ -92,13 +92,6 @@ export class DashboardComponent {
     this.router.navigate(['/applicant/ai-tools']);
   }
 
-  async logout() {
-    const success = await this.authStore.logout();
-    if (success) {
-      this.router.navigate(['/login']);
-    }
-  }
-  
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });

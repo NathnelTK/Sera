@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Ethiopian flag accent strip — a subtle cultural nod along the top edge. */
+.et-accent {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--afriwork-et-green) 0 33.33%,
+    var(--afriwork-et-yellow) 33.33% 66.66%,
+    var(--afriwork-et-red) 66.66% 100%
+  );
+}
+
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid var(--afriwork-border);
+  box-shadow: var(--afriwork-shadow-sm);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--afriwork-spacing-md);
+  height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  display: block;
+  border-radius: var(--afriwork-radius-md);
+}
+
+.brand-text {
+  font-size: var(--afriwork-font-size-lg);
+  font-weight: 700;
+  color: var(--afriwork-dark);
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: var(--afriwork-spacing-sm);
+}
+
+.nav-links a.active {
+  color: var(--afriwork-primary);
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--afriwork-spacing-xs);
+  margin-left: auto;
+}
+
+.cta {
+  background: var(--afriwork-primary);
+  color: #fff;
+}
+
+.account-email {
+  padding: 8px 16px 4px;
+  font-size: var(--afriwork-font-size-sm);
+  color: var(--afriwork-gray);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-menu-btn {
+  display: none;
+}
+
+/* Collapse the inline links into the overflow menu on small screens. */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hide-mobile {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .brand-text {
+    font-size: var(--afriwork-font-size-md);
+  }
+}

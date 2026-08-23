@@ -48,16 +48,4 @@ export class DashboardComponent implements OnInit {
   navigateToAiTools() {
     this.router.navigate(['/recruiter/ai-tools']);
   }
-
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        console.error('Logout error:', err);
-        this.router.navigate(['/login']);
-      }
-    });
-  }
 }

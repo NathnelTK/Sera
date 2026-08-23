@@ -341,3 +341,77 @@ a {
   border-color: var(--afriwork-primary) !important;
   color: var(--afriwork-primary) !important;
 }
+
+// ─────────────────────────────────────────────────────────────
+// TalentOS additions — token aliases, Ethiopian accents,
+// Amharic font, motion utilities, and toast styling.
+// ─────────────────────────────────────────────────────────────
+:root {
+  // Convenience aliases referenced by newer core/layout components
+  --afriwork-border: var(--afriwork-gray-light);
+  --afriwork-bg: #F8F9FA;
+  --afriwork-font-size-md: 1rem;
+
+  // Ethiopian flag accents — used sparingly as a cultural nod
+  --afriwork-et-green: #078930;
+  --afriwork-et-yellow: #FCDD09;
+  --afriwork-et-red: #DA121A;
+
+  // Ethiopic-capable font stack, applied when the app language is Amharic
+  --afriwork-font-family-ethiopic: 'Noto Sans Ethiopic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// Amharic switches <html lang="am"> — swap in a Ge'ez-capable font so glyphs render correctly.
+html[lang='am'] body {
+  font-family: var(--afriwork-font-family-ethiopic);
+}
+
+// Opt-in Ethiopian tricolor accent bar for hero/section headers.
+.et-accent-bar {
+  height: 4px;
+  width: 64px;
+  border-radius: var(--afriwork-radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--afriwork-et-green) 0 33.33%,
+    var(--afriwork-et-yellow) 33.33% 66.66%,
+    var(--afriwork-et-red) 66.66% 100%
+  );
+}
+
+// Lightweight entrance animations — transform/opacity only, so they stay GPU-cheap.
+@keyframes afriwork-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes afriwork-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.afriwork-fade-in { animation: afriwork-fade-in var(--afriwork-transition-slow) both; }
+.afriwork-slide-up { animation: afriwork-slide-up var(--afriwork-transition-slow) both; }
+
+// Respect users who prefer reduced motion.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Toast (MatSnackBar) color variants used by NotificationService.
+.toast-error .mdc-snackbar__surface { background-color: var(--afriwork-error) !important; }
+.toast-success .mdc-snackbar__surface { background-color: var(--afriwork-success) !important; }
+.toast-info .mdc-snackbar__surface { background-color: var(--afriwork-gray-dark) !important; }
+.toast-error,
+.toast-success,
+.toast-info {
+  .mdc-snackbar__label,
+  .mat-mdc-snack-bar-label { color: #fff !important; }
+  .mat-mdc-snack-bar-action,
+  .mdc-button__label { color: #fff !important; }
+}
