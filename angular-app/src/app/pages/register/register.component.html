@@ -1,0 +1,83 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Register</h1>
+    <p class="subtitle">Create your account</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="Enter your email" />
+        @if (email?.invalid && email?.touched) {
+          <mat-error>
+            @if (email?.errors?.['required']) {
+              Email is required
+            } @else if (email?.errors?.['email']) {
+              Please enter a valid email
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="Enter your password (min 8 characters)" />
+        @if (password?.invalid && password?.touched) {
+          <mat-error>
+            @if (password?.errors?.['required']) {
+              Password is required
+            } @else if (password?.errors?.['minlength']) {
+              Password must be at least 8 characters
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput formControlName="confirmPassword" type="password" placeholder="Confirm your password" />
+        @if (confirmPassword?.invalid && confirmPassword?.touched) {
+          <mat-error>
+            @if (confirmPassword?.errors?.['required']) {
+              Please confirm your password
+            } @else if (confirmPassword?.errors?.['mismatch']) {
+              Passwords do not match
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="role-selection">
+        <mat-label>I want to register as:</mat-label>
+        <mat-radio-group formControlName="role">
+          <mat-radio-button value="Applicant">Applicant</mat-radio-button>
+          <mat-radio-button value="Recruiter">Recruiter</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      @if (error()) {
+        <div class="error-message">
+          {{ error() }}
+        </div>
+      }
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="submit-button"
+        [disabled]="registerForm.invalid || isLoading()"
+      >
+        @if (isLoading()) {
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>Creating account...</span>
+        } @else {
+          Register
+        }
+      </button>
+    </form>
+
+    <div class="links">
+      <p>Already have an account? <a (click)="navigateToLogin()">Login</a></p>
+      <p><a (click)="navigateToHome()">Back to Home</a></p>
+    </div>
+  </div>
+</div>

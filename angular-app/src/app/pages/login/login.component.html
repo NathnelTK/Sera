@@ -1,0 +1,61 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Login</h1>
+    <p class="subtitle">Sign in to your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="Enter your email" />
+        @if (email?.invalid && email?.touched) {
+          <mat-error>
+            @if (email?.errors?.['required']) {
+              Email is required
+            } @else if (email?.errors?.['email']) {
+              Please enter a valid email
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="Enter your password" />
+        @if (password?.invalid && password?.touched) {
+          <mat-error>
+            @if (password?.errors?.['required']) {
+              Password is required
+            } @else if (password?.errors?.['minlength']) {
+              Password must be at least 8 characters
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      @if (error()) {
+        <div class="error-message">
+          {{ error() }}
+        </div>
+      }
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="submit-button"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        @if (isLoading()) {
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>Signing in...</span>
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+
+    <div class="links">
+      <p>Don't have an account? <a (click)="navigateToRegister()">Register</a></p>
+      <p><a (click)="navigateToHome()">Back to Home</a></p>
+    </div>
+  </div>
+</div>

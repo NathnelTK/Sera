@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Recruiter Dashboard</h1>
+    <p>Welcome back, {{ currentUser?.email }}!</p>
+    <button (click)="logout()" class="btn btn-logout">Logout</button>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card" (click)="navigateToJobs()">
+      <h2>My Jobs</h2>
+      <p>Manage your job postings</p>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToCreateJob()">
+      <h2>Create Job</h2>
+      <p>Post a new job opportunity</p>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToInterviews()">
+      <h2>Interviews</h2>
+      <p>Manage scheduled interviews</p>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToProfile()">
+      <h2>My Profile</h2>
+      <p>Update your company profile</p>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToNotifications()">
+      <h2>Notifications</h2>
+      <p>View your notifications</p>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToAiTools()">
+      <h2>AI Tools</h2>
+      <p>Candidate matching and analysis</p>
+    </div>
+  </div>
+</div>

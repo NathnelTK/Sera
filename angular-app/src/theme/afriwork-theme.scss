@@ -1,0 +1,343 @@
+// Afriwork-inspired Theme
+// Professional, clean, modern design with Ethiopian/African business aesthetics
+
+:root {
+  // Primary Colors - Professional Blue/Teal palette
+  --afriwork-primary: #0D6EFD;
+  --afriwork-primary-dark: #0B5ED7;
+  --afriwork-primary-light: #3D8BFD;
+  
+  // Secondary Colors - Warm Accent
+  --afriwork-secondary: #FF6B35;
+  --afriwork-secondary-dark: #E85A2A;
+  --afriwork-secondary-light: #FF8C5A;
+  
+  // Neutral Colors
+  --afriwork-dark: #1A1A2E;
+  --afriwork-gray-dark: #2D2D44;
+  --afriwork-gray: #6B7280;
+  --afriwork-gray-light: #E5E7EB;
+  --afriwork-light: #F9FAFB;
+  --afriwork-white: #FFFFFF;
+  
+  // Success/Error/Warning
+  --afriwork-success: #10B981;
+  --afriwork-success-light: #D1FAE5;
+  --afriwork-error: #EF4444;
+  --afriwork-error-light: #FEE2E2;
+  --afriwork-warning: #F59E0B;
+  --afriwork-warning-light: #FEF3C7;
+  
+  // Typography
+  --afriwork-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --afriwork-font-size-xs: 0.75rem;
+  --afriwork-font-size-sm: 0.875rem;
+  --afriwork-font-size-base: 1rem;
+  --afriwork-font-size-lg: 1.125rem;
+  --afriwork-font-size-xl: 1.25rem;
+  --afriwork-font-size-2xl: 1.5rem;
+  --afriwork-font-size-3xl: 1.875rem;
+  
+  // Spacing
+  --afriwork-spacing-xs: 0.25rem;
+  --afriwork-spacing-sm: 0.5rem;
+  --afriwork-spacing-md: 1rem;
+  --afriwork-spacing-lg: 1.5rem;
+  --afriwork-spacing-xl: 2rem;
+  --afriwork-spacing-2xl: 3rem;
+  
+  // Border Radius
+  --afriwork-radius-sm: 0.25rem;
+  --afriwork-radius-md: 0.5rem;
+  --afriwork-radius-lg: 0.75rem;
+  --afriwork-radius-xl: 1rem;
+  --afriwork-radius-full: 9999px;
+  
+  // Shadows
+  --afriwork-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --afriwork-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --afriwork-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --afriwork-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  // Transitions
+  --afriwork-transition-fast: 150ms ease-in-out;
+  --afriwork-transition-base: 200ms ease-in-out;
+  --afriwork-transition-slow: 300ms ease-in-out;
+}
+
+// Global Reset and Base Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--afriwork-font-family);
+  font-size: var(--afriwork-font-size-base);
+  line-height: 1.6;
+  color: var(--afriwork-dark);
+  background-color: var(--afriwork-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--afriwork-spacing-md);
+}
+
+h1 { font-size: var(--afriwork-font-size-3xl); }
+h2 { font-size: var(--afriwork-font-size-2xl); }
+h3 { font-size: var(--afriwork-font-size-xl); }
+h4 { font-size: var(--afriwork-font-size-lg); }
+h5 { font-size: var(--afriwork-font-size-base); }
+h6 { font-size: var(--afriwork-font-size-sm); }
+
+p {
+  margin-bottom: var(--afriwork-spacing-md);
+}
+
+a {
+  color: var(--afriwork-primary);
+  text-decoration: none;
+  transition: color var(--afriwork-transition-fast);
+  
+  &:hover {
+    color: var(--afriwork-primary-dark);
+  }
+}
+
+// Button Styles
+.afriwork-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--afriwork-spacing-sm) var(--afriwork-spacing-lg);
+  font-size: var(--afriwork-font-size-base);
+  font-weight: 500;
+  border-radius: var(--afriwork-radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--afriwork-transition-base);
+  text-decoration: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &.primary {
+    background-color: var(--afriwork-primary);
+    color: var(--afriwork-white);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--afriwork-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--afriwork-shadow-md);
+    }
+  }
+  
+  &.secondary {
+    background-color: var(--afriwork-secondary);
+    color: var(--afriwork-white);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--afriwork-secondary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--afriwork-shadow-md);
+    }
+  }
+  
+  &.outline {
+    background-color: transparent;
+    color: var(--afriwork-primary);
+    border: 2px solid var(--afriwork-primary);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--afriwork-primary-light);
+      color: var(--afriwork-white);
+    }
+  }
+  
+  &.ghost {
+    background-color: transparent;
+    color: var(--afriwork-gray);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--afriwork-gray-light);
+      color: var(--afriwork-dark);
+    }
+  }
+  
+  &.large {
+    padding: var(--afriwork-spacing-md) var(--afriwork-spacing-xl);
+    font-size: var(--afriwork-font-size-lg);
+  }
+  
+  &.small {
+    padding: var(--afriwork-spacing-xs) var(--afriwork-spacing-md);
+    font-size: var(--afriwork-font-size-sm);
+  }
+}
+
+// Card Styles
+.afriwork-card {
+  background-color: var(--afriwork-white);
+  border-radius: var(--afriwork-radius-lg);
+  box-shadow: var(--afriwork-shadow-sm);
+  padding: var(--afriwork-spacing-lg);
+  transition: box-shadow var(--afriwork-transition-base);
+  
+  &:hover {
+    box-shadow: var(--afriwork-shadow-md);
+  }
+}
+
+// Input Styles
+.afriwork-input {
+  width: 100%;
+  padding: var(--afriwork-spacing-sm) var(--afriwork-spacing-md);
+  font-size: var(--afriwork-font-size-base);
+  border: 1px solid var(--afriwork-gray-light);
+  border-radius: var(--afriwork-radius-md);
+  transition: border-color var(--afriwork-transition-fast);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--afriwork-primary);
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+  }
+  
+  &.error {
+    border-color: var(--afriwork-error);
+  }
+}
+
+// Status Badges
+.afriwork-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--afriwork-spacing-xs) var(--afriwork-spacing-sm);
+  font-size: var(--afriwork-font-size-xs);
+  font-weight: 600;
+  border-radius: var(--afriwork-radius-full);
+  text-transform: uppercase;
+  
+  &.success {
+    background-color: var(--afriwork-success-light);
+    color: var(--afriwork-success);
+  }
+  
+  &.error {
+    background-color: var(--afriwork-error-light);
+    color: var(--afriwork-error);
+  }
+  
+  &.warning {
+    background-color: var(--afriwork-warning-light);
+    color: var(--afriwork-warning);
+  }
+  
+  &.info {
+    background-color: var(--afriwork-primary-light);
+    color: var(--afriwork-primary);
+  }
+}
+
+// Layout Components
+.afriwork-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--afriwork-spacing-lg);
+}
+
+.afriwork-grid {
+  display: grid;
+  gap: var(--afriwork-spacing-lg);
+  
+  &.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  &.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    &.cols-2, &.cols-3, &.cols-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Loading States
+.afriwork-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--afriwork-spacing-xl);
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--afriwork-gray-light);
+    border-top-color: var(--afriwork-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Empty States
+.afriwork-empty {
+  text-align: center;
+  padding: var(--afriwork-spacing-2xl);
+  color: var(--afriwork-gray);
+  
+  .icon {
+    font-size: 3rem;
+    margin-bottom: var(--afriwork-spacing-md);
+    opacity: 0.5;
+  }
+}
+
+// Material Design Overrides
+.mat-mdc-form-field {
+  font-size: var(--afriwork-font-size-base);
+}
+
+.mat-mdc-form-field-outline {
+  border-color: var(--afriwork-gray-light) !important;
+}
+
+.mat-mdc-form-field-focus .mat-mdc-form-field-outline {
+  border-color: var(--afriwork-primary) !important;
+}
+
+.mat-mdc-raised-button {
+  background-color: var(--afriwork-primary) !important;
+  
+  &:hover {
+    background-color: var(--afriwork-primary-dark) !important;
+  }
+}
+
+.mat-mdc-outlined-button {
+  border-color: var(--afriwork-primary) !important;
+  color: var(--afriwork-primary) !important;
+}

@@ -1,0 +1,53 @@
+# ---------------------------------------------------------------------------
+# TalentOS .gitignore
+# ---------------------------------------------------------------------------
+
+# ---- Secrets / local configuration (NEVER commit) ----
+appsettings.Development.json
+appsettings.*.Local.json
+appsettings.Local.json
+.env
+.env.*
+!.env.example
+*.pfx
+secrets.json
+
+# ---- .NET build output ----
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+.vs/
+artifacts/
+logs/
+*.log
+
+# ---- Node / Angular ----
+node_modules/
+dist/
+.angular/
+tmp/
+out-tsc/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# ---- Next.js (legacy scaffold, removed) ----
+.next/
+.vercel/
+
+# ---- Editors / OS ----
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+
+# ---- v0 sandbox internal files (legacy) ----
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
