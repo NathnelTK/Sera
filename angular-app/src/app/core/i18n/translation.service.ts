@@ -36,13 +36,13 @@ export class TranslationService {
 
   /**
    * Resolve a key to a string in the active language. Falls back to English, then to the raw key.
-   * Supports `{{name}}` placeholders replaced from `params`.
+   * Supports `{name}` placeholders replaced from `params`.
    */
-  instant(key: string, params?: Record<string, string | number>): string {
+  instant(key: string, params?: Record<string, string | number | null | undefined>): string {
     const value = this.dictionary()[key] ?? TRANSLATIONS.en[key] ?? key;
     if (!params) return value;
-    return value.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, name) =>
-      params[name] != null ? String(params[name]) : `{{${name}}}`,
+    return value.replace(/\{\s*(\w+)\s*\}/g, (_, name) =>
+      params[name] != null ? String(params[name]) : `{${name}}`,
     );
   }
 

@@ -1,0 +1,195 @@
+.job-detail {
+  padding: var(--afriwork-spacing-lg) var(--afriwork-spacing-md);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--afriwork-primary);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: var(--afriwork-spacing-md);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--afriwork-spacing-sm);
+  padding: var(--afriwork-spacing-2xl) 0;
+  color: var(--afriwork-gray);
+  text-align: center;
+
+  .state-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--afriwork-spacing-xl);
+  align-items: start;
+}
+
+.job-head {
+  .et-accent-bar {
+    margin-bottom: var(--afriwork-spacing-sm);
+  }
+
+  h1 {
+    font-size: var(--afriwork-font-size-2xl);
+    margin: 0 0 0.25rem;
+    color: var(--afriwork-dark);
+  }
+
+  .company {
+    color: var(--afriwork-gray);
+    font-size: var(--afriwork-font-size-md);
+    margin: 0 0 var(--afriwork-spacing-md);
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--afriwork-spacing-sm);
+  align-items: center;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--afriwork-dark);
+  font-size: var(--afriwork-font-size-sm);
+
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    color: var(--afriwork-gray);
+  }
+}
+
+.deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: var(--afriwork-spacing-md);
+  color: var(--afriwork-et-red, #da121a);
+  font-size: var(--afriwork-font-size-sm);
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.section {
+  margin-top: var(--afriwork-spacing-lg);
+
+  h2 {
+    font-size: var(--afriwork-font-size-lg);
+    color: var(--afriwork-dark);
+    margin: 0 0 var(--afriwork-spacing-sm);
+  }
+
+  .prose {
+    color: var(--afriwork-dark);
+    line-height: 1.7;
+    white-space: pre-line;
+    margin: 0;
+  }
+}
+
+.apply-card {
+  padding: var(--afriwork-spacing-lg);
+  position: sticky;
+  top: var(--afriwork-spacing-lg);
+
+  h3 {
+    font-size: var(--afriwork-font-size-lg);
+    margin: 0 0 var(--afriwork-spacing-md);
+    color: var(--afriwork-dark);
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  .hint {
+    color: var(--afriwork-gray);
+    font-size: var(--afriwork-font-size-sm);
+    margin: 0 0 var(--afriwork-spacing-md);
+  }
+
+  .form-error {
+    color: var(--afriwork-et-red, #da121a);
+    font-size: var(--afriwork-font-size-sm);
+    margin: 0 0 var(--afriwork-spacing-sm);
+  }
+}
+
+.applied {
+  text-align: center;
+
+  .ok {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--afriwork-et-green, #078930);
+  }
+
+  h3 {
+    margin: var(--afriwork-spacing-sm) 0 0.25rem;
+  }
+
+  p {
+    color: var(--afriwork-gray);
+    font-size: var(--afriwork-font-size-sm);
+    margin: 0 0 var(--afriwork-spacing-md);
+  }
+}
+
+.notice {
+  display: flex;
+  gap: var(--afriwork-spacing-sm);
+  align-items: flex-start;
+  color: var(--afriwork-gray);
+  font-size: var(--afriwork-font-size-sm);
+
+  mat-icon {
+    color: var(--afriwork-primary);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+button mat-spinner {
+  margin: 0 auto;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .apply-card {
+    position: static;
+  }
+}

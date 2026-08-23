@@ -1,0 +1,69 @@
+.job-create {
+  padding: var(--afriwork-spacing-lg) var(--afriwork-spacing-md);
+  max-width: 760px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--afriwork-primary);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: var(--afriwork-spacing-md);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+h1 {
+  font-size: var(--afriwork-font-size-2xl);
+  color: var(--afriwork-dark);
+  margin: var(--afriwork-spacing-sm) 0 var(--afriwork-spacing-lg);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--afriwork-spacing-md);
+
+  .full {
+    grid-column: 1 / -1;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.hint {
+  color: var(--afriwork-gray);
+  font-size: var(--afriwork-font-size-sm);
+  margin: 0 0 var(--afriwork-spacing-md);
+}
+
+.form-error {
+  color: var(--afriwork-error);
+  font-size: var(--afriwork-font-size-sm);
+  margin: 0 0 var(--afriwork-spacing-md);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--afriwork-spacing-sm);
+  margin-top: var(--afriwork-spacing-sm);
+
+  mat-spinner {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

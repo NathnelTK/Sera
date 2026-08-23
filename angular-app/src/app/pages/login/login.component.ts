@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ import { AuthStore } from '../../stores/auth.store';
 })
 export class LoginComponent {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private authStore = inject(AuthStore);
   
@@ -59,6 +60,13 @@ export class LoginComponent {
   }
   
   private navigateBasedOnRole() {
+    // Honour a returnUrl set by the auth guard (e.g. "apply" deep-links), but only
+    // accept safe in-app paths to avoid open-redirects.
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')) {
+      this.router.navigateByUrl(returnUrl);
+      return;
+    }
     if (this.authStore.isApplicant()) {
       this.router.navigate(['/applicant/dashboard']);
     } else if (this.authStore.isRecruiter()) {

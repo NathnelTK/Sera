@@ -1,1 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* -------------------------------------------------------------------------
+   Workflow status chips
+   Shared across the recruitment-workflow pages (applications, pipeline,
+   interviews, jobs). Kept global + tiny so lazy page bundles stay lean and
+   every status renders with one consistent, accessible palette.
+   ------------------------------------------------------------------------- */
+.wf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--afriwork-radius-full, 999px);
+  font-size: var(--afriwork-font-size-xs, 0.75rem);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.wf-chip mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}
+
+.wf-chip--info {
+  background: #e7f0fe;
+  color: #1a5fb4;
+}
+.wf-chip--progress {
+  background: #fff4e5;
+  color: #b26a00;
+}
+.wf-chip--shortlist {
+  background: #f3e8fd;
+  color: #7b2fbf;
+}
+.wf-chip--success {
+  background: #e6f4ea;
+  color: #078930;
+}
+.wf-chip--danger {
+  background: #fdeaea;
+  color: #c0261f;
+}
+.wf-chip--muted {
+  background: #eef0f2;
+  color: #5f6b7a;
+}

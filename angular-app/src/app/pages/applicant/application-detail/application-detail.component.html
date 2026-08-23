@@ -1,1 +1,94 @@
-<p>application-detail works!</p>
+<div class="app-detail afriwork-container afriwork-fade-in">
+  <a routerLink="/applicant/applications" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    <span>{{ 'wf.apps.title' | translate }}</span>
+  </a>
+
+  @if (isLoading() && !app()) {
+    <div class="state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (!app()) {
+    <div class="state">
+      <mat-icon class="state-icon">search_off</mat-icon>
+      <p>{{ 'wf.app.notFound' | translate }}</p>
+      <a mat-stroked-button routerLink="/applicant/applications">{{ 'wf.apps.title' | translate }}</a>
+    </div>
+  } @else {
+    <header class="app-head">
+      <div class="et-accent-bar"></div>
+      <h1>{{ app()!.jobTitle }}</h1>
+      @if (app()!.companyName) {
+        <p class="company">{{ app()!.companyName }}</p>
+      }
+      <div class="head-meta">
+        <span class="wf-chip" [class]="'wf-chip wf-chip--' + applicationStatusColor(app()!.status)">
+          {{ applicationStatusKey(app()!.status) | translate }}
+        </span>
+        <span class="applied">{{ 'wf.apps.appliedOn' | translate: { date: (app()!.appliedAt | date: 'mediumDate') } }}</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>{{ 'wf.app.timeline' | translate }}</h2>
+      <ol class="timeline">
+        @for (step of steps(); track step.status) {
+          <li class="tl-step" [class.done]="step.done" [class.current]="step.current">
+            <span class="dot"></span>
+            <span class="label">{{ step.key | translate }}</span>
+          </li>
+        }
+      </ol>
+      @if (isTerminal()) {
+        <span class="wf-chip terminal" [class]="'wf-chip wf-chip--' + applicationStatusColor(app()!.status)">
+          {{ applicationStatusKey(app()!.status) | translate }}
+        </span>
+      }
+    </section>
+
+    @if (app()!.matchScore != null) {
+      <section class="section">
+        <h2>{{ 'wf.app.matchScore' | translate }}</h2>
+        <p class="score">{{ (app()!.matchScore! * 100) | number: '1.0-0' }}%</p>
+      </section>
+    }
+
+    @if (app()!.rejectionReason) {
+      <section class="section">
+        <h2>{{ 'wf.app.rejectionReason' | translate }}</h2>
+        <p class="prose">{{ app()!.rejectionReason }}</p>
+        @if (app()!.reviewedAt) {
+          <p class="muted">{{ 'wf.app.reviewedAt' | translate: { date: (app()!.reviewedAt | date: 'mediumDate') } }}</p>
+        }
+      </section>
+    }
+
+    @if (app()!.aiSummary) {
+      <section class="section">
+        <h2>{{ 'wf.app.aiSummary' | translate }}</h2>
+        <p class="prose">{{ app()!.aiSummary }}</p>
+      </section>
+    }
+
+    @if (app()!.coverLetter) {
+      <section class="section">
+        <h2>{{ 'wf.app.coverLetter' | translate }}</h2>
+        <p class="prose">{{ app()!.coverLetter }}</p>
+      </section>
+    }
+
+    <div class="actions">
+      <a mat-stroked-button [routerLink]="['/jobs', app()!.jobId]">
+        <mat-icon>open_in_new</mat-icon>
+        {{ 'wf.app.viewJob' | translate }}
+      </a>
+      @if (canWithdraw()) {
+        <button mat-stroked-button class="danger" (click)="withdraw()">
+          <mat-icon>cancel</mat-icon>
+          {{ 'wf.app.withdraw' | translate }}
+        </button>
+      }
+    </div>
+  }
+</div>

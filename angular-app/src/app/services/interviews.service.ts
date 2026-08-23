@@ -1,66 +1,74 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { InterviewFormat, InterviewStatus } from '../core/workflow/workflow';
 
+/** Mirrors InterviewResponse. */
 export interface Interview {
   id: string;
-  application_id: string;
-  job_id: string;
-  applicant_id: string;
-  recruiter_id: string;
-  scheduled_date: string;
-  duration: number;
-  status: 'Scheduled' | 'Completed' | 'Cancelled' | 'Rescheduled';
+  jobApplicationId: string;
+  status: InterviewStatus;
+  format: InterviewFormat;
+  scheduledAt: string;
+  durationMinutes: number;
+  meetingLink?: string;
+  locationDescription?: string;
   notes?: string;
-  created_at: string;
-  updated_at: string;
-  job_title?: string;
-  job_company?: string;
-  applicant_name?: string;
-  applicant_email?: string;
-  recruiter_name?: string;
-  recruiter_company?: string;
+  cancellationReason?: string;
+  completedAt?: string;
+  cancelledAt?: string;
+  createdAt: string;
 }
 
-export interface InterviewsResponse {
-  items: Interview[];
-  total: number;
+/** Mirrors ScheduleInterviewRequest. */
+export interface ScheduleInterviewRequest {
+  jobApplicationId: string;
+  format: InterviewFormat;
+  scheduledAt: string;
+  durationMinutes: number;
+  meetingLink?: string;
+  locationDescription?: string;
+  notes?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+/** Mirrors UpdateInterviewRequest. */
+export interface UpdateInterviewRequest {
+  format: InterviewFormat;
+  scheduledAt: string;
+  durationMinutes: number;
+  meetingLink?: string;
+  locationDescription?: string;
+  notes?: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class InterviewsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
-  getInterviews(applicantId?: string, recruiterId?: string): Observable<InterviewsResponse> {
-    let url = `${environment.apiUrl}/interviews`;
-    const params: string[] = [];
-    
-    if (applicantId) params.push(`applicantId=${applicantId}`);
-    if (recruiterId) params.push(`recruiterId=${recruiterId}`);
-    
-    if (params.length > 0) {
-      url += '?' + params.join('&');
-    }
-    
-    return this.http.get<InterviewsResponse>(url);
+  /** POST /api/interviews — Recruiter. Returns the new interview id. */
+  schedule(req: ScheduleInterviewRequest): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(`${environment.apiUrl}/interviews`, req);
   }
 
-  scheduleInterview(interview: Partial<Interview>): Observable<Interview> {
-    return this.http.post<Interview>(`${environment.apiUrl}/interviews`, interview);
+  /** GET /api/interviews/{id}. */
+  getById(id: string): Observable<Interview> {
+    return this.http.get<Interview>(`${environment.apiUrl}/interviews/${id}`);
   }
 
-  updateInterview(id: string, interview: Partial<Interview>): Observable<Interview> {
-    return this.http.put<Interview>(`${environment.apiUrl}/interviews/${id}`, interview);
+  /** GET /api/interviews/my — recruiter or applicant. Bare array. */
+  getMy(): Observable<Interview[]> {
+    return this.http.get<Interview[]>(`${environment.apiUrl}/interviews/my`);
   }
 
-  cancelInterview(id: string): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/interviews/${id}`);
+  /** PUT /api/interviews/{id} — Recruiter. 204 No Content. */
+  update(id: string, req: UpdateInterviewRequest): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/interviews/${id}`, req);
   }
 
-  getMyInterviews(): Observable<InterviewsResponse> {
-    return this.http.get<InterviewsResponse>(`${environment.apiUrl}/interviews`);
+  /** DELETE /api/interviews/{id}?reason= — Recruiter. 204 No Content. */
+  cancel(id: string, reason?: string): Observable<void> {
+    const q = reason ? `?reason=${encodeURIComponent(reason)}` : '';
+    return this.http.delete<void>(`${environment.apiUrl}/interviews/${id}${q}`);
   }
 }
