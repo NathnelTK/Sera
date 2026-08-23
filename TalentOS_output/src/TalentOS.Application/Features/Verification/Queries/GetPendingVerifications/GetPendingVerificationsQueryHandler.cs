@@ -14,7 +14,7 @@ public sealed class GetPendingVerificationsQueryHandler : IRequestHandler<GetPen
     public async Task<Result<IReadOnlyList<VerificationResponse>>> Handle(GetPendingVerificationsQuery request, CancellationToken cancellationToken)
     {
         var list = await _verifications.GetPendingAsync(cancellationToken);
-        var dtos = list.Select(v => new VerificationResponse(v.Id, v.UserId, v.CompanyId, v.VerificationType, v.Status, v.Notes, v.RejectionReason, v.ReviewedAt, v.CreatedAt)).ToList();
+        var dtos = list.Select(v => new VerificationResponse(v.Id, v.UserId, v.CompanyId, v.VerificationType, v.Status, v.Notes, v.RejectionReason, v.ReviewedAt, v.CreatedAt, v.ReferenceNumber, v.SignatureVerified)).ToList();
         return Result<IReadOnlyList<VerificationResponse>>.Success(dtos);
     }
 }

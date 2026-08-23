@@ -11,6 +11,8 @@ public class VerificationConfiguration : IEntityTypeConfiguration<Verification>
         builder.HasKey(v => v.Id);
         builder.Property(v => v.Notes).HasMaxLength(1_000);
         builder.Property(v => v.RejectionReason).HasMaxLength(500);
+        builder.Property(v => v.ReferenceNumber).HasMaxLength(64);
+        builder.Property(v => v.DecodedPayloadJson).HasColumnType("text");
         builder.HasIndex(v => new { v.UserId, v.Status });
     }
 }

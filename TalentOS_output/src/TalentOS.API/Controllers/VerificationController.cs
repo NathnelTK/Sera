@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TalentOS.Application.Features.Verification.Commands.ApproveVerification;
 using TalentOS.Application.Features.Verification.Commands.RejectVerification;
+using TalentOS.Application.Features.Verification.Commands.SubmitFaydaVerification;
 using TalentOS.Application.Features.Verification.Commands.SubmitVerification;
 using TalentOS.Application.Features.Verification.DTOs;
 using TalentOS.Application.Features.Verification.Queries.GetPendingVerifications;
@@ -24,6 +25,34 @@ public sealed class VerificationController : BaseApiController
         var command = new SubmitVerificationCommand(userId.Value, request.VerificationType, request.Notes);
         var result = await Mediator.Send(command, ct);
         return result.IsSuccess ? CreatedAtRoute("GetVerificationById", new { id = result.Value }, new { id = result.Value }) : BadRequest(new { error = result.Error });
+    }
+
+    /// <summary>
+    /// Submit a Fayda national-ID scan for identity verification. The client decodes the ID's QR
+    /// code and validates its signature on-device (fayda-decoder), then posts the decoded fields.
+    /// </summary>
+    [Authorize]
+    [HttpPost("fayda")]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> SubmitFayda([FromBody] SubmitFaydaVerificationRequest request, CancellationToken ct)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null) return Unauthorized();
+
+        var command = new SubmitFaydaVerificationCommand(
+            userId.Value,
+            request.Fan,
+            request.FullName,
+            request.DateOfBirth,
+            request.Gender,
+            request.SignatureVerified,
+            request.RawPayloadJson);
+
+        var result = await Mediator.Send(command, ct);
+        return result.IsSuccess
+            ? CreatedAtRoute("GetVerificationById", new { id = result.Value }, new { id = result.Value })
+            : BadRequest(new { error = result.Error });
     }
 
     /// <summary>Get a verification request by ID.</summary>

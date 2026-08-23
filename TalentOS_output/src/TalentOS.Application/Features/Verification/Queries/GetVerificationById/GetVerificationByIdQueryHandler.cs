@@ -16,6 +16,6 @@ public sealed class GetVerificationByIdQueryHandler : IRequestHandler<GetVerific
         var v = await _verifications.GetByIdAsync(request.VerificationId, cancellationToken);
         if (v is null) return Result<VerificationResponse>.Failure("Verification request not found.");
 
-        return Result<VerificationResponse>.Success(new VerificationResponse(v.Id, v.UserId, v.CompanyId, v.VerificationType, v.Status, v.Notes, v.RejectionReason, v.ReviewedAt, v.CreatedAt));
+        return Result<VerificationResponse>.Success(new VerificationResponse(v.Id, v.UserId, v.CompanyId, v.VerificationType, v.Status, v.Notes, v.RejectionReason, v.ReviewedAt, v.CreatedAt, v.ReferenceNumber, v.SignatureVerified));
     }
 }
