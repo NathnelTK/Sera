@@ -1,0 +1,89 @@
+.employers { color: var(--afriwork-dark); }
+
+/* Hero (dark, business-focused, to contrast the job-seeker hero) */
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+  color: #fff;
+  padding: var(--afriwork-spacing-2xl) 0;
+}
+.hero-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+.et-accent-bar { margin: 0 auto var(--afriwork-spacing-md); }
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--afriwork-spacing-md);
+}
+.hero-subtitle { font-size: var(--afriwork-font-size-lg); opacity: 0.85; margin-bottom: var(--afriwork-spacing-xl); }
+.hero-actions { display: flex; gap: var(--afriwork-spacing-md); justify-content: center; flex-wrap: wrap; }
+.hero-primary { background: var(--afriwork-primary); color: #fff; }
+.hero-secondary { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
+
+/* Sections */
+.section { padding: var(--afriwork-spacing-2xl) 0; }
+.section-tint { background: var(--afriwork-light); }
+.section-title {
+  text-align: center;
+  font-size: var(--afriwork-font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--afriwork-spacing-xl);
+}
+
+/* Value props */
+.value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--afriwork-spacing-lg); }
+.value-card { text-align: center; padding: var(--afriwork-spacing-lg); }
+.value-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--afriwork-radius-full);
+  background: #eaf2ff;
+  margin-bottom: var(--afriwork-spacing-md);
+}
+.value-icon mat-icon { color: var(--afriwork-primary); width: 32px; height: 32px; font-size: 32px; }
+.value-card h3 { font-size: var(--afriwork-font-size-lg); margin-bottom: var(--afriwork-spacing-sm); }
+.value-card p { color: var(--afriwork-gray); margin: 0; }
+
+/* How it works */
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--afriwork-spacing-lg); }
+.step-card {
+  background: #fff;
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-lg);
+  padding: var(--afriwork-spacing-lg);
+}
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--afriwork-radius-full);
+  background: var(--afriwork-primary);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: var(--afriwork-spacing-md);
+}
+.step-card h3 { font-size: var(--afriwork-font-size-lg); margin-bottom: var(--afriwork-spacing-sm); }
+.step-card p { color: var(--afriwork-gray); margin: 0; }
+
+/* Job-seeker cross-link */
+.seeker-band { background: var(--afriwork-primary); color: #fff; padding: var(--afriwork-spacing-xl) 0; }
+.seeker-band-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--afriwork-spacing-lg); flex-wrap: wrap; }
+.seeker-band h2 { font-size: var(--afriwork-font-size-xl); margin: 0 0 4px; }
+.seeker-band p { margin: 0; opacity: 0.9; }
+.seeker-link { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+
+/* CTA */
+.cta { padding: var(--afriwork-spacing-2xl) 0; text-align: center; }
+.cta h2 { font-size: var(--afriwork-font-size-2xl); margin-bottom: var(--afriwork-spacing-sm); }
+.cta p { color: var(--afriwork-gray); margin-bottom: var(--afriwork-spacing-lg); }
+.cta-primary { background: var(--afriwork-primary); color: #fff; }
+
+@media (max-width: 768px) {
+  .value-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+}

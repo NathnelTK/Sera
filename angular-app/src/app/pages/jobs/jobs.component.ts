@@ -1,6 +1,6 @@
 import { Component, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,24 +30,35 @@ import { Job } from '../../services/jobs.service';
 })
 export class JobsComponent {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private jobsStore = inject(JobsStore);
-  
+
   // Search form
   searchForm = this.fb.group({
     search: ['']
   });
-  
+
   // Signals from store
   isLoading = computed(() => this.jobsStore.isLoading());
   error = computed(() => this.jobsStore.error());
   jobs = computed(() => this.jobsStore.jobs());
   hasJobs = computed(() => this.jobsStore.hasJobs());
-  
+
   constructor() {
-    // Load jobs on component init
+    // Honor a ?search= query param (e.g. arriving from the homepage search bar).
+    const initialSearch = this.route.snapshot.queryParamMap.get('search')?.trim() ?? '';
+    if (initialSearch) {
+      this.searchForm.patchValue({ search: initialSearch });
+    }
+
+    // Load jobs on component init.
     effect(() => {
-      this.jobsStore.loadPublishedJobs();
+      if (initialSearch) {
+        this.jobsStore.loadJobs(1, 20, initialSearch);
+      } else {
+        this.jobsStore.loadPublishedJobs();
+      }
     });
   }
   
