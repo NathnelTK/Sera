@@ -1,25 +1,4 @@
 <div class="home-container">
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-        </svg>
-        <span class="logo-text">TalentOS</span>
-      </div>
-      <nav class="nav">
-        <button mat-button (click)="navigateToJobs()">Find Jobs</button>
-        @if (!isAuthenticated()) {
-          <button mat-button (click)="navigateToLogin()">Sign In</button>
-          <button mat-raised-button color="primary" (click)="navigateToRegister()">Join Now</button>
-        } @else {
-          <button mat-raised-button color="primary" (click)="navigateToDashboard()">Dashboard</button>
-        }
-      </nav>
-    </div>
-  </header>
-
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
