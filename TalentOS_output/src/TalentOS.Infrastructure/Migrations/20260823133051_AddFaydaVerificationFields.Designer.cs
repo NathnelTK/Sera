@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TalentOS.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using TalentOS.Infrastructure.Persistence;
 namespace TalentOS.Infrastructure.Migrations
 {
     [DbContext(typeof(TalentOSDbContext))]
-    partial class TalentOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260823133051_AddFaydaVerificationFields")]
+    partial class AddFaydaVerificationFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
