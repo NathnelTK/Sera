@@ -1,0 +1,20 @@
+{
+  "//": "Copy this file to 'appsettings.Development.json' (which is gitignored) and fill in real values. Never commit real credentials.",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=YOUR_SUPABASE_POOLER_HOST;Port=5432;Database=postgres;Username=YOUR_POOLER_USERNAME;Password=YOUR_DB_PASSWORD"
+  },
+  "JwtSettings": {
+    "Secret": "REPLACE_WITH_A_STRONG_SECRET_AT_LEAST_32_CHARS",
+    "Issuer": "TalentOS.API",
+    "Audience": "TalentOS.Clients",
+    "ExpirationMinutes": 60
+  },
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+      }
+    }
+  }
+}
