@@ -35,7 +35,13 @@
               "src/theme/afriwork-theme.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "externalDependencies": [
+              "sharp",
+              "fs/promises",
+              "module",
+              "url"
+            ]
           },
           "configurations": {
             "production": {

@@ -1,0 +1,121 @@
+<section class="fayda afriwork-fade-in">
+  <header class="fayda-head">
+    <div class="fayda-title">
+      <mat-icon aria-hidden="true">badge</mat-icon>
+      <h2>{{ 'fayda.title' | translate }}</h2>
+    </div>
+
+    @if (store.isApproved()) {
+      <span class="chip chip-approved"><mat-icon>verified</mat-icon>{{ 'fayda.status.approved' | translate }}</span>
+    } @else if (store.isPending()) {
+      <span class="chip chip-pending"><mat-icon>hourglass_top</mat-icon>{{ 'fayda.status.pending' | translate }}</span>
+    } @else if (store.isRejected()) {
+      <span class="chip chip-rejected"><mat-icon>cancel</mat-icon>{{ 'fayda.status.rejected' | translate }}</span>
+    } @else {
+      <span class="chip chip-unverified">{{ 'fayda.status.unverified' | translate }}</span>
+    }
+  </header>
+
+  <p class="fayda-desc">{{ 'fayda.desc' | translate }}</p>
+
+  @if (store.isApproved()) {
+    <div class="result-card approved">
+      <mat-icon aria-hidden="true">verified_user</mat-icon>
+      <div>
+        <h3>{{ 'fayda.approved.title' | translate }}</h3>
+        <p>{{ 'fayda.approved.body' | translate }}</p>
+        @if (store.verification()?.referenceNumber) {
+          <p class="ref">{{ 'fayda.fan' | translate }}: {{ store.verification()?.referenceNumber }}</p>
+        }
+      </div>
+    </div>
+  } @else {
+    @if (store.isPending()) {
+      <div class="notice notice-pending">{{ 'fayda.pending.body' | translate }}</div>
+    }
+    @if (store.isRejected()) {
+      <div class="notice notice-rejected">
+        <span>{{ 'fayda.rejected.body' | translate }}</span>
+        @if (store.verification()?.rejectionReason) {
+          <span class="reason">{{ store.verification()?.rejectionReason }}</span>
+        }
+      </div>
+    }
+
+    <div class="mode-toggle" role="tablist">
+      <button type="button" role="tab" [class.active]="mode() === 'scan'" (click)="mode.set('scan')">
+        {{ 'fayda.mode.scan' | translate }}
+      </button>
+      <button type="button" role="tab" [class.active]="mode() === 'manual'" (click)="mode.set('manual')">
+        {{ 'fayda.mode.manual' | translate }}
+      </button>
+    </div>
+
+    @if (mode() === 'scan') {
+      @if (decoded()) {
+        <div class="preview">
+          <h3>{{ 'fayda.preview.title' | translate }}</h3>
+          <dl class="fields">
+            <div><dt>{{ 'fayda.fullName' | translate }}</dt><dd>{{ fields()?.full_name || '—' }}</dd></div>
+            <div><dt>{{ 'fayda.fan' | translate }}</dt><dd>{{ fields()?.fan || '—' }}</dd></div>
+            <div><dt>{{ 'fayda.dob' | translate }}</dt><dd>{{ fields()?.date_of_birth || '—' }}</dd></div>
+            <div><dt>{{ 'fayda.gender' | translate }}</dt><dd>{{ fields()?.gender || '—' }}</dd></div>
+          </dl>
+          <div class="sig" [class.ok]="signatureVerified()">
+            <mat-icon>{{ signatureVerified() ? 'verified' : 'gpp_maybe' }}</mat-icon>
+            <span>{{ (signatureVerified() ? 'fayda.sig.verified' : 'fayda.sig.unverified') | translate }}</span>
+          </div>
+          <div class="actions">
+            <button mat-stroked-button type="button" (click)="reset()" [disabled]="store.isLoading()">
+              {{ 'fayda.retake' | translate }}
+            </button>
+            <button mat-flat-button color="primary" type="button" (click)="submitDecoded()" [disabled]="store.isLoading()">
+              {{ 'fayda.submit' | translate }}
+            </button>
+          </div>
+        </div>
+      } @else {
+        <label class="uploader" [class.busy]="decoding()">
+          <input type="file" accept="image/*" hidden (change)="onFileSelected($event)" [disabled]="decoding()" />
+          @if (decoding()) {
+            <mat-spinner diameter="28" />
+            <span>{{ 'fayda.decoding' | translate }}</span>
+          } @else {
+            <mat-icon aria-hidden="true">photo_camera</mat-icon>
+            <span class="uploader-cta">{{ 'fayda.upload.cta' | translate }}</span>
+            <small>{{ 'fayda.upload.hint' | translate }}</small>
+          }
+        </label>
+        @if (decodeError()) {
+          <p class="error">{{ decodeError()! | translate }}</p>
+        }
+      }
+    } @else {
+      <form class="manual" [formGroup]="manualForm" (ngSubmit)="submitManual()">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fayda.fan' | translate }}</mat-label>
+          <input matInput formControlName="fan" maxlength="64" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fayda.fullName' | translate }}</mat-label>
+          <input matInput formControlName="fullName" maxlength="256" autocomplete="name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fayda.dob' | translate }}</mat-label>
+          <input matInput formControlName="dateOfBirth" maxlength="32" placeholder="YYYY-MM-DD" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'fayda.gender' | translate }}</mat-label>
+          <input matInput formControlName="gender" maxlength="32" />
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit" class="manual-submit" [disabled]="store.isLoading()">
+          {{ 'fayda.submit' | translate }}
+        </button>
+      </form>
+    }
+
+    @if (store.error()) {
+      <p class="error">{{ store.error() }}</p>
+    }
+  }
+</section>

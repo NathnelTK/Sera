@@ -1,0 +1,16 @@
+.profile-page {
+  padding: var(--afriwork-spacing-xl) var(--afriwork-spacing-md);
+  max-width: 820px;
+}
+.profile-head {
+  margin-bottom: var(--afriwork-spacing-lg);
+}
+.profile-head h1 {
+  font-size: var(--afriwork-font-size-2xl);
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.profile-head p {
+  color: var(--afriwork-gray);
+  margin: 0;
+}
