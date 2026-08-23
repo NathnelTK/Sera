@@ -1,1 +1,51 @@
-<p>applications works!</p>
+<div class="applications afriwork-container afriwork-fade-in">
+  @if (isLoading()) {
+    <div class="state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <mat-icon class="state-icon">error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="reload()">{{ 'common.retry' | translate }}</button>
+    </div>
+  } @else if (!hasApplications()) {
+    <div class="state">
+      <mat-icon class="state-icon">work_outline</mat-icon>
+      <p>{{ 'wf.apps.empty' | translate }}</p>
+      <a mat-flat-button color="primary" routerLink="/jobs">{{ 'wf.apps.emptyCta' | translate }}</a>
+    </div>
+  } @else {
+    <header class="head">
+      <div class="et-accent-bar"></div>
+      <h1>{{ 'wf.apps.title' | translate }}</h1>
+      <p class="subtitle">{{ 'wf.apps.subtitle' | translate }}</p>
+    </header>
+
+    <div class="list">
+      @for (app of applications(); track app.id) {
+        <mat-card class="app-card" [routerLink]="['/applicant/applications', app.id]">
+          <div class="app-main">
+            <h2 class="job-title">{{ app.jobTitle }}</h2>
+            @if (app.companyName) {
+              <p class="company">{{ app.companyName }}</p>
+            }
+            <p class="applied">
+              {{ 'wf.apps.appliedOn' | translate: { date: (app.appliedAt | date: 'mediumDate') } }}
+            </p>
+          </div>
+          <div class="app-side">
+            <span class="wf-chip" [class]="'wf-chip wf-chip--' + applicationStatusColor(app.status)">
+              {{ applicationStatusKey(app.status) | translate }}
+            </span>
+            <span class="view">
+              {{ 'wf.apps.view' | translate }}
+              <mat-icon>chevron_right</mat-icon>
+            </span>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

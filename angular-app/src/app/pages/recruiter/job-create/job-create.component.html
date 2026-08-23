@@ -1,1 +1,101 @@
-<p>job-create works!</p>
+<div class="job-create afriwork-container afriwork-fade-in">
+  <a routerLink="/recruiter/jobs" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    <span>{{ 'wf.myJobs.title' | translate }}</span>
+  </a>
+
+  <div class="et-accent-bar"></div>
+  <h1>{{ (isEdit() ? 'wf.jobForm.editTitle' : 'wf.jobForm.createTitle') | translate }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>{{ 'wf.jobForm.title' | translate }}</mat-label>
+      <input matInput formControlName="title" required />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <mat-error>{{ 'wf.jobForm.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>{{ 'wf.jobForm.description' | translate }}</mat-label>
+      <textarea matInput rows="6" formControlName="description" required></textarea>
+      @if (form.controls.description.touched && form.controls.description.invalid) {
+        <mat-error>{{ 'wf.jobForm.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>{{ 'wf.jobForm.requirements' | translate }}</mat-label>
+      <textarea matInput rows="4" formControlName="requirements"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>{{ 'wf.jobForm.benefits' | translate }}</mat-label>
+      <textarea matInput rows="4" formControlName="benefits"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.type' | translate }}</mat-label>
+      <mat-select formControlName="jobType">
+        @for (o of jobTypeOptions; track o.value) {
+          <mat-option [value]="o.value">{{ o.labelKey | translate }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.workMode' | translate }}</mat-label>
+      <mat-select formControlName="workMode">
+        @for (o of workModeOptions; track o.value) {
+          <mat-option [value]="o.value">{{ o.labelKey | translate }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.experience' | translate }}</mat-label>
+      <mat-select formControlName="experienceLevel">
+        @for (o of experienceLevelOptions; track o.value) {
+          <mat-option [value]="o.value">{{ o.labelKey | translate }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.deadline' | translate }}</mat-label>
+      <input matInput type="date" formControlName="deadline" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.minSalary' | translate }}</mat-label>
+      <input matInput type="number" min="0" formControlName="minSalary" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.maxSalary' | translate }}</mat-label>
+      <input matInput type="number" min="0" formControlName="maxSalary" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'wf.jobForm.currency' | translate }}</mat-label>
+      <input matInput formControlName="salaryCurrency" />
+    </mat-form-field>
+
+    <p class="hint full">{{ 'wf.jobForm.salaryHint' | translate }}</p>
+
+    @if (error()) {
+      <p class="form-error full">{{ error() }}</p>
+    }
+
+    <div class="actions full">
+      <a mat-stroked-button routerLink="/recruiter/jobs">{{ 'common.cancel' | translate }}</a>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+          {{ (isEdit() ? 'wf.jobForm.saveUpdate' : 'wf.jobForm.save') | translate }}
+        }
+      </button>
+    </div>
+  </form>
+</div>

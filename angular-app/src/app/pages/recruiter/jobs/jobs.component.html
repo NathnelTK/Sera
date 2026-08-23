@@ -1,1 +1,79 @@
-<p>jobs works!</p>
+<div class="my-jobs afriwork-container afriwork-fade-in">
+  <header class="head">
+    <div>
+      <div class="et-accent-bar"></div>
+      <h1>{{ 'wf.myJobs.title' | translate }}</h1>
+      <p class="subtitle">{{ 'wf.myJobs.subtitle' | translate }}</p>
+    </div>
+    <a mat-flat-button color="primary" class="new-btn" routerLink="/recruiter/jobs/create">
+      <mat-icon>add</mat-icon>
+      <span>{{ 'wf.myJobs.new' | translate }}</span>
+    </a>
+  </header>
+
+  @if (isLoading() && myJobs().length === 0) {
+    <div class="state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <mat-icon class="state-icon">error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="reload()">{{ 'common.retry' | translate }}</button>
+    </div>
+  } @else if (myJobs().length === 0) {
+    <div class="state">
+      <mat-icon class="state-icon">work_outline</mat-icon>
+      <p>{{ 'wf.myJobs.empty' | translate }}</p>
+      <a mat-flat-button color="primary" routerLink="/recruiter/jobs/create">
+        <mat-icon>add</mat-icon>
+        <span>{{ 'wf.myJobs.new' | translate }}</span>
+      </a>
+    </div>
+  } @else {
+    <div class="jobs-list">
+      @for (job of myJobs(); track job.id) {
+        <mat-card class="job-card">
+          <div class="card-body">
+            <div class="title-row">
+              <h2>{{ job.title }}</h2>
+              <span [class]="'wf-chip wf-chip--' + jobStatusColor(job.status)">
+                {{ jobStatusKey(job.status) | translate }}
+              </span>
+            </div>
+            <p class="company">{{ job.companyName || job.recruiterName }}</p>
+            <div class="meta">
+              <span class="meta-item"><mat-icon>work</mat-icon>{{ jobTypeKey(job.jobType) | translate }}</span>
+              <span class="meta-item"><mat-icon>schedule</mat-icon>{{ workModeKey(job.workMode) | translate }}</span>
+              <span class="meta-item"><mat-icon>business_center</mat-icon>{{ experienceLevelKey(job.experienceLevel) | translate }}</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a mat-stroked-button [routerLink]="['/recruiter/jobs', job.id, 'applications']">
+              <mat-icon>groups</mat-icon>
+              <span>{{ 'wf.myJobs.candidates' | translate }}</span>
+            </a>
+            <a mat-button [routerLink]="['/recruiter/jobs', job.id, 'edit']">
+              <mat-icon>edit</mat-icon>
+              <span>{{ 'wf.myJobs.edit' | translate }}</span>
+            </a>
+            @if (job.status === JobStatus.Draft) {
+              <button mat-flat-button color="primary" (click)="publish(job.id)">
+                <mat-icon>publish</mat-icon>
+                <span>{{ 'wf.myJobs.publish' | translate }}</span>
+              </button>
+            }
+            @if (job.status === JobStatus.Published) {
+              <button mat-button class="danger-text" (click)="close(job)">
+                <mat-icon>lock</mat-icon>
+                <span>{{ 'wf.myJobs.close' | translate }}</span>
+              </button>
+            }
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

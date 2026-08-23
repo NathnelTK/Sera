@@ -1,110 +1,104 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { InterviewsService, Interview, InterviewsResponse } from '../services/interviews.service';
+import { firstValueFrom } from 'rxjs';
+import {
+  InterviewsService,
+  Interview,
+  ScheduleInterviewRequest,
+} from '../services/interviews.service';
+import { TranslationService } from '../core/i18n/translation.service';
+import { InterviewStatus } from '../core/workflow/workflow';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class InterviewsStore {
-  private interviewsService = inject(InterviewsService);
-  
+  private service = inject(InterviewsService);
+  private i18n = inject(TranslationService);
+
   // State
   isLoading = signal(false);
   error = signal<string | null>(null);
   interviews = signal<Interview[]>([]);
   currentInterview = signal<Interview | null>(null);
-  
+
   // Computed
   hasInterviews = computed(() => this.interviews().length > 0);
-  scheduledInterviews = computed(() => this.interviews().filter(int => int.status === 'Scheduled'));
-  completedInterviews = computed(() => this.interviews().filter(int => int.status === 'Completed'));
+
+  private isActive(i: Interview): boolean {
+    return i.status === InterviewStatus.Scheduled || i.status === InterviewStatus.Rescheduled;
+  }
+
+  scheduledInterviews = computed(() => this.interviews().filter((i) => this.isActive(i)));
+  completedInterviews = computed(() =>
+    this.interviews().filter((i) => i.status === InterviewStatus.Completed),
+  );
   upcomingInterviews = computed(() => {
-    const now = new Date();
+    const now = Date.now();
     return this.interviews()
-      .filter(int => int.status === 'Scheduled' && new Date(int.scheduled_date) > now)
-      .sort((a, b) => new Date(a.scheduled_date).getTime() - new Date(b.scheduled_date).getTime());
+      .filter((i) => this.isActive(i) && new Date(i.scheduledAt).getTime() > now)
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
   });
-  
-  async loadInterviews(applicantId?: string, recruiterId?: string) {
+
+  async loadMyInterviews(): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const response = await this.interviewsService.getInterviews(applicantId, recruiterId).toPromise();
-      if (response) {
-        this.interviews.set(response.items);
-      }
+      const list = await firstValueFrom(this.service.getMy());
+      this.interviews.set(list ?? []);
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to load interviews');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.loadInterviews'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async loadMyInterviews() {
-    return this.loadInterviews();
-  }
-  
-  async scheduleInterview(interview: Partial<Interview>) {
+
+  /** Recruiter schedules an interview. Returns the new interview id, or null on failure. */
+  async scheduleInterview(req: ScheduleInterviewRequest): Promise<string | null> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const createdInterview = await this.interviewsService.scheduleInterview(interview).toPromise();
-      if (createdInterview) {
-        this.interviews.update(ints => [...ints, createdInterview]);
-      }
+      const created = await firstValueFrom(this.service.schedule(req));
+      await this.loadMyInterviews();
+      return created?.id ?? null;
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.scheduleInterview'));
+      return null;
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  async cancelInterview(id: string, reason?: string): Promise<boolean> {
+    this.isLoading.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.service.cancel(id, reason));
+      this.interviews.update((ints) =>
+        ints.map((i) =>
+          i.id === id ? { ...i, status: InterviewStatus.Cancelled, cancellationReason: reason } : i,
+        ),
+      );
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to schedule interview');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.cancelInterview'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async updateInterview(id: string, interview: Partial<Interview>) {
-    this.isLoading.set(true);
-    this.error.set(null);
-    
-    try {
-      const updatedInterview = await this.interviewsService.updateInterview(id, interview).toPromise();
-      if (updatedInterview) {
-        this.interviews.update(ints => ints.map(int => int.id === id ? { ...int, ...updatedInterview } : int));
-        if (this.currentInterview()?.id === id) {
-          this.currentInterview.set({ ...this.currentInterview()!, ...updatedInterview });
-        }
-      }
-      return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to update interview');
-      return false;
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
-  
-  async cancelInterview(id: string) {
-    this.isLoading.set(true);
-    this.error.set(null);
-    
-    try {
-      await this.interviewsService.cancelInterview(id).toPromise();
-      this.interviews.update(ints => ints.filter(int => int.id !== id));
-      if (this.currentInterview()?.id === id) {
-        this.currentInterview.set(null);
-      }
-      return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to cancel interview');
-      return false;
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
-  
-  clearCurrentInterview() {
+
+  clearCurrentInterview(): void {
     this.currentInterview.set(null);
+  }
+
+  private messageFrom(err: unknown, fallbackKey: string): string {
+    const body = (err as { error?: unknown })?.error;
+    if (typeof body === 'string' && body.trim()) return body;
+    if (body && typeof body === 'object') {
+      const problem = body as { error?: string; title?: string; detail?: string };
+      const msg = problem.error ?? problem.detail ?? problem.title;
+      if (msg) return msg;
+    }
+    return this.i18n.instant(fallbackKey);
   }
 }
