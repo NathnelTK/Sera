@@ -10,6 +10,8 @@ import { AuthStore } from '../../../stores/auth.store';
 import { ApplicationsStore } from '../../../stores/applications.store';
 import { InterviewsStore } from '../../../stores/interviews.store';
 import { NotificationsStore } from '../../../stores/notifications.store';
+import { VerificationStore } from '../../../stores/verification.store';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +22,8 @@ import { NotificationsStore } from '../../../stores/notifications.store';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    TranslatePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -31,10 +34,15 @@ export class DashboardComponent {
   private applicationsStore = inject(ApplicationsStore);
   private interviewsStore = inject(InterviewsStore);
   private notificationsStore = inject(NotificationsStore);
-  
+  private verificationStore = inject(VerificationStore);
+
   // Signals from stores
   currentUser = computed(() => this.authStore.currentUser());
   isAuthenticated = computed(() => this.authStore.isAuthenticated());
+
+  // Identity verification (Fayda)
+  isVerified = computed(() => this.verificationStore.isApproved());
+  verificationPending = computed(() => this.verificationStore.isPending());
   
   // Application stats
   totalApplications = computed(() => this.applicationsStore.applications().length);
@@ -54,6 +62,9 @@ export class DashboardComponent {
   isLoadingNotifications = computed(() => this.notificationsStore.isLoading());
   
   constructor() {
+    // Read the current Fayda verification status once (non-reactive — avoids signal writes in an effect).
+    void this.verificationStore.loadStatus();
+
     // Load data on component init
     effect(() => {
       if (this.isAuthenticated()) {

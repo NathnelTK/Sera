@@ -1,0 +1,117 @@
+.fayda {
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-lg);
+  padding: var(--afriwork-spacing-lg);
+  background: #fff;
+}
+
+.fayda-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--afriwork-spacing-md);
+  flex-wrap: wrap;
+}
+.fayda-title { display: flex; align-items: center; gap: 8px; }
+.fayda-title h2 { font-size: var(--afriwork-font-size-lg); margin: 0; }
+.fayda-title mat-icon { color: var(--afriwork-primary); }
+.fayda-desc { color: var(--afriwork-gray); margin: 8px 0 var(--afriwork-spacing-md); }
+
+/* Status chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--afriwork-radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.chip mat-icon { font-size: 16px; width: 16px; height: 16px; }
+.chip-approved { background: #e6f4ea; color: var(--afriwork-et-green); }
+.chip-pending { background: #fff4e5; color: #b26a00; }
+.chip-rejected { background: #fdecea; color: var(--afriwork-et-red); }
+.chip-unverified { background: var(--afriwork-light); color: var(--afriwork-gray); }
+
+/* Approved summary */
+.result-card {
+  display: flex;
+  gap: var(--afriwork-spacing-md);
+  padding: var(--afriwork-spacing-md);
+  border-radius: var(--afriwork-radius-md);
+  background: #e6f4ea;
+}
+.result-card mat-icon { color: var(--afriwork-et-green); font-size: 36px; width: 36px; height: 36px; }
+.result-card h3 { margin: 0 0 4px; }
+.result-card p { margin: 0; color: var(--afriwork-dark); }
+.result-card .ref { margin-top: 6px; color: var(--afriwork-gray); font-size: 0.85rem; }
+
+/* Notices */
+.notice {
+  padding: var(--afriwork-spacing-sm) var(--afriwork-spacing-md);
+  border-radius: var(--afriwork-radius-md);
+  margin-bottom: var(--afriwork-spacing-md);
+  font-size: 0.9rem;
+}
+.notice-pending { background: #fff4e5; color: #8a5300; }
+.notice-rejected { background: #fdecea; color: #a1160c; display: flex; flex-direction: column; gap: 4px; }
+.notice-rejected .reason { font-weight: 600; }
+
+/* Method toggle */
+.mode-toggle {
+  display: inline-flex;
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-full);
+  padding: 3px;
+  margin-bottom: var(--afriwork-spacing-md);
+}
+.mode-toggle button {
+  border: 0;
+  background: transparent;
+  padding: 6px 16px;
+  border-radius: var(--afriwork-radius-full);
+  cursor: pointer;
+  font: inherit;
+  color: var(--afriwork-gray);
+}
+.mode-toggle button.active { background: var(--afriwork-primary); color: #fff; }
+
+/* Uploader */
+.uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  padding: var(--afriwork-spacing-xl);
+  border: 2px dashed var(--afriwork-border);
+  border-radius: var(--afriwork-radius-lg);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.uploader:hover { border-color: var(--afriwork-primary); background: var(--afriwork-light); }
+.uploader.busy { cursor: progress; }
+.uploader mat-icon { font-size: 40px; width: 40px; height: 40px; color: var(--afriwork-primary); }
+.uploader-cta { font-weight: 600; }
+.uploader small { color: var(--afriwork-gray); max-width: 42ch; }
+
+/* Decoded preview */
+.preview h3 { margin: 0 0 var(--afriwork-spacing-sm); }
+.fields { margin: 0 0 var(--afriwork-spacing-md); display: grid; gap: 8px; }
+.fields > div { display: flex; justify-content: space-between; gap: var(--afriwork-spacing-md); border-bottom: 1px solid var(--afriwork-light); padding-bottom: 6px; }
+.fields dt { color: var(--afriwork-gray); margin: 0; }
+.fields dd { margin: 0; font-weight: 600; text-align: right; }
+.sig { display: flex; align-items: center; gap: 6px; color: #b26a00; margin-bottom: var(--afriwork-spacing-md); font-size: 0.9rem; }
+.sig.ok { color: var(--afriwork-et-green); }
+.actions { display: flex; gap: var(--afriwork-spacing-sm); justify-content: flex-end; flex-wrap: wrap; }
+
+/* Manual form */
+.manual { display: grid; grid-template-columns: 1fr 1fr; gap: var(--afriwork-spacing-sm) var(--afriwork-spacing-md); }
+.manual mat-form-field { width: 100%; }
+.manual-submit { grid-column: 1 / -1; justify-self: start; }
+
+.error { color: var(--afriwork-et-red); margin: var(--afriwork-spacing-sm) 0 0; font-size: 0.9rem; }
+
+@media (max-width: 600px) {
+  .manual { grid-template-columns: 1fr; }
+}
