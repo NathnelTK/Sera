@@ -1,0 +1,73 @@
+<div class="employers">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner afriwork-container afriwork-fade-in">
+      <div class="et-accent-bar" aria-hidden="true"></div>
+      <h1 class="hero-title">{{ 'employers.hero.title' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'employers.hero.subtitle' | translate }}</p>
+      <div class="hero-actions">
+        <a mat-flat-button routerLink="/register" class="hero-primary">
+          {{ 'employers.hero.primary' | translate }}
+        </a>
+        <a mat-stroked-button href="#how" class="hero-secondary">
+          {{ 'employers.hero.secondary' | translate }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value props -->
+  <section class="section afriwork-container">
+    <h2 class="section-title">{{ 'employers.value.title' | translate }}</h2>
+    <div class="value-grid">
+      @for (v of valueProps; track v.titleKey) {
+        <div class="value-card">
+          <div class="value-icon"><mat-icon>{{ v.icon }}</mat-icon></div>
+          <h3>{{ v.titleKey | translate }}</h3>
+          <p>{{ v.descKey | translate }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="section section-tint">
+    <div class="afriwork-container">
+      <h2 class="section-title">{{ 'employers.how.title' | translate }}</h2>
+      <div class="steps-grid">
+        @for (step of steps; track step.n) {
+          <div class="step-card">
+            <div class="step-number">{{ step.n }}</div>
+            <h3>{{ step.titleKey | translate }}</h3>
+            <p>{{ step.descKey | translate }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Job-seeker cross-link -->
+  <section class="seeker-band">
+    <div class="afriwork-container seeker-band-inner">
+      <div>
+        <h2>{{ 'employers.seeker.title' | translate }}</h2>
+        <p>{{ 'employers.seeker.subtitle' | translate }}</p>
+      </div>
+      <a mat-stroked-button routerLink="/jobs" class="seeker-link">
+        {{ 'employers.seeker.button' | translate }}
+        <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="afriwork-container cta-inner">
+      <h2>{{ 'employers.cta.title' | translate }}</h2>
+      <p>{{ 'employers.cta.subtitle' | translate }}</p>
+      <a mat-flat-button routerLink="/register" class="cta-primary">{{ 'employers.cta.primary' | translate }}</a>
+    </div>
+  </section>
+
+  <app-footer />
+</div>
