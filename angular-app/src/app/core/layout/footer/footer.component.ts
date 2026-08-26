@@ -28,7 +28,6 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
         <div class="footer-section">
           <h4>{{ 'footer.company' | translate }}</h4>
           <a routerLink="/home">{{ 'footer.about' | translate }}</a>
-          <a routerLink="/home">{{ 'footer.contact' | translate }}</a>
         </div>
       </div>
       <div class="footer-bottom afriwork-container">

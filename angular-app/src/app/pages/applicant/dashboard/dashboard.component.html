@@ -1,22 +1,19 @@
 <div class="dashboard-container">
   <div class="header">
-    <div class="header-content">
-      <div>
-        <h1>Applicant Dashboard</h1>
-        <p>Welcome back, {{ currentUser()?.email }}!</p>
-      </div>
-    </div>
+    <span class="et-accent-bar"></span>
+    <h1>{{ 'dash.applicant.title' | translate }}</h1>
+    <p>{{ 'dash.welcome' | translate:{ name: currentUser()?.email } }}</p>
   </div>
 
   <!-- Stats Overview -->
-  <div class="stats-grid">
+  <div class="stats-grid afriwork-stagger">
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-content">
           <mat-icon class="stat-icon applications">work</mat-icon>
           <div class="stat-info">
             <div class="stat-number">{{ totalApplications() }}</div>
-            <div class="stat-label">Total Applications</div>
+            <div class="stat-label">{{ 'dash.stat.total' | translate }}</div>
           </div>
         </div>
       </mat-card-content>
@@ -28,7 +25,7 @@
           <mat-icon class="stat-icon pending">schedule</mat-icon>
           <div class="stat-info">
             <div class="stat-number">{{ pendingApplications() }}</div>
-            <div class="stat-label">Pending</div>
+            <div class="stat-label">{{ 'dash.stat.pending' | translate }}</div>
           </div>
         </div>
       </mat-card-content>
@@ -40,7 +37,7 @@
           <mat-icon class="stat-icon accepted">check_circle</mat-icon>
           <div class="stat-info">
             <div class="stat-number">{{ acceptedApplications() }}</div>
-            <div class="stat-label">Accepted</div>
+            <div class="stat-label">{{ 'dash.stat.accepted' | translate }}</div>
           </div>
         </div>
       </mat-card-content>
@@ -52,7 +49,7 @@
           <mat-icon class="stat-icon interviews">event</mat-icon>
           <div class="stat-info">
             <div class="stat-number">{{ totalInterviews() }}</div>
-            <div class="stat-label">Interviews</div>
+            <div class="stat-label">{{ 'dash.stat.interviews' | translate }}</div>
           </div>
         </div>
       </mat-card-content>
@@ -60,43 +57,43 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="dashboard-grid">
-    <mat-card class="dashboard-card" (click)="navigateToApplications()">
+  <div class="dashboard-grid afriwork-stagger">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToApplications()">
       <mat-card-header>
-        <mat-card-title>My Applications</mat-card-title>
-        <mat-card-subtitle>View and manage your job applications</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.applications.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.applications.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">folder_open</mat-icon>
           <div class="card-stats">
-            <span class="stat">{{ totalApplications() }} total</span>
-            <span class="stat">{{ pendingApplications() }} pending</span>
+            <span class="stat">{{ 'dash.count.total' | translate:{ count: totalApplications() } }}</span>
+            <span class="stat">{{ 'dash.count.pending' | translate:{ count: pendingApplications() } }}</span>
           </div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">View Applications</button>
+        <button mat-button color="primary">{{ 'dash.applications.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card" (click)="navigateToProfile()">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToProfile()">
       <mat-card-header>
-        <mat-card-title>My Profile</mat-card-title>
-        <mat-card-subtitle>Update your profile and skills</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.profile.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.profile.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">person</mat-icon>
-          <div class="card-hint">Complete your profile to get better matches</div>
+          <div class="card-hint">{{ 'dash.profile.hint' | translate }}</div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">Edit Profile</button>
+        <button mat-button color="primary">{{ 'dash.profile.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card verification-card" (click)="navigateToProfile()">
+    <mat-card class="dashboard-card verification-card afriwork-hoverable" (click)="navigateToProfile()">
       <mat-card-header>
         <mat-card-title>{{ 'fayda.card.title' | translate }}</mat-card-title>
         <mat-card-subtitle>{{ 'fayda.card.subtitle' | translate }}</mat-card-subtitle>
@@ -118,93 +115,93 @@
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card" (click)="navigateToJobs()">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToJobs()">
       <mat-card-header>
-        <mat-card-title>Browse Jobs</mat-card-title>
-        <mat-card-subtitle>Find new job opportunities</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.jobs.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.jobs.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">search</mat-icon>
-          <div class="card-hint">Discover jobs that match your skills</div>
+          <div class="card-hint">{{ 'dash.jobs.hint' | translate }}</div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">Find Jobs</button>
+        <button mat-button color="primary">{{ 'dash.jobs.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card" (click)="navigateToInterviews()">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToInterviews()">
       <mat-card-header>
-        <mat-card-title>My Interviews</mat-card-title>
-        <mat-card-subtitle>View scheduled interviews</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.interviews.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.interviews.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">video_call</mat-icon>
           <div class="card-stats">
-            <span class="stat">{{ totalInterviews() }} total</span>
-            <span class="stat">{{ upcomingInterviews().length }} upcoming</span>
+            <span class="stat">{{ 'dash.count.total' | translate:{ count: totalInterviews() } }}</span>
+            <span class="stat">{{ 'dash.count.upcoming' | translate:{ count: upcomingInterviews().length } }}</span>
           </div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">View Interviews</button>
+        <button mat-button color="primary">{{ 'dash.interviews.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card" (click)="navigateToDocuments()">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToDocuments()">
       <mat-card-header>
-        <mat-card-title>My Documents</mat-card-title>
-        <mat-card-subtitle>Manage your CV and certificates</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.documents.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.documents.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">description</mat-icon>
-          <div class="card-hint">Upload and manage your documents</div>
+          <div class="card-hint">{{ 'dash.documents.hint' | translate }}</div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">Manage Documents</button>
+        <button mat-button color="primary">{{ 'dash.documents.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card notification-card" (click)="navigateToNotifications()">
+    <mat-card class="dashboard-card notification-card afriwork-hoverable" (click)="navigateToNotifications()">
       <mat-card-header>
-        <mat-card-title>Notifications</mat-card-title>
-        <mat-card-subtitle>View your notifications</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.notifications.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.notifications.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <div class="notification-icon-wrapper">
             <mat-icon class="card-icon">notifications</mat-icon>
             @if (unreadNotifications() > 0) {
-              <span class="notification-badge">{{ unreadNotifications() }}</span>
+              <span class="notification-badge">{{ unreadNotifications() > 99 ? '99+' : unreadNotifications() }}</span>
             }
           </div>
           <div class="card-stats">
-            <span class="stat">{{ unreadNotifications() }} unread</span>
+            <span class="stat">{{ 'dash.count.unread' | translate:{ count: unreadNotifications() } }}</span>
           </div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">View Notifications</button>
+        <button mat-button color="primary">{{ 'dash.notifications.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card" (click)="navigateToAiTools()">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToAiTools()">
       <mat-card-header>
-        <mat-card-title>AI Tools</mat-card-title>
-        <mat-card-subtitle>Resume analysis and candidate matching</mat-card-subtitle>
+        <mat-card-title>{{ 'dash.ai.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.ai.desc' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="card-content">
           <mat-icon class="card-icon">psychology</mat-icon>
-          <div class="card-hint">Let AI help you improve your chances</div>
+          <div class="card-hint">{{ 'dash.ai.hint' | translate }}</div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary">Try AI Tools</button>
+        <button mat-button color="primary">{{ 'dash.ai.action' | translate }}</button>
       </mat-card-actions>
     </mat-card>
   </div>

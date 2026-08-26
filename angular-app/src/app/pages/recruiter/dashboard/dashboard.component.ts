@@ -1,29 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthStore } from '../../../stores/auth.store';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
-  currentUser: any = null;
+export class DashboardComponent {
+  private router = inject(Router);
+  private authStore = inject(AuthStore);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
-    this.currentUser = this.authService.currentUser;
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-    }
-  }
+  // Route is already protected by authGuard + recruiterGuard, so we just read the user.
+  currentUser = computed(() => this.authStore.currentUser());
 
   navigateToJobs() {
     this.router.navigate(['/recruiter/jobs']);

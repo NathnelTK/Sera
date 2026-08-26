@@ -1,5 +1,7 @@
 <app-offline-banner />
 <app-navbar />
 <main class="app-main">
-  <router-outlet />
+  <div class="route-host" [@routeAnimations]="prepareRoute(outlet)">
+    <router-outlet #outlet="outlet" />
+  </div>
 </main>

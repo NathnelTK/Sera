@@ -182,6 +182,8 @@
 
 button mat-spinner {
   margin: 0 auto;
+  // In-button spinner sits on a filled primary button — keep it white, not blue-on-blue.
+  --mdc-circular-progress-active-indicator-color: #fff;
 }
 
 @media (max-width: 860px) {
