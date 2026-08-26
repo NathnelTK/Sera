@@ -1,0 +1,152 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Angular Material theme (M2 API, Material 18)
+//
+// This file wires up Angular Material's core styles and a brand-matched theme.
+// Before it existed, the app used Material components (mat-menu, mat-select,
+// mat-dialog, mat-form-field, …) with NO theme loaded, which caused two very
+// visible bugs:
+//
+//   1. `mat.core()` emits the CDK overlay styles. Without them, overlay panels
+//      (the language menu, account menu, selects, dialogs, tooltips) had no
+//      positioning and rendered in normal document flow at the BOTTOM of the
+//      page instead of anchored to their trigger.
+//   2. Un-themed `mat-form-field` floating labels overlapped the input text,
+//      and `color="primary"` buttons had no brand color.
+//
+// Loading this file first (see angular.json) fixes all of the above at once.
+// Palette 500 values intentionally match the --afriwork-* CSS variables in
+// afriwork-theme.scss so Material components and hand-rolled elements share
+// one brand.
+// ─────────────────────────────────────────────────────────────────────────
+
+@use '@angular/material' as mat;
+
+// Emit the core Material styles once — this pulls in the CDK overlay,
+// a11y, and ripple styles that make every popup/overlay position correctly.
+@include mat.core();
+
+// Brand primary — TalentOS blue (#0D6EFD). Tonal steps built around it.
+$talent-blue: (
+  50: #e7f1ff,
+  100: #c3daff,
+  200: #9cc2fe,
+  300: #74a9fd,
+  400: #3d8bfd,
+  500: #0d6efd,
+  600: #0b5ed7,
+  700: #0a52bd,
+  800: #08429a,
+  900: #063071,
+  A100: #c3daff,
+  A200: #9cc2fe,
+  A400: #3d8bfd,
+  A700: #0a52bd,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+// Brand accent — TalentOS warm orange (#FF6B35).
+$talent-orange: (
+  50: #fff1eb,
+  100: #ffddcf,
+  200: #ffc2ab,
+  300: #ffa687,
+  400: #ff8c5a,
+  500: #ff6b35,
+  600: #e85a2a,
+  700: #cc4a20,
+  800: #a83b19,
+  900: #7d2b11,
+  A100: #ffddcf,
+  A200: #ffc2ab,
+  A400: #ff8c5a,
+  A700: #cc4a20,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: #ffffff,
+  ),
+);
+
+// Warn — brand error red (#EF4444).
+$talent-red: (
+  50: #fdeaea,
+  100: #fbcccc,
+  200: #f79a9a,
+  300: #f36b6b,
+  400: #f15252,
+  500: #ef4444,
+  600: #dc2626,
+  700: #b91c1c,
+  800: #991b1b,
+  900: #7f1d1d,
+  A100: #fbcccc,
+  A200: #f79a9a,
+  A400: #f15252,
+  A700: #b91c1c,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$talent-primary: mat.m2-define-palette($talent-blue, 500, 400, 700);
+$talent-accent: mat.m2-define-palette($talent-orange, 500, 400, 700);
+$talent-warn: mat.m2-define-palette($talent-red, 500, 300, 700);
+
+// Inter matches the rest of the UI (loaded in index.html). Keeping the family
+// here means Material components (buttons, form fields, menus) use it too.
+$talent-typography: mat.m2-define-typography-config(
+  $font-family: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+);
+
+$talent-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $talent-primary,
+      accent: $talent-accent,
+      warn: $talent-warn,
+    ),
+    typography: $talent-typography,
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($talent-theme);

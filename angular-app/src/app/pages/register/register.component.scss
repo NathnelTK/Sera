@@ -1,110 +1,148 @@
-.register-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem;
+:host {
+  display: block;
 }
 
-.register-card {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 2rem;
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  padding: var(--afriwork-spacing-2xl) var(--afriwork-spacing-md);
+  background:
+    radial-gradient(1100px 560px at 100% -10%, rgba(13, 110, 253, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(255, 107, 53, 0.08), transparent 55%),
+    var(--afriwork-light);
+}
+
+.auth-card {
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  max-width: 460px;
+  background: var(--afriwork-white);
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-xl);
+  box-shadow: var(--afriwork-shadow-lg);
+  padding: var(--afriwork-spacing-2xl) var(--afriwork-spacing-xl);
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: var(--afriwork-spacing-xl);
+
+  .et-accent-bar {
+    margin: 0 auto var(--afriwork-spacing-md);
+  }
 
   h1 {
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-    text-align: center;
+    font-size: var(--afriwork-font-size-2xl);
+    color: var(--afriwork-dark);
+    margin-bottom: var(--afriwork-spacing-xs);
   }
 
-  .subtitle {
-    color: #718096;
-    text-align: center;
-    margin-bottom: 2rem;
+  .auth-subtitle {
+    color: var(--afriwork-gray);
+    margin: 0;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
   }
 
-  form {
-    .form-group {
-      margin-bottom: 1.5rem;
+  mat-icon[matPrefix] {
+    margin: 0 0.5rem 0 0.25rem;
+    color: var(--afriwork-gray);
+  }
+}
 
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: #4a5568;
-        font-weight: 500;
-      }
+.role-select {
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-md);
+  padding: var(--afriwork-spacing-sm) var(--afriwork-spacing-md) var(--afriwork-spacing-md);
+  margin: var(--afriwork-spacing-xs) 0 var(--afriwork-spacing-md);
 
-      input, select {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.25rem;
-        font-size: 1rem;
-        box-sizing: border-box;
+  legend {
+    padding: 0 var(--afriwork-spacing-xs);
+    color: var(--afriwork-gray);
+    font-size: var(--afriwork-font-size-sm);
+    font-weight: 500;
+  }
 
-        &:focus {
-          outline: none;
-          border-color: #4299e1;
-          box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-        }
-      }
-    }
+  .role-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--afriwork-spacing-md);
+  }
+}
 
-    .error-message {
-      background-color: #fed7d7;
-      color: #742a2a;
-      padding: 0.75rem;
-      border-radius: 0.25rem;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-    }
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--afriwork-error-light);
+  color: var(--afriwork-error);
+  border-radius: var(--afriwork-radius-md);
+  padding: var(--afriwork-spacing-sm) var(--afriwork-spacing-md);
+  margin-bottom: var(--afriwork-spacing-md);
+  font-size: var(--afriwork-font-size-sm);
 
-    .btn {
-      width: 100%;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 0.25rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
 
-      &.btn-primary {
-        background-color: #48bb78;
-        color: white;
+.auth-submit {
+  width: 100%;
+  height: 44px;
+  margin-top: var(--afriwork-spacing-sm);
+  font-weight: 600;
 
-        &:hover:not(:disabled) {
-          background-color: #38a169;
-        }
+  // In-button spinner must read on the filled primary background (white, not blue-on-blue).
+  mat-spinner {
+    --mdc-circular-progress-active-indicator-color: #fff;
+  }
+}
 
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      }
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-links {
+  margin-top: var(--afriwork-spacing-lg);
+  text-align: center;
+
+  p {
+    color: var(--afriwork-gray);
+    margin-bottom: var(--afriwork-spacing-sm);
+
+    a {
+      font-weight: 600;
     }
   }
 
-  .links {
-    margin-top: 1.5rem;
-    text-align: center;
+  .auth-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--afriwork-gray);
+    font-size: var(--afriwork-font-size-sm);
 
-    p {
-      color: #718096;
-      margin-bottom: 0.5rem;
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
 
-      a {
-        color: #4299e1;
-        cursor: pointer;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
+    &:hover {
+      color: var(--afriwork-primary);
     }
   }
 }

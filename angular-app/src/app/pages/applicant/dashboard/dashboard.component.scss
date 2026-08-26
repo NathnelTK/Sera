@@ -1,82 +1,83 @@
 .dashboard-container {
-  padding: 2rem;
+  padding: var(--afriwork-spacing-xl);
   max-width: 1200px;
   margin: 0 auto;
 
   .header {
-    margin-bottom: 2rem;
+    margin-bottom: var(--afriwork-spacing-xl);
 
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .et-accent-bar {
+      margin-bottom: var(--afriwork-spacing-md);
+    }
 
-      h1 {
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-      }
+    h1 {
+      color: var(--afriwork-dark);
+      margin-bottom: var(--afriwork-spacing-xs);
+    }
 
-      p {
-        color: #718096;
-      }
+    p {
+      color: var(--afriwork-gray);
+      margin: 0;
     }
   }
 
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: var(--afriwork-spacing-md);
+    margin-bottom: var(--afriwork-spacing-xl);
 
     .stat-card {
       mat-card-content {
-        padding: 1rem;
+        padding: var(--afriwork-spacing-md);
 
         .stat-content {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: var(--afriwork-spacing-md);
 
           .stat-icon {
-            font-size: 2rem;
+            font-size: 1.75rem;
             width: 48px;
             height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            flex-shrink: 0;
 
             &.applications {
-              background-color: #e3f2fd;
-              color: #1976d2;
+              background-color: rgba(13, 110, 253, 0.1);
+              color: var(--afriwork-primary);
             }
 
             &.pending {
-              background-color: #fff3e0;
-              color: #f57c00;
+              background-color: var(--afriwork-warning-light);
+              color: var(--afriwork-warning);
             }
 
             &.accepted {
-              background-color: #e8f5e9;
-              color: #388e3c;
+              background-color: var(--afriwork-success-light);
+              color: var(--afriwork-success);
             }
 
             &.interviews {
-              background-color: #f3e5f5;
-              color: #7b1fa2;
+              background-color: rgba(255, 107, 53, 0.12);
+              color: var(--afriwork-secondary);
             }
           }
 
           .stat-info {
             .stat-number {
-              font-size: 1.5rem;
-              font-weight: bold;
-              color: #2d3748;
+              font-size: var(--afriwork-font-size-2xl);
+              font-weight: 700;
+              color: var(--afriwork-dark);
+              line-height: 1.1;
             }
 
             .stat-label {
-              font-size: 0.875rem;
-              color: #718096;
+              font-size: var(--afriwork-font-size-sm);
+              color: var(--afriwork-gray);
             }
           }
         }
@@ -87,62 +88,62 @@
   .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: var(--afriwork-spacing-lg);
 
     .dashboard-card {
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      }
 
       .card-content {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: var(--afriwork-spacing-md);
+        min-height: 56px;
 
         .card-icon {
           font-size: 2rem;
-          color: #0D6EFD;
+          width: 2rem;
+          height: 2rem;
+          color: var(--afriwork-primary);
+          flex-shrink: 0;
         }
 
-        .card-stats,
-        .card-hint {
+        .card-stats {
           display: flex;
           flex-direction: column;
           gap: 0.25rem;
 
           .stat {
-            font-size: 0.875rem;
-            color: #718096;
+            font-size: var(--afriwork-font-size-sm);
+            color: var(--afriwork-gray);
           }
         }
 
         .card-hint {
-          font-size: 0.875rem;
-          color: #718096;
+          font-size: var(--afriwork-font-size-sm);
+          color: var(--afriwork-gray);
         }
 
         .notification-icon-wrapper {
           position: relative;
-          display: inline-block;
+          display: inline-flex;
+          flex-shrink: 0;
 
           .notification-badge {
             position: absolute;
-            top: -8px;
+            top: -6px;
             right: -8px;
-            background-color: #FF6B35;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            background-color: var(--afriwork-secondary);
+            color: var(--afriwork-white);
+            border-radius: var(--afriwork-radius-full);
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-sizing: border-box;
           }
         }
       }
@@ -168,7 +169,7 @@
 
   &.verified {
     background-color: #e6f4ea;
-    color: #078930;
+    color: var(--afriwork-et-green);
   }
 
   &.pending {

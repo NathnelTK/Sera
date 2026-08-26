@@ -316,30 +316,36 @@ a {
   }
 }
 
-// Material Design Overrides
+// ─────────────────────────────────────────────────────────────
+// Material component refinements
+// Colors & typography come from material-theme.scss (the real theme). These
+// are small, theme-friendly tweaks only — no color `!important` hacks that
+// would fight the theme (the previous versions targeted MDC classes that no
+// longer exist and forced every raised button to blue).
+// ─────────────────────────────────────────────────────────────
 .mat-mdc-form-field {
   font-size: var(--afriwork-font-size-base);
 }
 
-.mat-mdc-form-field-outline {
-  border-color: var(--afriwork-gray-light) !important;
-}
-
-.mat-mdc-form-field-focus .mat-mdc-form-field-outline {
-  border-color: var(--afriwork-primary) !important;
-}
-
-.mat-mdc-raised-button {
-  background-color: var(--afriwork-primary) !important;
-  
-  &:hover {
-    background-color: var(--afriwork-primary-dark) !important;
-  }
-}
-
+// Match buttons to the app's rounder card radius and give primary actions a
+// gentle lift on hover — transform + shadow only, so it stays GPU-cheap.
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
 .mat-mdc-outlined-button {
-  border-color: var(--afriwork-primary) !important;
-  color: var(--afriwork-primary) !important;
+  border-radius: var(--afriwork-radius-md);
+  letter-spacing: 0;
+}
+
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  transition: transform var(--afriwork-transition-base),
+    box-shadow var(--afriwork-transition-base);
+
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--afriwork-shadow-md);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -414,4 +420,60 @@ html[lang='am'] body {
   .mat-mdc-snack-bar-label { color: #fff !important; }
   .mat-mdc-snack-bar-action,
   .mdc-button__label { color: #fff !important; }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Motion utilities & interaction polish
+// All animations use transform/opacity only so they composite on the GPU and
+// stay cheap on low-end devices. Honour prefers-reduced-motion (handled above).
+// ─────────────────────────────────────────────────────────────
+@keyframes afriwork-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.afriwork-scale-in { animation: afriwork-scale-in var(--afriwork-transition-slow) both; }
+
+// Stagger helper — add `.afriwork-stagger` to a container and its direct
+// children fade+rise in sequence for a polished list/grid entrance.
+.afriwork-stagger > * {
+  animation: afriwork-slide-up var(--afriwork-transition-slow) both;
+}
+@for $i from 1 through 8 {
+  .afriwork-stagger > *:nth-child(#{$i}) { animation-delay: #{($i - 1) * 60ms}; }
+}
+
+// Reusable hover lift for clickable cards/tiles.
+.afriwork-hoverable {
+  transition: transform var(--afriwork-transition-base),
+    box-shadow var(--afriwork-transition-base),
+    border-color var(--afriwork-transition-base);
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--afriwork-shadow-lg);
+  }
+}
+
+// Consistent, accessible keyboard focus ring across the app. Mouse users don't
+// see it (`:focus-visible`), so it never adds visual noise for pointer input.
+:focus-visible {
+  outline: 2px solid var(--afriwork-primary);
+  outline-offset: 2px;
+  border-radius: var(--afriwork-radius-sm);
+}
+// Material components manage their own focus indicators — don't double up.
+.mat-mdc-button-base:focus-visible,
+.mat-mdc-menu-item:focus-visible,
+.mat-mdc-form-field :focus-visible {
+  outline: none;
+}
+
+// Brand text selection.
+::selection {
+  background: rgba(13, 110, 253, 0.18);
+}
+
+// Route transition — the outlet's active page fades/rises in on navigation.
+// Paired with the @routeAnimations trigger in AppComponent.
+.route-host {
+  display: block;
 }
