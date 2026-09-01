@@ -22,6 +22,7 @@ export const routes: Routes = [
       { path: 'applications', loadComponent: () => import('./pages/applicant/applications/applications.component').then(m => m.ApplicationsComponent) },
       { path: 'applications/:id', loadComponent: () => import('./pages/applicant/application-detail/application-detail.component').then(m => m.ApplicationDetailComponent) },
       { path: 'profile', loadComponent: () => import('./pages/applicant/profile/profile.component').then(m => m.ProfileComponent) },
+      { path: 'verification', loadComponent: () => import('./pages/applicant/verification/verification-page.component').then(m => m.VerificationPageComponent) },
       { path: 'documents', loadComponent: () => import('./pages/applicant/documents/documents.component').then(m => m.DocumentsComponent) },
       { path: 'interviews', loadComponent: () => import('./pages/applicant/interviews/interviews.component').then(m => m.InterviewsComponent) },
       { path: 'notifications', loadComponent: () => import('./pages/applicant/notifications/notifications.component').then(m => m.NotificationsComponent) },

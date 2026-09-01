@@ -10,16 +10,21 @@ public sealed class ApplicantProfileRepository : BaseRepository<ApplicantProfile
     public ApplicantProfileRepository(TalentOSDbContext context) : base(context) { }
 
     public async Task<ApplicantProfile?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
-        => await DbSet.Include(a => a.User).FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken);
+        => await DbSet.Include(a => a.User).Include(a => a.Location).FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken);
+
+    public async Task<ApplicantProfile?> GetFullDetailsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+        => await FullDetails().FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken);
 
     public async Task<ApplicantProfile?> GetWithFullDetailsAsync(Guid id, CancellationToken cancellationToken = default)
-        => await DbSet
+        => await FullDetails().FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+    private IQueryable<ApplicantProfile> FullDetails()
+        => DbSet.AsNoTracking()
             .Include(a => a.User)
             .Include(a => a.Location)
             .Include(a => a.Skills).ThenInclude(s => s.Skill)
             .Include(a => a.Educations)
             .Include(a => a.Experiences)
             .Include(a => a.CVs)
-            .Include(a => a.MediaLinks)
-            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+            .Include(a => a.MediaLinks);
 }

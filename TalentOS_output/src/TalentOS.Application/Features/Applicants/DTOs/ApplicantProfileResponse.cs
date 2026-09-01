@@ -17,6 +17,9 @@ public sealed record ApplicantProfileResponse(
     string? PortfolioUrl,
     bool IsOpenToWork,
     LocationDto? Location,
+    IReadOnlyList<ApplicantSkillResponse> Skills,
+    IReadOnlyList<EducationResponse> Educations,
+    IReadOnlyList<ExperienceResponse> Experiences,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

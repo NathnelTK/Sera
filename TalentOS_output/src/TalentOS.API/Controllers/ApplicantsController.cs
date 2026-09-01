@@ -4,11 +4,24 @@ using TalentOS.Application.Features.Applicants.Commands.UpdateProfile;
 using TalentOS.Application.Features.Applicants.DTOs;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantById;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantSkills;
+using TalentOS.Application.Features.Applicants.Queries.GetMyApplicantProfile;
 
 namespace TalentOS.API.Controllers;
 
 public sealed class ApplicantsController : BaseApiController
 {
+    /// <summary>Get the current applicant's complete professional profile.</summary>
+    [Authorize(Roles = "Applicant")]
+    [HttpGet("me")]
+    [ProducesResponseType(typeof(ApplicantProfileResponse), 200)]
+    [ProducesResponseType(401)]
+    public async Task<IActionResult> GetMe(CancellationToken ct)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null) return Unauthorized();
+        return FromResult(await Mediator.Send(new GetMyApplicantProfileQuery(userId.Value), ct));
+    }
+
     /// <summary>Get an applicant profile by ID.</summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApplicantProfileResponse), 200)]
@@ -21,12 +34,12 @@ public sealed class ApplicantsController : BaseApiController
 
     /// <summary>Update the current user's applicant profile.</summary>
     [Authorize(Roles = "Applicant")]
-    [HttpPut("{id:guid}")]
+    [HttpPut("me")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateApplicantProfileRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateMe([FromBody] UpdateApplicantProfileRequest request, CancellationToken ct)
     {
         var userId = GetCurrentUserId();
         if (userId is null) return Unauthorized();
@@ -35,7 +48,8 @@ public sealed class ApplicantsController : BaseApiController
             userId.Value, request.FirstName, request.LastName,
             request.Headline, request.Summary, request.Phone,
             request.AvatarUrl, request.LinkedInUrl, request.GitHubUrl,
-            request.PortfolioUrl, request.IsOpenToWork);
+            request.PortfolioUrl, request.LocationCity, request.LocationCountry,
+            request.LocationState, request.LocationPostalCode, request.IsOpenToWork);
 
         return FromResult(await Mediator.Send(command, ct));
     }

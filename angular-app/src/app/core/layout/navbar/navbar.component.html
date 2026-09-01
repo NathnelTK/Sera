@@ -41,9 +41,17 @@
             <span>{{ 'nav.dashboard' | translate }}</span>
           </a>
           @if (auth.isApplicant()) {
+            <a mat-menu-item routerLink="/applicant/profile">
+              <mat-icon>person</mat-icon>
+              <span>{{ 'nav.profile' | translate }}</span>
+            </a>
             <a mat-menu-item routerLink="/applicant/applications">
               <mat-icon>work_outline</mat-icon>
               <span>{{ 'nav.myApplications' | translate }}</span>
+            </a>
+            <a mat-menu-item routerLink="/applicant/verification">
+              <mat-icon>verified_user</mat-icon>
+              <span>{{ 'profile.verificationTitle' | translate }}</span>
             </a>
           }
           <a mat-menu-item routerLink="/jobs">

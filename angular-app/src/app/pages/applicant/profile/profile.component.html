@@ -1,8 +1,127 @@
 <div class="profile-page afriwork-container afriwork-fade-in">
   <header class="profile-head">
-    <h1>{{ 'profile.title' | translate }}</h1>
-    <p>{{ 'profile.subtitle' | translate }}</p>
+    <div>
+      <h1>{{ 'profile.title' | translate }}</h1>
+      <p>{{ 'profile.subtitle' | translate }}</p>
+    </div>
+    <a mat-stroked-button routerLink="/applicant/verification">
+      <mat-icon>verified_user</mat-icon>
+      {{ 'profile.verificationLink' | translate }}
+    </a>
   </header>
 
-  <app-fayda-verification />
+  @if (loading()) {
+    <div class="state"><mat-spinner diameter="42" /><span>{{ 'common.loading' | translate }}</span></div>
+  } @else if (error() && !profile()) {
+    <div class="state error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error()! | translate }}</span>
+      <button mat-button (click)="load()">{{ 'common.retry' | translate }}</button>
+    </div>
+  } @else {
+    @if (profile(); as p) {
+    <section class="profile-hero">
+      <div class="avatar">
+        @if (p.avatarUrl) { <img [src]="p.avatarUrl" [alt]="p.firstName + ' ' + p.lastName" /> }
+        @else { <mat-icon>person</mat-icon> }
+      </div>
+      <div class="identity">
+        <div class="name-row">
+          <h2>{{ p.firstName }} {{ p.lastName }}</h2>
+          @if (p.isOpenToWork) { <span class="open-badge">{{ 'profile.openToWork' | translate }}</span> }
+        </div>
+        <p class="headline">{{ p.headline || ('profile.empty.headline' | translate) }}</p>
+        @if (p.location) {
+          <span class="meta"><mat-icon>location_on</mat-icon>{{ p.location.city }}, {{ p.location.country }}</span>
+        }
+        <span class="meta"><mat-icon>mail_outline</mat-icon>{{ p.email }}</span>
+      </div>
+      <button mat-flat-button color="primary" (click)="startEditing()">
+        <mat-icon>edit</mat-icon>{{ 'profile.edit' | translate }}
+      </button>
+    </section>
+
+    <section class="completion" aria-label="Profile completion">
+      <div><strong>{{ 'profile.completion' | translate }}</strong><span>{{ completion() }}%</span></div>
+      <div class="completion-track"><span [style.width.%]="completion()"></span></div>
+    </section>
+
+    @if (saved()) { <div class="success"><mat-icon>check_circle</mat-icon>{{ 'profile.saved' | translate }}</div> }
+    @if (error()) { <div class="error-banner"><mat-icon>error_outline</mat-icon>{{ error()! | translate }}</div> }
+
+    @if (editing()) {
+      <mat-card class="edit-card">
+        <mat-card-header><mat-card-title>{{ 'profile.edit' | translate }}</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.firstName' | translate }}</mat-label><input matInput formControlName="firstName" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.lastName' | translate }}</mat-label><input matInput formControlName="lastName" /></mat-form-field>
+              <mat-form-field appearance="outline" class="wide"><mat-label>{{ 'profile.headline' | translate }}</mat-label><input matInput formControlName="headline" /></mat-form-field>
+              <mat-form-field appearance="outline" class="wide"><mat-label>{{ 'profile.summary' | translate }}</mat-label><textarea matInput rows="5" formControlName="summary"></textarea></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.phone' | translate }}</mat-label><input matInput formControlName="phone" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.avatarUrl' | translate }}</mat-label><input matInput type="url" formControlName="avatarUrl" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.locationCity' | translate }}</mat-label><input matInput formControlName="locationCity" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.locationCountry' | translate }}</mat-label><input matInput formControlName="locationCountry" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.locationState' | translate }}</mat-label><input matInput formControlName="locationState" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>{{ 'profile.locationPostalCode' | translate }}</mat-label><input matInput formControlName="locationPostalCode" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>LinkedIn</mat-label><input matInput type="url" formControlName="linkedInUrl" /></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>GitHub</mat-label><input matInput type="url" formControlName="gitHubUrl" /></mat-form-field>
+              <mat-form-field appearance="outline" class="wide"><mat-label>{{ 'profile.portfolio' | translate }}</mat-label><input matInput type="url" formControlName="portfolioUrl" /></mat-form-field>
+            </div>
+            <mat-checkbox formControlName="isOpenToWork">{{ 'profile.openToWork' | translate }}</mat-checkbox>
+            <div class="form-actions">
+              <button mat-button type="button" (click)="cancelEditing()">{{ 'common.cancel' | translate }}</button>
+              <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+                @if (saving()) { <mat-spinner diameter="20" /> } @else { <span>{{ 'common.save' | translate }}</span> }
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <div class="content-grid">
+      <section class="profile-section wide-section">
+        <h3><mat-icon>person_outline</mat-icon>{{ 'profile.about' | translate }}</h3>
+        <p>{{ p.summary || ('profile.empty.summary' | translate) }}</p>
+      </section>
+
+      <section class="profile-section">
+        <h3><mat-icon>psychology</mat-icon>{{ 'profile.skills' | translate }}</h3>
+        @if (p.skills.length) {
+          <mat-chip-set>
+            @for (skill of p.skills; track skill.skillId) {
+              <mat-chip>{{ skill.skillName }} · {{ skillLevel(skill.level) }}</mat-chip>
+            }
+          </mat-chip-set>
+        } @else { <p class="empty">{{ 'profile.empty.skills' | translate }}</p> }
+      </section>
+
+      <section class="profile-section">
+        <h3><mat-icon>link</mat-icon>{{ 'profile.links' | translate }}</h3>
+        <div class="links">
+          @if (p.linkedInUrl) { <a [href]="p.linkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a> }
+          @if (p.gitHubUrl) { <a [href]="p.gitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a> }
+          @if (p.portfolioUrl) { <a [href]="p.portfolioUrl" target="_blank" rel="noopener noreferrer">{{ 'profile.portfolio' | translate }}</a> }
+          @if (!p.linkedInUrl && !p.gitHubUrl && !p.portfolioUrl) { <p class="empty">{{ 'profile.empty.links' | translate }}</p> }
+        </div>
+      </section>
+
+      <section class="profile-section wide-section">
+        <h3><mat-icon>business_center</mat-icon>{{ 'profile.experience' | translate }}</h3>
+        @for (item of p.experiences; track item.id) {
+          <article class="timeline-item"><strong>{{ item.title }}</strong><span>{{ item.companyName }}</span><small>{{ item.startDate | date:'MMM y' }} – {{ item.isCurrentPosition ? ('profile.present' | translate) : (item.endDate | date:'MMM y') }}</small><p>{{ item.description }}</p></article>
+        } @empty { <p class="empty">{{ 'profile.empty.experience' | translate }}</p> }
+      </section>
+
+      <section class="profile-section wide-section">
+        <h3><mat-icon>school</mat-icon>{{ 'profile.education' | translate }}</h3>
+        @for (item of p.educations; track item.id) {
+          <article class="timeline-item"><strong>{{ item.degree }} · {{ item.fieldOfStudy }}</strong><span>{{ item.institution }}</span><small>{{ item.startYear }} – {{ item.isOngoing ? ('profile.present' | translate) : item.endYear }}</small></article>
+        } @empty { <p class="empty">{{ 'profile.empty.education' | translate }}</p> }
+      </section>
+    </div>
+    }
+  }
 </div>
