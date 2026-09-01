@@ -25,10 +25,14 @@ public sealed class JobsController : BaseApiController
         [FromQuery] int pageSize = 10,
         [FromQuery] string? search = null,
         [FromQuery] string? sortBy = null,
+        [FromQuery] string? category = null,
+        [FromQuery] string? location = null,
+        [FromQuery] JobType? jobType = null,
+        [FromQuery] WorkMode? workMode = null,
         CancellationToken ct = default)
     {
         var filter = new PaginationFilter { PageNumber = page, PageSize = pageSize, SearchTerm = search, SortBy = sortBy };
-        return FromResult(await Mediator.Send(new SearchJobsQuery(filter), ct));
+        return FromResult(await Mediator.Send(new SearchJobsQuery(filter, category, location, jobType, workMode), ct));
     }
 
     /// <summary>Get job details by ID.</summary>

@@ -12,16 +12,32 @@ public sealed class JobRepository : BaseRepository<Job>, IJobRepository
 
     public async Task<IReadOnlyList<Job>> GetByRecruiterAsync(Guid recruiterProfileId, CancellationToken cancellationToken = default)
         => await DbSet.AsNoTracking()
+            .Include(j => j.Recruiter)
             .Include(j => j.Company)
+            .Include(j => j.Category)
+            .Include(j => j.Location)
             .Where(j => j.RecruiterProfileId == recruiterProfileId)
             .OrderByDescending(j => j.CreatedAt)
             .ToListAsync(cancellationToken);
 
-    public async Task<(IReadOnlyList<Job> Jobs, int TotalCount)> GetPublishedAsync(int skip, int take, string? searchTerm, string? sortBy, CancellationToken cancellationToken = default)
+    public async Task<(IReadOnlyList<Job> Jobs, int TotalCount)> GetPublishedAsync(
+        int skip,
+        int take,
+        string? searchTerm,
+        string? sortBy,
+        string? category,
+        string? location,
+        JobType? jobType,
+        WorkMode? workMode,
+        CancellationToken cancellationToken = default)
     {
         var query = DbSet.AsNoTracking()
             .Include(j => j.Recruiter)
             .Include(j => j.Company)
+            .Include(j => j.Category)
+            .Include(j => j.Location)
+            .Include(j => j.RequiredSkills).ThenInclude(js => js.Skill)
+            .Include(j => j.Tags)
             .Where(j => j.Status == JobStatus.Published);
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -29,8 +45,33 @@ public sealed class JobRepository : BaseRepository<Job>, IJobRepository
             var term = searchTerm.Trim().ToLowerInvariant();
             query = query.Where(j =>
                 j.Title.ToLower().Contains(term) ||
-                j.Description.ToLower().Contains(term));
+                j.Description.ToLower().Contains(term) ||
+                (j.Requirements != null && j.Requirements.ToLower().Contains(term)) ||
+                (j.Company != null && j.Company.Name.ToLower().Contains(term)) ||
+                j.RequiredSkills.Any(js => js.Skill.Name.ToLower().Contains(term)) ||
+                j.Tags.Any(t => t.Name.ToLower().Contains(term)));
         }
+
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            var categoryTerm = category.Trim().ToLowerInvariant();
+            query = query.Where(j => j.Category != null && j.Category.Name.ToLower() == categoryTerm);
+        }
+
+        if (!string.IsNullOrWhiteSpace(location))
+        {
+            var locationTerm = location.Trim().ToLowerInvariant();
+            query = query.Where(j => j.Location != null &&
+                (j.Location.City.ToLower().Contains(locationTerm) ||
+                 j.Location.Country.ToLower().Contains(locationTerm) ||
+                 (j.Location.State != null && j.Location.State.ToLower().Contains(locationTerm))));
+        }
+
+        if (jobType.HasValue)
+            query = query.Where(j => j.JobType == jobType.Value);
+
+        if (workMode.HasValue)
+            query = query.Where(j => j.WorkMode == workMode.Value);
 
         query = sortBy?.ToLowerInvariant() switch
         {

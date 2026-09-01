@@ -16,5 +16,8 @@ public sealed record JobSummaryResponse(
     DateTime? Deadline,
     DateTime CreatedAt,
     string RecruiterName,
-    string? CompanyName
+    string? CompanyName,
+    string? CategoryName,
+    string? LocationCity,
+    string? LocationCountry
 );

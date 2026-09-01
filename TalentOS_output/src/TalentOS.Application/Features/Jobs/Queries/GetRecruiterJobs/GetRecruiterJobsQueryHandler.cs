@@ -20,7 +20,10 @@ public sealed class GetRecruiterJobsQueryHandler : IRequestHandler<GetRecruiterJ
             j.MinimumSalary, j.MaximumSalary, j.SalaryCurrency,
             j.Status, j.DeadlineAt, j.CreatedAt,
             j.Recruiter != null ? $"{j.Recruiter.FirstName} {j.Recruiter.LastName}" : string.Empty,
-            j.Company?.Name)).ToList();
+            j.Company?.Name,
+            j.Category?.Name,
+            j.Location?.City,
+            j.Location?.Country)).ToList();
 
         return Result<IReadOnlyList<JobSummaryResponse>>.Success(dtos);
     }

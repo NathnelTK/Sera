@@ -16,13 +16,37 @@
       margin: 0;
     }
 
-    .search-form {
-      flex: 1 1 320px;
-      max-width: 480px;
+  }
 
-      mat-form-field {
-        width: 100%;
-      }
+  .search-form {
+    padding: var(--afriwork-spacing-lg);
+    margin-bottom: var(--afriwork-spacing-xl);
+    background: var(--afriwork-white);
+    border: 1px solid var(--afriwork-gray-light);
+    border-radius: var(--afriwork-radius-lg);
+    box-shadow: var(--afriwork-shadow-sm);
+
+    .primary-filters,
+    .secondary-filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--afriwork-spacing-md);
+      align-items: start;
+    }
+
+    .primary-filters {
+      grid-template-columns: minmax(240px, 2fr) minmax(200px, 1fr);
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .filter-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--afriwork-spacing-sm);
+      min-height: 56px;
     }
   }
 
@@ -94,6 +118,23 @@
               color: var(--afriwork-success);
             }
           }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 700px) {
+    padding: var(--afriwork-spacing-md);
+
+    .search-form {
+      .primary-filters,
+      .secondary-filters {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-actions {
+        button {
+          flex: 1;
         }
       }
     }
