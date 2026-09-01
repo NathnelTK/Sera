@@ -5,6 +5,7 @@ import {
   JobSummary,
   JobDetails,
   JobFormPayload,
+  JobSearchFilters,
 } from '../services/jobs.service';
 import { TranslationService } from '../core/i18n/translation.service';
 import { JobStatus } from '../core/workflow/workflow';
@@ -26,11 +27,11 @@ export class JobsStore {
   hasJobs = computed(() => this.jobs().length > 0);
   publishedJobs = computed(() => this.jobs().filter((j) => j.status === JobStatus.Published));
 
-  async loadJobs(page = 1, pageSize = 10, search?: string): Promise<boolean> {
+  async loadJobs(page = 1, pageSize = 10, filters: JobSearchFilters = {}): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
     try {
-      const res = await firstValueFrom(this.service.getJobs(page, pageSize, search));
+      const res = await firstValueFrom(this.service.getJobs(page, pageSize, filters));
       if (res) {
         this.jobs.set(res.items ?? []);
         this.pagination.set({

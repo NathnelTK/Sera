@@ -110,6 +110,16 @@ const en: Dictionary = {
   'home.cat.admin': 'Administration',
   'home.cat.hospitality': 'Hospitality',
 
+  // Job discovery
+  'jobs.filter.category': 'Category',
+  'jobs.filter.allCategories': 'All categories',
+  'jobs.filter.jobType': 'Employment type',
+  'jobs.filter.allTypes': 'All employment types',
+  'jobs.filter.workMode': 'Work mode',
+  'jobs.filter.allModes': 'All work modes',
+  'jobs.filter.clear': 'Clear filters',
+  'jobs.empty': 'No jobs match your current filters.',
+
   // Employer home
   'employers.hero.title': 'Hire verified talent in Ethiopia',
   'employers.hero.subtitle': 'Post a job, review Fayda-verified candidates, and hire faster with a modern applicant-tracking workflow.',

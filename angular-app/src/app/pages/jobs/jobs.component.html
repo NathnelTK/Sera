@@ -1,16 +1,64 @@
 <div class="jobs-container">
   <div class="header">
     <h1>{{ 'nav.findJobs' | translate }}</h1>
-    <form [formGroup]="searchForm" class="search-form">
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'home.search.keyword' | translate }}</mat-label>
-        <input matInput formControlName="search" (keyup.enter)="onSearch()" />
-        <button matSuffix mat-button (click)="onSearch()" [disabled]="isLoading()">
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-    </form>
   </div>
+
+  <form [formGroup]="searchForm" class="search-form" (ngSubmit)="onSearch()">
+    <div class="primary-filters">
+      <mat-form-field appearance="outline" class="keyword-field">
+        <mat-label>{{ 'home.search.keyword' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput formControlName="search" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'home.search.location' | translate }}</mat-label>
+        <mat-icon matPrefix>location_on</mat-icon>
+        <input matInput formControlName="location" />
+      </mat-form-field>
+    </div>
+
+    <div class="secondary-filters">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'jobs.filter.category' | translate }}</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="">{{ 'jobs.filter.allCategories' | translate }}</mat-option>
+          @for (category of categories; track category) {
+            <mat-option [value]="category">{{ category }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'jobs.filter.jobType' | translate }}</mat-label>
+        <mat-select formControlName="jobType">
+          <mat-option [value]="null">{{ 'jobs.filter.allTypes' | translate }}</mat-option>
+          @for (option of jobTypeOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.labelKey | translate }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'jobs.filter.workMode' | translate }}</mat-label>
+        <mat-select formControlName="workMode">
+          <mat-option [value]="null">{{ 'jobs.filter.allModes' | translate }}</mat-option>
+          @for (option of workModeOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.labelKey | translate }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()">
+          {{ 'common.search' | translate }}
+        </button>
+        <button mat-button type="button" (click)="clearFilters()" [disabled]="isLoading()">
+          {{ 'jobs.filter.clear' | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
 
   @if (isLoading()) {
     <div class="loading">
@@ -26,7 +74,10 @@
   } @else if (!hasJobs()) {
     <div class="no-jobs">
       <mat-icon class="empty-icon">work_outline</mat-icon>
-      <p>{{ 'wf.apps.empty' | translate }}</p>
+      <p>{{ 'jobs.empty' | translate }}</p>
+      <button mat-stroked-button type="button" (click)="clearFilters()">
+        {{ 'jobs.filter.clear' | translate }}
+      </button>
     </div>
   } @else {
     <div class="jobs-grid">
@@ -50,6 +101,18 @@
                 <mat-icon>business_center</mat-icon>
                 <span>{{ experienceLevelKey(job.experienceLevel) | translate }}</span>
               </div>
+              @if (formatLocation(job)) {
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ formatLocation(job) }}</span>
+                </div>
+              }
+              @if (job.categoryName) {
+                <div class="detail-item">
+                  <mat-icon>category</mat-icon>
+                  <span>{{ job.categoryName }}</span>
+                </div>
+              }
               @if (job.minSalary || job.maxSalary) {
                 <div class="detail-item salary">
                   <mat-icon>payments</mat-icon>

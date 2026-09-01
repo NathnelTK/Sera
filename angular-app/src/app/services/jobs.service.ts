@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApplicationStatus, ExperienceLevel, JobStatus, JobType, WorkMode } from '../core/workflow/workflow';
@@ -20,6 +21,18 @@ export interface JobSummary {
   createdAt: string;
   recruiterName: string;
   companyName?: string;
+  categoryName?: string;
+  locationCity?: string;
+  locationCountry?: string;
+}
+
+export interface JobSearchFilters {
+  search?: string;
+  category?: string;
+  location?: string;
+  jobType?: JobType;
+  workMode?: WorkMode;
+  sortBy?: string;
 }
 
 /** Mirrors JobDetailsResponse. */
@@ -76,12 +89,14 @@ export class JobsService {
   private http = inject(HttpClient);
 
   /** GET /api/jobs — published jobs, paged. */
-  getJobs(page = 1, pageSize = 10, search?: string): Observable<PagedResponse> {
-    let url = `${environment.apiUrl}/jobs?page=${page}&pageSize=${pageSize}`;
-    if (search) {
-      url += `&search=${encodeURIComponent(search)}`;
+  getJobs(page = 1, pageSize = 10, filters: JobSearchFilters = {}): Observable<PagedResponse> {
+    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.set(key, String(value));
+      }
     }
-    return this.http.get<PagedResponse>(url);
+    return this.http.get<PagedResponse>(`${environment.apiUrl}/jobs`, { params });
   }
 
   /** GET /api/jobs/{id}. */

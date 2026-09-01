@@ -66,6 +66,6 @@ export class HomeComponent {
   }
 
   searchCategory(query: string): void {
-    this.router.navigate(['/jobs'], { queryParams: { search: query } });
+    this.router.navigate(['/jobs'], { queryParams: { category: query } });
   }
 }
