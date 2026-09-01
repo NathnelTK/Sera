@@ -74,12 +74,14 @@ Status: implementation in progress.
 
 ## PR 2: Applicant Professional Profile and Verification Separation
 
+Status: implemented in `feat/applicant-professional-profile`; awaiting review.
+
 ### Scope
 
 - Move Fayda verification to a dedicated applicant route and navigation item.
 - Build the professional profile page around the existing applicant endpoint and profile entity.
 - Support first name, last name, headline, summary, phone, avatar URL, location, LinkedIn, GitHub, portfolio, and open-to-work status where persistence exists.
-- Add skills, education, and experience editing through focused CQRS commands/endpoints if missing.
+- Display persisted skills, education, and experience. Their mutation APIs remain a follow-up because ownership, duplicate handling, and date validation are not yet defined.
 - Display profile completion based only on persisted, recruiter-visible fields.
 - Keep identity verification status as a separate badge/link, not profile content.
 

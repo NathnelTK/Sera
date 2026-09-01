@@ -83,6 +83,10 @@ export class DashboardComponent {
     this.router.navigate(['/applicant/profile']);
   }
 
+  navigateToVerification() {
+    this.router.navigate(['/applicant/verification']);
+  }
+
   navigateToJobs() {
     this.router.navigate(['/jobs']);
   }
