@@ -6,6 +6,14 @@
   </div>
 
   <div class="dashboard-grid afriwork-stagger">
+    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToTalent()">
+      <mat-card-header>
+        <mat-card-title>{{ 'dash.rec.talent.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dash.rec.talent.desc' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content><div class="card-content"><mat-icon class="card-icon">groups</mat-icon></div></mat-card-content>
+      <mat-card-actions><button mat-button color="primary">{{ 'dash.rec.talent.action' | translate }}</button></mat-card-actions>
+    </mat-card>
     <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToJobs()">
       <mat-card-header>
         <mat-card-title>{{ 'dash.rec.jobs.title' | translate }}</mat-card-title>

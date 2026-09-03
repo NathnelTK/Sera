@@ -28,6 +28,10 @@ export class DashboardComponent {
     this.router.navigate(['/recruiter/jobs/create']);
   }
 
+  navigateToTalent() {
+    this.router.navigate(['/recruiter/talent']);
+  }
+
   navigateToInterviews() {
     this.router.navigate(['/recruiter/interviews']);
   }
