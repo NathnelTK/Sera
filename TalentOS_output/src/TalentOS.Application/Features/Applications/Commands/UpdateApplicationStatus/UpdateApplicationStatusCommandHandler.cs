@@ -41,6 +41,9 @@ public sealed class UpdateApplicationStatusCommandHandler : IRequestHandler<Upda
         if (request.Status == ApplicationStatus.Withdrawn)
             return Result.Failure("Cannot set status to Withdrawn — only applicants can withdraw.");
 
+        if (!IsAllowedTransition(application.Status, request.Status))
+            return Result.Failure($"Cannot move an application from {application.Status} to {request.Status}.");
+
         application.Status = request.Status;
         application.ReviewedAt = DateTime.UtcNow;
         if (request.Status == ApplicationStatus.Rejected)
@@ -49,5 +52,21 @@ public sealed class UpdateApplicationStatusCommandHandler : IRequestHandler<Upda
         _applications.Update(application);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();
+    }
+
+    private static bool IsAllowedTransition(ApplicationStatus current, ApplicationStatus next)
+    {
+        if (current == ApplicationStatus.Rejected || current == ApplicationStatus.Accepted)
+            return false;
+
+        return next switch
+        {
+            ApplicationStatus.Submitted => current == ApplicationStatus.Submitted,
+            ApplicationStatus.UnderReview => current is ApplicationStatus.Submitted or ApplicationStatus.UnderReview,
+            ApplicationStatus.Shortlisted => current is ApplicationStatus.UnderReview or ApplicationStatus.Shortlisted,
+            ApplicationStatus.Accepted => current is ApplicationStatus.Shortlisted,
+            ApplicationStatus.Rejected => current is ApplicationStatus.Submitted or ApplicationStatus.UnderReview or ApplicationStatus.Shortlisted,
+            _ => false,
+        };
     }
 }

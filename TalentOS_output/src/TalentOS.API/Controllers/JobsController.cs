@@ -100,7 +100,7 @@ public sealed class JobsController : BaseApiController
     public async Task<IActionResult> Mine(CancellationToken ct)
     {
         // We need the recruiter profile ID; return empty if not found
-        var recruiterId = GetRecruiterProfileId();
+        var recruiterId = await GetRecruiterProfileId(ct);
         if (recruiterId is null) return Unauthorized();
         return FromResult(await Mediator.Send(new GetRecruiterJobsQuery(recruiterId.Value), ct));
     }
@@ -113,9 +113,11 @@ public sealed class JobsController : BaseApiController
         => FromResult(await Mediator.Send(new GetJobApplicationsQuery(id), ct));
 
     // Placeholder — real implementation should resolve via RecruiterProfile lookup
-    private Guid? GetRecruiterProfileId()
+    private async Task<Guid?> GetRecruiterProfileId(CancellationToken ct)
     {
-        var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        return Guid.TryParse(claim, out var id) ? id : null;
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var id)) return null;
+        var recruiters = HttpContext.RequestServices.GetRequiredService<TalentOS.Domain.Interfaces.IRecruiterProfileRepository>();
+        return (await recruiters.GetByUserIdAsync(id, ct))?.Id;
     }
 }
