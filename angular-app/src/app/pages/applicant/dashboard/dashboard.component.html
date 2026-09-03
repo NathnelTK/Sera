@@ -5,6 +5,43 @@
     <p>{{ 'dash.welcome' | translate:{ name: currentUser()?.email } }}</p>
   </div>
 
+  <section class="discovery-panel">
+    <div class="section-heading">
+      <div>
+        <h2>{{ 'dash.discovery.title' | translate }}</h2>
+        <p>{{ 'dash.discovery.desc' | translate }}</p>
+      </div>
+      <button mat-flat-button color="primary" (click)="navigateToJobs()">
+        <mat-icon>search</mat-icon>{{ 'dash.discovery.action' | translate }}
+      </button>
+    </div>
+
+    <div class="category-links" aria-label="Popular job categories">
+      @for (category of ['Technology', 'Healthcare', 'Finance', 'Engineering', 'Marketing', 'Hospitality']; track category) {
+        <button mat-stroked-button type="button" (click)="navigateToCategory(category)">{{ category }}</button>
+      }
+    </div>
+
+    @if (isLoadingJobs()) {
+      <div class="discovery-loading"><mat-spinner diameter="30" />{{ 'common.loading' | translate }}</div>
+    } @else if (jobsError()) {
+      <div class="discovery-empty"><mat-icon>error_outline</mat-icon>{{ jobsError() }}</div>
+      <button mat-button type="button" (click)="reloadJobs()">{{ 'common.retry' | translate }}</button>
+    } @else if (publishedJobs().length) {
+      <div class="recent-jobs">
+        @for (job of publishedJobs(); track job.id) {
+          <button class="recent-job" type="button" (click)="navigateToJob(job.id)">
+            <span class="recent-job-title">{{ job.title }}</span>
+            <span>{{ job.companyName || job.recruiterName }}</span>
+            @if (jobLocation(job)) { <span class="recent-job-location"><mat-icon>location_on</mat-icon>{{ jobLocation(job) }}</span> }
+          </button>
+        }
+      </div>
+    } @else {
+      <p class="discovery-empty">{{ 'dash.discovery.empty' | translate }}</p>
+    }
+  </section>
+
   <!-- Stats Overview -->
   <div class="stats-grid afriwork-stagger">
     <mat-card class="stat-card">

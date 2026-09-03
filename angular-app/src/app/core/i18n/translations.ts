@@ -509,6 +509,10 @@ const en: Dictionary = {
   'dash.rec.ai.title': 'AI tools',
   'dash.rec.ai.desc': 'Candidate matching and analysis.',
   'dash.rec.ai.action': 'Try AI tools',
+  'dash.discovery.title': 'Discover your next opportunity',
+  'dash.discovery.desc': 'Explore published roles and find work that fits your goals.',
+  'dash.discovery.action': 'Find jobs',
+  'dash.discovery.empty': 'No published jobs are available right now.',
 
   // --- Coming soon (placeholder pages) -------------------------------------
   'comingSoon.badge': 'Coming soon',
