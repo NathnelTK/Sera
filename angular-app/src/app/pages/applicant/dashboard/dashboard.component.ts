@@ -11,6 +11,8 @@ import { ApplicationsStore } from '../../../stores/applications.store';
 import { InterviewsStore } from '../../../stores/interviews.store';
 import { NotificationsStore } from '../../../stores/notifications.store';
 import { VerificationStore } from '../../../stores/verification.store';
+import { JobsStore } from '../../../stores/jobs.store';
+import { JobSummary } from '../../../services/jobs.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
@@ -35,6 +37,7 @@ export class DashboardComponent {
   private interviewsStore = inject(InterviewsStore);
   private notificationsStore = inject(NotificationsStore);
   private verificationStore = inject(VerificationStore);
+  private jobsStore = inject(JobsStore);
 
   // Signals from stores
   currentUser = computed(() => this.authStore.currentUser());
@@ -60,6 +63,9 @@ export class DashboardComponent {
   isLoadingApplications = computed(() => this.applicationsStore.isLoading());
   isLoadingInterviews = computed(() => this.interviewsStore.isLoading());
   isLoadingNotifications = computed(() => this.notificationsStore.isLoading());
+  publishedJobs = computed(() => this.jobsStore.publishedJobs().slice(0, 6));
+  isLoadingJobs = computed(() => this.jobsStore.isLoading());
+  jobsError = computed(() => this.jobsStore.error());
   
   constructor() {
     // Read the current Fayda verification status once (non-reactive — avoids signal writes in an effect).
@@ -71,6 +77,7 @@ export class DashboardComponent {
         this.applicationsStore.loadMyApplications();
         this.interviewsStore.loadMyInterviews();
         this.notificationsStore.loadNotifications();
+        this.jobsStore.loadPublishedJobs();
       }
     });
   }
@@ -89,6 +96,22 @@ export class DashboardComponent {
 
   navigateToJobs() {
     this.router.navigate(['/jobs']);
+  }
+
+  navigateToCategory(category: string) {
+    this.router.navigate(['/jobs'], { queryParams: { category } });
+  }
+
+  navigateToJob(jobId: string) {
+    this.router.navigate(['/jobs', jobId]);
+  }
+
+  jobLocation(job: JobSummary): string {
+    return [job.locationCity, job.locationCountry].filter(Boolean).join(', ');
+  }
+
+  reloadJobs() {
+    void this.jobsStore.loadPublishedJobs();
   }
 
   navigateToInterviews() {
