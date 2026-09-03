@@ -196,6 +196,8 @@ Implement each item as a separate PR when the prerequisite data model is ready.
 
 ### Saved Jobs
 
+Status: implemented in `feat/saved-jobs`; awaiting review.
+
 - Add a persisted applicant-to-job relationship with a unique constraint.
 - Add save, unsave, and paged list endpoints plus optimistic UI with rollback.
 - Handle jobs closed or deleted after being saved.
