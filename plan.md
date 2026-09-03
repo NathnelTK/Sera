@@ -190,6 +190,8 @@ Status: implementation in progress on `feat/harden-recruitment-ownership`.
 
 ## PR 6: Supporting MVP Features
 
+Status: notifications slice implemented in `feat/notifications-mvp`; awaiting review.
+
 Implement each item as a separate PR when the prerequisite data model is ready.
 
 ### Saved Jobs
