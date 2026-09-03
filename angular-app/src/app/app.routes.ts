@@ -40,6 +40,8 @@ export const routes: Routes = [
       { path: 'jobs/create', loadComponent: () => import('./pages/recruiter/job-create/job-create.component').then(m => m.JobCreateComponent) },
       { path: 'jobs/:id/edit', loadComponent: () => import('./pages/recruiter/job-create/job-create.component').then(m => m.JobCreateComponent) },
       { path: 'jobs/:id/applications', loadComponent: () => import('./pages/recruiter/job-applications/job-applications.component').then(m => m.JobApplicationsComponent) },
+      { path: 'talent', loadComponent: () => import('./pages/recruiter/talent/talent.component').then(m => m.TalentComponent) },
+      { path: 'talent/:id', loadComponent: () => import('./pages/recruiter/talent-detail/talent-detail.component').then(m => m.TalentDetailComponent) },
       { path: 'interviews', loadComponent: () => import('./pages/recruiter/interviews/interviews.component').then(m => m.InterviewsComponent) },
       { path: 'profile', loadComponent: () => import('./pages/recruiter/profile/profile.component').then(m => m.ProfileComponent) },
       { path: 'notifications', loadComponent: () => import('./pages/recruiter/notifications/notifications.component').then(m => m.NotificationsComponent) },

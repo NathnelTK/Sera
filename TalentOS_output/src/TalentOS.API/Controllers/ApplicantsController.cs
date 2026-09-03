@@ -5,11 +5,37 @@ using TalentOS.Application.Features.Applicants.DTOs;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantById;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantSkills;
 using TalentOS.Application.Features.Applicants.Queries.GetMyApplicantProfile;
+using TalentOS.Application.Common;
+using TalentOS.Application.Features.Applicants.Queries.DiscoverApplicants;
+using TalentOS.Application.Features.Applicants.Queries.GetRecruiterApplicant;
 
 namespace TalentOS.API.Controllers;
 
 public sealed class ApplicantsController : BaseApiController
 {
+    /// <summary>Get a recruiter-safe applicant profile.</summary>
+    [Authorize(Roles = "Recruiter")]
+    [HttpGet("discover/{id:guid}")]
+    [ProducesResponseType(typeof(ApplicantDiscoveryResponse), 200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetRecruiterApplicant(Guid id, CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetRecruiterApplicantQuery(id), ct);
+        return result.IsSuccess ? Ok(result.Value) : NotFound(new { error = result.Error });
+    }
+    /// <summary>Discover recruiter-safe applicant profiles.</summary>
+    [Authorize(Roles = "Recruiter")]
+    [HttpGet("discover")]
+    [ProducesResponseType(typeof(PagedList<ApplicantDiscoveryResponse>), 200)]
+    public async Task<IActionResult> Discover(
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 12,
+        [FromQuery] string? search = null, [FromQuery] string? location = null,
+        [FromQuery] string? skill = null, [FromQuery] bool openToWorkOnly = true,
+        CancellationToken ct = default)
+    {
+        var filter = new PaginationFilter { PageNumber = page, PageSize = pageSize, SearchTerm = search };
+        return FromResult(await Mediator.Send(new DiscoverApplicantsQuery(filter, location, skill, openToWorkOnly), ct));
+    }
     /// <summary>Get the current applicant's complete professional profile.</summary>
     [Authorize(Roles = "Applicant")]
     [HttpGet("me")]

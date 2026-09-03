@@ -110,6 +110,8 @@ Status: implemented in `feat/applicant-professional-profile`; awaiting review.
 
 ## PR 3: Recruiter Talent Discovery
 
+Status: implemented in `feat/recruiter-talent-discovery`; awaiting review.
+
 ### Scope
 
 - Add a guarded `/recruiter/talent` route and correct every authenticated `Find Talent` link.
