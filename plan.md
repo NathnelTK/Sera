@@ -145,6 +145,8 @@ Status: implemented in `feat/recruiter-talent-discovery`; awaiting review.
 
 ## PR 4: Recruiter Job Ownership and Applicant Pipeline Hardening
 
+Status: implementation in progress on `feat/harden-recruitment-ownership`.
+
 ### Scope
 
 - Replace placeholder recruiter-profile claim handling with a user-to-recruiter-profile lookup.

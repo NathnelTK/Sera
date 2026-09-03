@@ -53,6 +53,8 @@ public sealed class ApplyForJobCommandHandler : IRequestHandler<ApplyForJobComma
         };
 
         _applications.Add(application);
+        // The unique job/applicant index is the final concurrency guard. The API error
+        // middleware translates a duplicate database constraint failure consistently.
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         _logger.LogInformation("Application submitted: {ApplicationId} for job: {JobId}", application.Id, request.JobId);
         return Result<Guid>.Success(application.Id);
