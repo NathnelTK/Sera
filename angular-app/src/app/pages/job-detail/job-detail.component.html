@@ -65,8 +65,14 @@
 
       <!-- Apply column -->
       <aside class="apply">
-        <mat-card class="apply-card">
-          @if (hasApplied()) {
+          <mat-card class="apply-card">
+            @if (isApplicant()) {
+              <button mat-stroked-button class="full save-button" type="button" (click)="toggleSaved()" [disabled]="saving()">
+                <mat-icon>{{ saved() ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                {{ (saved() ? 'saved.removeBookmark' : 'saved.bookmark') | translate }}
+              </button>
+            }
+            @if (hasApplied()) {
             <div class="applied">
               <mat-icon class="ok">check_circle</mat-icon>
               <h3>{{ 'wf.job.applied' | translate }}</h3>

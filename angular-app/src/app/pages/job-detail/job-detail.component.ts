@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { JobsStore } from '../../stores/jobs.store';
 import { ApplicationsStore } from '../../stores/applications.store';
+import { SavedJobsService } from '../../services/saved-jobs.service';
 import { AuthStore } from '../../stores/auth.store';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { JobDetails } from '../../services/jobs.service';
@@ -49,6 +50,7 @@ export class JobDetailComponent {
   private jobsStore = inject(JobsStore);
   private appsStore = inject(ApplicationsStore);
   private auth = inject(AuthStore);
+  private savedJobs = inject(SavedJobsService);
 
   // Enum → i18n-key helpers for the template.
   jobTypeKey = jobTypeKey;
@@ -70,6 +72,8 @@ export class JobDetailComponent {
   applyError = computed(() => this.appsStore.error());
   submitting = signal(false);
   submittedAppId = signal<string | null>(null);
+  saved = signal(false);
+  saving = signal(false);
 
   coverForm = this.fb.group({
     coverLetter: ['', [Validators.maxLength(5000)]],
@@ -95,6 +99,7 @@ export class JobDetailComponent {
     // Applicants: check whether they've already applied so we show the right call to action.
     if (this.auth.isApplicant()) {
       void this.appsStore.loadMyApplications();
+      void this.loadSavedState();
     }
   }
 
@@ -121,5 +126,19 @@ export class JobDetailComponent {
 
   signInToApply(): void {
     this.router.navigate(['/login'], { queryParams: { returnUrl: `/jobs/${this.jobId}` } });
+  }
+
+  async toggleSaved(): Promise<void> {
+    if (!this.isApplicant() || this.saving()) return;
+    this.saving.set(true);
+    try {
+      if (this.saved()) await this.savedJobs.remove(this.jobId).toPromise();
+      else await this.savedJobs.save(this.jobId).toPromise();
+      this.saved.update(value => !value);
+    } finally { this.saving.set(false); }
+  }
+
+  private async loadSavedState(): Promise<void> {
+    try { this.saved.set((await this.savedJobs.getMine().toPromise())?.some(job => job.jobId === this.jobId) ?? false); } catch { this.saved.set(false); }
   }
 }

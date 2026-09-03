@@ -21,6 +21,7 @@ public class TalentOSDbContext : DbContext
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Job> Jobs => Set<Job>();
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
+    public DbSet<SavedJob> SavedJobs => Set<SavedJob>();
     public DbSet<Interview> Interviews => Set<Interview>();
     public DbSet<Verification> Verifications => Set<Verification>();
     public DbSet<Document> Documents => Set<Document>();

@@ -21,6 +21,7 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./pages/applicant/dashboard/dashboard.component').then(m => m.DashboardComponent) },
       { path: 'applications', loadComponent: () => import('./pages/applicant/applications/applications.component').then(m => m.ApplicationsComponent) },
       { path: 'applications/:id', loadComponent: () => import('./pages/applicant/application-detail/application-detail.component').then(m => m.ApplicationDetailComponent) },
+      { path: 'saved-jobs', loadComponent: () => import('./pages/applicant/saved-jobs/saved-jobs.component').then(m => m.SavedJobsComponent) },
       { path: 'profile', loadComponent: () => import('./pages/applicant/profile/profile.component').then(m => m.ProfileComponent) },
       { path: 'verification', loadComponent: () => import('./pages/applicant/verification/verification-page.component').then(m => m.VerificationPageComponent) },
       { path: 'documents', loadComponent: () => import('./pages/applicant/documents/documents.component').then(m => m.DocumentsComponent) },
