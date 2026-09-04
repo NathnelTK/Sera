@@ -5,6 +5,7 @@ using TalentOS.Application.Features.Applicants.DTOs;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantById;
 using TalentOS.Application.Features.Applicants.Queries.GetApplicantSkills;
 using TalentOS.Application.Features.Applicants.Queries.GetMyApplicantProfile;
+using TalentOS.Application.Features.Applicants.Commands.UpdateProfileHistory;
 using TalentOS.Application.Common;
 using TalentOS.Application.Features.Applicants.Queries.DiscoverApplicants;
 using TalentOS.Application.Features.Applicants.Queries.GetRecruiterApplicant;
@@ -13,6 +14,15 @@ namespace TalentOS.API.Controllers;
 
 public sealed class ApplicantsController : BaseApiController
 {
+    [Authorize(Roles = "Applicant")]
+    [HttpPut("me/history")]
+    public async Task<IActionResult> UpdateHistory([FromBody] UpdateHistoryRequest request, CancellationToken ct)
+    {
+        var userId = GetCurrentUserId(); if (userId is null) return Unauthorized();
+        return FromResult(await Mediator.Send(new UpdateProfileHistoryCommand(userId.Value, request.Educations ?? [], request.Experiences ?? []), ct));
+    }
+
+    public sealed record UpdateHistoryRequest(IReadOnlyList<EducationInput>? Educations, IReadOnlyList<ExperienceInput>? Experiences);
     /// <summary>Get a recruiter-safe applicant profile.</summary>
     [Authorize(Roles = "Recruiter")]
     [HttpGet("discover/{id:guid}")]
