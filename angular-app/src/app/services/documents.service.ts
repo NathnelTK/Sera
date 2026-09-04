@@ -1,43 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-export interface Document {
-  id: string;
-  applicant_id: string;
-  name: string;
-  file_url: string;
-  file_type: string;
-  file_size: number;
-  document_type: 'CV' | 'Certificate' | 'Other';
-  uploaded_at: string;
+export enum DocumentType { Resume = 1, CoverLetter = 2, Portfolio = 3, Certificate = 4, NationalId = 5, Other = 99 }
+export interface DocumentRecord {
+  id: string; uploadedByUserId: string; documentType: DocumentType; fileName: string; fileUrl: string;
+  fileSizeBytes: number; mimeType?: string; description?: string; uploadedAt: string;
 }
 
-export interface DocumentsResponse {
-  items: Document[];
-  total: number;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DocumentsService {
-  constructor(private http: HttpClient) {}
-
-  getDocuments(): Observable<DocumentsResponse> {
-    return this.http.get<DocumentsResponse>(`${environment.apiUrl}/documents`);
+  private readonly http = inject(HttpClient);
+  getMine(): Observable<DocumentRecord[]> { return this.http.get<DocumentRecord[]>(`${environment.apiUrl}/documents/mine`); }
+  upload(file: File, documentType: DocumentType, description?: string): Observable<{ id: string }> {
+    const form = new FormData(); form.append('file', file); form.append('documentType', String(documentType));
+    if (description?.trim()) form.append('description', description.trim());
+    return this.http.post<{ id: string }>(`${environment.apiUrl}/documents`, form);
   }
-
-  uploadDocument(file: File, documentType: 'CV' | 'Certificate' | 'Other'): Observable<Document> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('documentType', documentType);
-    
-    return this.http.post<Document>(`${environment.apiUrl}/documents`, formData);
-  }
-
-  deleteDocument(id: string): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/documents/${id}`);
-  }
+  remove(id: string): Observable<void> { return this.http.delete<void>(`${environment.apiUrl}/documents/${id}`); }
 }

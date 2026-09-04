@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        services.AddScoped<IPdfTextExtractor, PdfTextExtractor>();
         services.AddScoped<IAiService, StubAiService>();
 
         // JWT Authentication

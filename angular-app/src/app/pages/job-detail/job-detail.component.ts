@@ -6,11 +6,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { JobsStore } from '../../stores/jobs.store';
 import { ApplicationsStore } from '../../stores/applications.store';
 import { SavedJobsService } from '../../services/saved-jobs.service';
+import { DocumentRecord, DocumentsService } from '../../services/documents.service';
+import { ApplicationMode } from '../../services/application-mode';
 import { AuthStore } from '../../stores/auth.store';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { JobDetails } from '../../services/jobs.service';
@@ -36,6 +39,7 @@ import {
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatIconModule,
     MatProgressSpinnerModule,
     TranslatePipe,
@@ -51,6 +55,7 @@ export class JobDetailComponent {
   private appsStore = inject(ApplicationsStore);
   private auth = inject(AuthStore);
   private savedJobs = inject(SavedJobsService);
+  private documents = inject(DocumentsService);
 
   // Enum → i18n-key helpers for the template.
   jobTypeKey = jobTypeKey;
@@ -74,6 +79,9 @@ export class JobDetailComponent {
   submittedAppId = signal<string | null>(null);
   saved = signal(false);
   saving = signal(false);
+  applicationMode = signal<'quick' | 'manual'>('quick');
+  applicantDocuments = signal<DocumentRecord[]>([]);
+  selectedCvId = signal<string | null>(null);
 
   coverForm = this.fb.group({
     coverLetter: ['', [Validators.maxLength(5000)]],
@@ -100,6 +108,7 @@ export class JobDetailComponent {
     if (this.auth.isApplicant()) {
       void this.appsStore.loadMyApplications();
       void this.loadSavedState();
+      void this.loadDocuments();
     }
   }
 
@@ -117,7 +126,7 @@ export class JobDetailComponent {
     if (!this.canApply() || this.coverForm.invalid) return;
     this.submitting.set(true);
     const coverLetter = this.coverForm.value.coverLetter?.trim() || undefined;
-    const id = await this.appsStore.apply({ jobId: this.jobId, coverLetter });
+    const id = await this.appsStore.apply({ jobId: this.jobId, coverLetter, cvId: this.selectedCvId() ?? undefined, mode: this.applicationMode() === 'quick' ? ApplicationMode.Quick : ApplicationMode.Manual });
     this.submitting.set(false);
     if (id) {
       this.submittedAppId.set(id);
@@ -140,5 +149,13 @@ export class JobDetailComponent {
 
   private async loadSavedState(): Promise<void> {
     try { this.saved.set((await this.savedJobs.getMine().toPromise())?.some(job => job.jobId === this.jobId) ?? false); } catch { this.saved.set(false); }
+  }
+
+  private async loadDocuments(): Promise<void> {
+    try {
+      const documents = await this.documents.getMine().toPromise() ?? [];
+      this.applicantDocuments.set(documents.filter(document => document.documentType === 1));
+      this.selectedCvId.set(this.applicantDocuments()[0]?.id ?? null);
+    } catch { this.applicantDocuments.set([]); }
   }
 }

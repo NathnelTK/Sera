@@ -198,6 +198,18 @@ Implement each item as a separate PR when the prerequisite data model is ready.
 
 Status: implemented in `feat/saved-jobs`; awaiting review.
 
+### Application Documents and Modes
+
+Status: implemented in `feat/document-portal-application-modes`; awaiting review.
+
+- PDF CV uploads are stored in the existing local document storage and linked to both `Document` and `CV` records.
+- PDF text is extracted locally with PdfPig without an external API key.
+- Applicant document reads are self-scoped.
+- Applications require an applicant-owned CV and accept `Quick` or `Manual` mode.
+- Quick Apply submits the saved profile and selected CV; Manual Apply additionally requires a cover letter.
+- Existing document IDs are resolved to their owned CV records server-side to prevent the previous document/CV ID mismatch.
+- Production object storage, virus scanning, and full document type management remain separate operations work.
+
 - Add a persisted applicant-to-job relationship with a unique constraint.
 - Add save, unsave, and paged list endpoints plus optimistic UI with rollback.
 - Handle jobs closed or deleted after being saved.
