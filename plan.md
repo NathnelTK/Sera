@@ -192,6 +192,16 @@ Status: implementation in progress on `feat/harden-recruitment-ownership`.
 
 Status: notifications slice implemented in `feat/notifications-mvp`; awaiting review.
 
+### Job Distribution Workflow
+
+Status: channel selection and review workflow implemented in `feat/job-distribution-workflow`; awaiting review.
+
+- Recruiters can select Website, Telegram, LinkedIn, Facebook, or X channels.
+- Channel-specific draft content is persisted per job and can be reviewed and edited.
+- Drafts are recruiter-owned and require explicit approval before being marked approved.
+- External provider credentials and live delivery remain gated work; no provider is falsely reported as published without credentials.
+- Local Llama generation can be connected through the existing Ollama adapter in the AI PR.
+
 Implement each item as a separate PR when the prerequisite data model is ready.
 
 ### Saved Jobs

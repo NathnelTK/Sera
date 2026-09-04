@@ -59,6 +59,7 @@
               <mat-icon>edit</mat-icon>
               <span>{{ 'wf.myJobs.edit' | translate }}</span>
             </a>
+            <a mat-button [routerLink]="['/recruiter/jobs', job.id, 'distribution']"><mat-icon>share</mat-icon><span>{{ 'distribution.title' | translate }}</span></a>
             @if (job.status === JobStatus.Draft) {
               <button mat-flat-button color="primary" (click)="publish(job.id)">
                 <mat-icon>publish</mat-icon>
