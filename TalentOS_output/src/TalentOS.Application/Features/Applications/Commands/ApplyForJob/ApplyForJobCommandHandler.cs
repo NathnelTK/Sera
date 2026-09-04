@@ -13,15 +13,17 @@ public sealed class ApplyForJobCommandHandler : IRequestHandler<ApplyForJobComma
     private readonly IJobApplicationRepository _applications;
     private readonly IJobRepository _jobs;
     private readonly IApplicantProfileRepository _applicants;
+    private readonly IDocumentRepository _documents;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
     private readonly ILogger<ApplyForJobCommandHandler> _logger;
 
-    public ApplyForJobCommandHandler(IJobApplicationRepository applications, IJobRepository jobs, IApplicantProfileRepository applicants, IUnitOfWork unitOfWork, ICurrentUserService currentUser, ILogger<ApplyForJobCommandHandler> logger)
+    public ApplyForJobCommandHandler(IJobApplicationRepository applications, IJobRepository jobs, IApplicantProfileRepository applicants, IDocumentRepository documents, IUnitOfWork unitOfWork, ICurrentUserService currentUser, ILogger<ApplyForJobCommandHandler> logger)
     {
         _applications = applications;
         _jobs = jobs;
         _applicants = applicants;
+        _documents = documents;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _logger = logger;
@@ -34,6 +36,15 @@ public sealed class ApplyForJobCommandHandler : IRequestHandler<ApplyForJobComma
 
         var applicant = await _applicants.GetByUserIdAsync(userId.Value, cancellationToken);
         if (applicant is null) return Result<Guid>.Failure("Applicant profile not found.");
+        if (!request.CvId.HasValue)
+            return Result<Guid>.Failure("Select a CV from your document portal before applying.");
+        var cvId = applicant.CVs.Any(cv => cv.Id == request.CvId.Value)
+            ? request.CvId.Value
+            : (await _documents.GetByApplicantAsync(applicant.Id, cancellationToken))
+                .Where(d => d.Id == request.CvId.Value && d.DocumentType == DocumentType.Resume)
+                .Join(applicant.CVs, d => new { d.FileUrl, d.FileName }, cv => new { cv.FileUrl, cv.FileName }, (_, cv) => cv.Id)
+                .FirstOrDefault();
+        if (cvId == Guid.Empty) return Result<Guid>.Failure("Select a CV from your document portal before applying.");
 
         var job = await _jobs.GetByIdAsync(request.JobId, cancellationToken);
         if (job is null) return Result<Guid>.Failure("Job not found.");
@@ -48,7 +59,7 @@ public sealed class ApplyForJobCommandHandler : IRequestHandler<ApplyForJobComma
         {
             JobId = request.JobId,
             ApplicantProfileId = applicant.Id,
-            CvId = request.CvId,
+            CvId = cvId,
             CoverLetter = request.CoverLetter
         };
 

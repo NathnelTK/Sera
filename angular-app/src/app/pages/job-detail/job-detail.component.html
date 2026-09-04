@@ -83,6 +83,20 @@
             </div>
           } @else if (canApply()) {
             <h3>{{ 'wf.job.applyTitle' | translate }}</h3>
+            <div class="apply-modes">
+              <button mat-button type="button" [class.active]="applicationMode() === 'quick'" (click)="applicationMode.set('quick')">{{ 'wf.job.quickApply' | translate }}</button>
+              <button mat-button type="button" [class.active]="applicationMode() === 'manual'" (click)="applicationMode.set('manual')">{{ 'wf.job.manualApply' | translate }}</button>
+            </div>
+            @if (applicationMode() === 'quick') { <p class="hint">{{ 'wf.job.quickApplyHint' | translate }}</p> }
+            @else { <p class="hint">{{ 'wf.job.manualApplyHint' | translate }}</p> }
+            @if (applicantDocuments().length) {
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>{{ 'wf.job.selectCv' | translate }}</mat-label>
+                <mat-select [value]="selectedCvId()" (selectionChange)="selectedCvId.set($event.value)">
+                  @for (document of applicantDocuments(); track document.id) { <mat-option [value]="document.id">{{ document.fileName }}</mat-option> }
+                </mat-select>
+              </mat-form-field>
+            } @else { <p class="form-error">{{ 'wf.job.cvRequired' | translate }} <a routerLink="/applicant/documents">{{ 'documents.title' | translate }}</a></p> }
             <form [formGroup]="coverForm" (ngSubmit)="apply()">
               <mat-form-field appearance="outline" class="full">
                 <mat-label>{{ 'wf.job.coverLetter' | translate }}</mat-label>
@@ -93,7 +107,7 @@
                 <p class="form-error">{{ applyError() }}</p>
               }
               <button mat-flat-button color="primary" class="full" type="submit"
-                      [disabled]="submitting() || coverForm.invalid">
+                      [disabled]="submitting() || coverForm.invalid || !selectedCvId()">
                 @if (submitting()) {
                   <mat-spinner diameter="18"></mat-spinner>
                 } @else {

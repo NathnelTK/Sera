@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApplicationStatus } from '../core/workflow/workflow';
+import { ApplicationMode } from './application-mode';
 
 /** Mirrors ApplicationSummaryResponse. */
 export interface ApplicationSummary {
@@ -36,6 +37,7 @@ export interface ApplyForJobRequest {
   jobId: string;
   coverLetter?: string;
   cvId?: string;
+  mode?: ApplicationMode;
 }
 
 @Injectable({ providedIn: 'root' })
