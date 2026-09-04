@@ -44,7 +44,12 @@ public static class DependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<IPdfTextExtractor, PdfTextExtractor>();
-        services.AddScoped<IAiService, StubAiService>();
+        services.AddScoped<IAiService, LocalAiService>();
+        services.AddHttpClient("LocalAi", client =>
+        {
+            client.BaseAddress = new Uri(configuration["AI:OllamaUrl"] ?? "http://localhost:11434/");
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
 
         // JWT Authentication
         var jwtSettings = configuration.GetSection("JwtSettings");
