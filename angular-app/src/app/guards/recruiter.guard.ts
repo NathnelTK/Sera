@@ -16,7 +16,9 @@ export const recruiterGuard: CanActivateFn = (route, state) => {
       }
       
       if (currentUser.roles && currentUser.roles.includes('Applicant')) {
-        router.navigate(['/applicant/dashboard']);
+        router.navigate(['/home'], {
+          queryParams: { authorizationError: 'You are not authorized to access the recruiter portal.' }
+        });
         return false;
       }
     } catch (e) {

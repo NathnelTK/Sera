@@ -2,7 +2,7 @@
 
 <header class="navbar">
   <div class="navbar-inner afriwork-container">
-    <a class="brand" routerLink="/home" [attr.aria-label]="'app.name' | translate">
+    <a class="brand" [routerLink]="homeLink()" [attr.aria-label]="'app.name' | translate">
       <svg class="brand-mark" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
         <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--afriwork-primary)" />
         <path d="M9 21V11h4.4c2.3 0 3.8 1.3 3.8 3.3 0 2.1-1.5 3.4-3.9 3.4H11.4V21z" fill="#fff" />
@@ -12,13 +12,16 @@
     </a>
 
     <nav class="nav-links" aria-label="Primary">
-      <a mat-button routerLink="/jobs" routerLinkActive="active">{{ 'nav.findJobs' | translate }}</a>
+       @if (!auth.isRecruiter()) {
+         <a mat-button routerLink="/jobs" routerLinkActive="active">{{ 'nav.findJobs' | translate }}</a>
+       }
       @if (!auth.isAuthenticated() || auth.isApplicant()) {
         <a mat-button routerLink="/employers" routerLinkActive="active">{{ 'nav.forEmployers' | translate }}</a>
       }
-      @if (auth.isRecruiter()) {
-        <a mat-button routerLink="/recruiter/jobs" routerLinkActive="active">{{ 'nav.postJob' | translate }}</a>
-        <a mat-button routerLink="/recruiter/talent" routerLinkActive="active">{{ 'nav.findTalent' | translate }}</a>
+       @if (auth.isRecruiter()) {
+         <a mat-button routerLink="/recruiter/jobs" routerLinkActive="active">{{ 'nav.postJob' | translate }}</a>
+         <a mat-button routerLink="/recruiter/talent" routerLinkActive="active">{{ 'nav.findTalent' | translate }}</a>
+         <a mat-button routerLink="/home" routerLinkActive="active">{{ 'nav.forJobseekers' | translate }}</a>
       }
     </nav>
 
@@ -59,10 +62,17 @@
               <span>{{ 'profile.verificationTitle' | translate }}</span>
             </a>
           }
-          <a mat-menu-item routerLink="/jobs">
-            <mat-icon>search</mat-icon>
-            <span>{{ 'nav.findJobs' | translate }}</span>
-          </a>
+           @if (auth.isApplicant()) {
+             <a mat-menu-item routerLink="/jobs">
+               <mat-icon>search</mat-icon>
+               <span>{{ 'nav.findJobs' | translate }}</span>
+             </a>
+           } @else if (auth.isRecruiter()) {
+             <a mat-menu-item routerLink="/home">
+               <mat-icon>person_search</mat-icon>
+               <span>{{ 'nav.forJobseekers' | translate }}</span>
+             </a>
+           }
           <button mat-menu-item (click)="confirmLogout()">
             <mat-icon>logout</mat-icon>
             <span>{{ 'nav.logout' | translate }}</span>
@@ -82,14 +92,23 @@
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #mobile="matMenu">
-        <a mat-menu-item routerLink="/jobs">
-          <mat-icon>search</mat-icon>
-          <span>{{ 'nav.findJobs' | translate }}</span>
-        </a>
-        <a mat-menu-item routerLink="/employers">
-          <mat-icon>business_center</mat-icon>
-          <span>{{ 'nav.forEmployers' | translate }}</span>
-        </a>
+         @if (!auth.isRecruiter()) {
+           <a mat-menu-item routerLink="/jobs">
+             <mat-icon>search</mat-icon>
+             <span>{{ 'nav.findJobs' | translate }}</span>
+           </a>
+         }
+         @if (auth.isRecruiter()) {
+           <a mat-menu-item routerLink="/home">
+             <mat-icon>person_search</mat-icon>
+             <span>{{ 'nav.forJobseekers' | translate }}</span>
+           </a>
+         } @else {
+           <a mat-menu-item routerLink="/employers">
+             <mat-icon>business_center</mat-icon>
+             <span>{{ 'nav.forEmployers' | translate }}</span>
+           </a>
+         }
         @if (!auth.isAuthenticated()) {
           <a mat-menu-item routerLink="/login">
             <mat-icon>login</mat-icon>

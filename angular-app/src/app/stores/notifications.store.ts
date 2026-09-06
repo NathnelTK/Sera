@@ -12,6 +12,7 @@ export class NotificationsStore {
   isLoading = signal(false);
   error = signal<string | null>(null);
   notifications = signal<Notification[]>([]);
+  hasLoaded = signal(false);
   
   // Computed
   hasNotifications = computed(() => this.notifications().length > 0);
@@ -25,7 +26,18 @@ export class NotificationsStore {
     
     try {
       const response = await firstValueFrom(this.notificationsService.getNotifications(unreadOnly));
-      this.notifications.set(response ?? []);
+      const incoming = response ?? [];
+      if (unreadOnly) {
+        // An unread-count refresh must not replace the full notification history.
+        this.notifications.update(current => {
+          const byId = new Map(current.map(notification => [notification.id, notification]));
+          incoming.forEach(notification => byId.set(notification.id, notification));
+          return [...byId.values()];
+        });
+      } else {
+        this.notifications.set(incoming);
+      }
+      this.hasLoaded.set(true);
       return true;
     } catch (err: any) {
       this.error.set(err.message || 'Failed to load notifications');

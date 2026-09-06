@@ -6,9 +6,9 @@
       <h1 class="hero-title">{{ 'employers.hero.title' | translate }}</h1>
       <p class="hero-subtitle">{{ 'employers.hero.subtitle' | translate }}</p>
       <div class="hero-actions">
-        <a mat-flat-button routerLink="/register" class="hero-primary">
+        <button mat-flat-button type="button" class="hero-primary" (click)="openEmployerPortal()">
           {{ 'employers.hero.primary' | translate }}
-        </a>
+        </button>
         <a mat-stroked-button href="#how" class="hero-secondary">
           {{ 'employers.hero.secondary' | translate }}
         </a>
