@@ -57,10 +57,16 @@
               <mat-card class="cand" [class.busy]="busyId() === c.applicationId">
                 <p class="name">{{ c.applicantName }}</p>
                 @if (c.matchScore != null) {
-                  <p class="match">
+                 <p class="match">
                     <mat-icon>insights</mat-icon>
                     {{ 'wf.pipeline.match' | translate }}: {{ (c.matchScore * 100) | number: '1.0-0' }}%
-                  </p>
+                 </p>
+                 <details class="score-details">
+                   <summary>Why this score?</summary>
+                   @for (part of scoreParts(c); track part.label) { <div class="score-row"><span>{{ part.label }}</span><strong>{{ part.value * 100 | number:'1.0-0' }}%</strong></div> }
+                   @if (c.matchExplanation) { <p>{{ c.matchExplanation }}</p> }
+                   <a [routerLink]="['/recruiter/talent', c.applicantProfileId]">Go to Profile</a>
+                 </details>
                 }
                 <p class="applied">{{ 'wf.pipeline.appliedOn' | translate: { date: (c.appliedAt | date: 'mediumDate') } }}</p>
 

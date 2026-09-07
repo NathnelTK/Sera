@@ -82,6 +82,12 @@ export interface JobApplicationSummary {
   status: ApplicationStatus;
   appliedAt: string;
   matchScore?: number;
+  matchExplanation?: string;
+  skillsMatch?: number;
+  experienceMatch?: number;
+  educationMatch?: number;
+  requirementsMatch?: number;
+  locationMatch?: number;
 }
 
 @Injectable({ providedIn: 'root' })

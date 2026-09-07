@@ -8,14 +8,21 @@ namespace TalentOS.Application.Features.Recruiters.Queries.GetRecruiterById;
 public sealed class GetRecruiterByIdQueryHandler : IRequestHandler<GetRecruiterByIdQuery, Result<RecruiterProfileResponse>>
 {
     private readonly IRecruiterProfileRepository _recruiters;
+    private readonly IVerificationRepository _verifications;
 
-    public GetRecruiterByIdQueryHandler(IRecruiterProfileRepository recruiters) => _recruiters = recruiters;
+    public GetRecruiterByIdQueryHandler(IRecruiterProfileRepository recruiters, IVerificationRepository verifications)
+    {
+        _recruiters = recruiters;
+        _verifications = verifications;
+    }
 
     public async Task<Result<RecruiterProfileResponse>> Handle(GetRecruiterByIdQuery request, CancellationToken cancellationToken)
     {
         var profile = await _recruiters.GetWithCompanyAsync(request.RecruiterId, cancellationToken);
         if (profile is null) return Result<RecruiterProfileResponse>.Failure("Recruiter profile not found.");
 
+        var verification = (await _verifications.GetByUserAsync(profile.UserId, cancellationToken)).FirstOrDefault();
+        var verificationStatus = verification?.Status ?? TalentOS.Domain.Enums.VerificationStatus.Pending;
         var dto = new RecruiterProfileResponse(
             profile.Id, profile.UserId,
             profile.User?.Email ?? string.Empty,
@@ -23,7 +30,7 @@ public sealed class GetRecruiterByIdQueryHandler : IRequestHandler<GetRecruiterB
             profile.Title, profile.Bio, profile.AvatarUrl, profile.Phone,
             profile.RecruiterType,
             profile.Company?.Name, profile.CompanyId,
-            profile.CreatedAt);
+            profile.CreatedAt, verificationStatus);
 
         return Result<RecruiterProfileResponse>.Success(dto);
     }

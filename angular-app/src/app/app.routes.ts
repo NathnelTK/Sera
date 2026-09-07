@@ -46,6 +46,7 @@ export const routes: Routes = [
       { path: 'talent/:id', loadComponent: () => import('./pages/recruiter/talent-detail/talent-detail.component').then(m => m.TalentDetailComponent) },
       { path: 'interviews', loadComponent: () => import('./pages/recruiter/interviews/interviews.component').then(m => m.InterviewsComponent) },
       { path: 'profile', loadComponent: () => import('./pages/recruiter/profile/profile.component').then(m => m.ProfileComponent) },
+      { path: 'settings', loadComponent: () => import('./pages/recruiter/settings/settings.component').then(m => m.SettingsComponent) },
       { path: 'notifications', loadComponent: () => import('./pages/recruiter/notifications/notifications.component').then(m => m.NotificationsComponent) },
       { path: 'ai-tools', loadComponent: () => import('./pages/recruiter/ai-tools/ai-tools.component').then(m => m.AiToolsComponent) }
     ]

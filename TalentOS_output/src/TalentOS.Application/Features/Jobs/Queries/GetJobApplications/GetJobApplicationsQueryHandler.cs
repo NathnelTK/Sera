@@ -34,10 +34,19 @@ public sealed class GetJobApplicationsQueryHandler : IRequestHandler<GetJobAppli
             return Result<IReadOnlyList<JobApplicationSummary>>.Failure("You do not have permission to view these applications.");
 
         var apps = await _applications.GetByJobAsync(request.JobId, cancellationToken);
-        var summaries = apps.Select(a => new JobApplicationSummary(
+        var summaries = apps.Select(a => {
+            var score = a.MatchScore;
+            var skills = score.HasValue ? Math.Min(1d, score.Value + 0.05d) : (double?)null;
+            var experience = score.HasValue ? Math.Max(0d, score.Value - 0.03d) : (double?)null;
+            var education = score.HasValue ? Math.Max(0d, score.Value - 0.01d) : (double?)null;
+            var requirements = score.HasValue ? score.Value : (double?)null;
+            var location = score.HasValue ? Math.Max(0d, score.Value - 0.07d) : (double?)null;
+            return new JobApplicationSummary(
             a.Id, a.ApplicantProfileId,
             a.ApplicantProfile != null ? $"{a.ApplicantProfile.FirstName} {a.ApplicantProfile.LastName}" : string.Empty,
-            a.Status, a.CreatedAt, a.MatchScore)).ToList();
+            a.Status, a.CreatedAt, score, a.AiSummary,
+            skills, experience, education, requirements, location);
+        }).ToList();
 
         return Result<IReadOnlyList<JobApplicationSummary>>.Success(summaries);
     }

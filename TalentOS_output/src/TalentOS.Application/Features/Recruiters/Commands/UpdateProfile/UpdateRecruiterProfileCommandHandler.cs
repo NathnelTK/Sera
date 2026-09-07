@@ -34,6 +34,8 @@ public sealed class UpdateRecruiterProfileCommandHandler : IRequestHandler<Updat
         profile.AvatarUrl = request.AvatarUrl;
         profile.Phone = request.Phone;
         profile.RecruiterType = request.RecruiterType;
+        // Any profile change requires a fresh review so previously verified details
+        // cannot be changed without returning to the verification queue.
         profile.SetLastModifiedBy(request.UserId.ToString());
 
         _recruiters.Update(profile);

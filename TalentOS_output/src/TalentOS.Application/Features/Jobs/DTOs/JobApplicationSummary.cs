@@ -8,5 +8,11 @@ public sealed record JobApplicationSummary(
     string ApplicantName,
     ApplicationStatus Status,
     DateTime AppliedAt,
-    double? MatchScore
+    double? MatchScore,
+    string? MatchExplanation,
+    double? SkillsMatch,
+    double? ExperienceMatch,
+    double? EducationMatch,
+    double? RequirementsMatch,
+    double? LocationMatch
 );

@@ -1,5 +1,14 @@
-<app-coming-soon
-  icon="business"
-  title="page.companyProfile.title"
-  description="page.companyProfile.desc"
-  backLink="/recruiter/dashboard" />
+<div class="profile-page afriwork-container">
+  <header><div class="et-accent-bar"></div><h1>Profile</h1><p>Build trust with candidates by completing your employer profile.</p></header>
+  @if (loading()) { <div class="state"><mat-spinner diameter="40" /><span>{{ 'common.loading' | translate }}</span></div> }
+  @else { @if (error()) { <div class="error-banner"><mat-icon>error_outline</mat-icon>{{ error() }}</div> } @if (saved()) { <div class="success"><mat-icon>check_circle</mat-icon>Profile saved.</div> }
+    <mat-card class="status-card"><mat-card-content><mat-icon>verified_user</mat-icon><div><strong>Verification status</strong><span class="status" [class]="'status ' + verificationClass(profile()?.verificationStatus)">{{ verificationLabel(profile()?.verificationStatus) }}</span></div><p>Employer verification helps keep TalentOS safe for job seekers.</p></mat-card-content></mat-card>
+    <mat-card><mat-card-header><mat-card-title>Employer profile</mat-card-title><mat-card-subtitle>Individual, company, and agency profiles are supported.</mat-card-subtitle></mat-card-header><mat-card-content><form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+      <mat-form-field appearance="outline"><mat-label>First name</mat-label><input matInput formControlName="firstName" /></mat-form-field><mat-form-field appearance="outline"><mat-label>Last name</mat-label><input matInput formControlName="lastName" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Employer type</mat-label><mat-select formControlName="recruiterType">@for (type of types; track type.value) { <mat-option [value]="type.value">{{ type.label }}</mat-option> }</mat-select></mat-form-field><mat-form-field appearance="outline"><mat-label>Title</mat-label><input matInput formControlName="title" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Phone</mat-label><input matInput formControlName="phone" /></mat-form-field><mat-form-field appearance="outline"><mat-label>Profile photo URL</mat-label><input matInput formControlName="avatarUrl" /></mat-form-field>
+      <mat-form-field appearance="outline" class="wide"><mat-label>Professional description</mat-label><textarea matInput rows="6" formControlName="bio"></textarea></mat-form-field>
+      <div class="actions wide"><a mat-button routerLink="/recruiter/dashboard">Cancel</a><button mat-flat-button color="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save profile' }}</button></div>
+    </form></mat-card-content></mat-card>
+  }
+</div>

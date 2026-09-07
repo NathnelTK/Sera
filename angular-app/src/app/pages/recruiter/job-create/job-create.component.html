@@ -83,6 +83,12 @@
 
     <p class="hint full">{{ 'wf.jobForm.salaryHint' | translate }}</p>
 
+    <section class="distribution-selection full">
+      <h2>Distribution channels</h2>
+      <p>Select where TalentOS should prepare this job post. You can review every generated version before approval.</p>
+      <div class="channel-options">@for (channel of channels; track channel.value) { <mat-checkbox [checked]="selectedChannels().includes(channel.value)" (change)="toggleChannel(channel.value)">{{ channel.label }}</mat-checkbox> }</div>
+    </section>
+
     @if (error()) {
       <p class="form-error full">{{ error() }}</p>
     }
@@ -93,7 +99,7 @@
         @if (isLoading()) {
           <mat-spinner diameter="18"></mat-spinner>
         } @else {
-          {{ (isEdit() ? 'wf.jobForm.saveUpdate' : 'wf.jobForm.save') | translate }}
+          {{ (isEdit() ? 'wf.jobForm.saveUpdate' : 'Generate') | translate }}
         }
       </button>
     </div>
