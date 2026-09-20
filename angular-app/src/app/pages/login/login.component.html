@@ -1,78 +1,95 @@
-<div class="auth-page">
-  <div class="auth-card afriwork-scale-in">
-    <div class="auth-brand">
-      <span class="et-accent-bar"></span>
-      <h1>{{ 'auth.login.title' | translate }}</h1>
-      <p class="auth-subtitle">{{ 'auth.login.subtitle' | translate }}</p>
+<div class="auth-page afriwork-fade-in">
+  <div class="auth-wrapper glass-card">
+    <div class="auth-visual-side">
+      <div class="visual-content">
+        <div class="auth-pill-badge">
+          <mat-icon>shield</mat-icon>
+          <span>Fayda Biometric Security</span>
+        </div>
+        <h2>National Digital ID Verified Talent</h2>
+        <p>Connecting verified professionals with trusted Ethiopian and global employers with zero fraud.</p>
+        <div class="visual-image-box float-animation">
+          <img src="/images/auth-visual.jpg" alt="Digital Identity and Verified Credentials" class="auth-side-img" />
+        </div>
+      </div>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'auth.email' | translate }}</mat-label>
-        <mat-icon matPrefix>mail_outline</mat-icon>
-        <input matInput formControlName="email" type="email" autocomplete="email"
-               [placeholder]="'auth.emailPlaceholder' | translate" />
-        @if (email?.invalid && email?.touched) {
-          <mat-error>
-            @if (email?.errors?.['required']) {
-              {{ 'auth.err.emailRequired' | translate }}
-            } @else if (email?.errors?.['email']) {
-              {{ 'auth.err.emailInvalid' | translate }}
-            }
-          </mat-error>
-        }
-      </mat-form-field>
+    <div class="auth-card-side">
+      <div class="auth-brand">
+        <span class="et-accent-bar"></span>
+        <h1>{{ 'auth.login.title' | translate }}</h1>
+        <p class="auth-subtitle">{{ 'auth.login.subtitle' | translate }}</p>
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'auth.password' | translate }}</mat-label>
-        <mat-icon matPrefix>lock_outline</mat-icon>
-        <input matInput formControlName="password"
-               [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password"
-               [placeholder]="'auth.passwordPlaceholder' | translate" />
-        <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1"
-                [attr.aria-label]="'auth.password' | translate">
-          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>{{ 'auth.email' | translate }}</mat-label>
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          <input matInput formControlName="email" type="email" autocomplete="email"
+                 [placeholder]="'auth.emailPlaceholder' | translate" />
+          @if (email?.invalid && email?.touched) {
+            <mat-error>
+              @if (email?.errors?.['required']) {
+                {{ 'auth.err.emailRequired' | translate }}
+              } @else if (email?.errors?.['email']) {
+                {{ 'auth.err.emailInvalid' | translate }}
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>{{ 'auth.password' | translate }}</mat-label>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input matInput formControlName="password"
+                 [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password"
+                 [placeholder]="'auth.passwordPlaceholder' | translate" />
+          <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1"
+                  [attr.aria-label]="'auth.password' | translate">
+            <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (password?.invalid && password?.touched) {
+            <mat-error>
+              @if (password?.errors?.['required']) {
+                {{ 'auth.err.passwordRequired' | translate }}
+              } @else if (password?.errors?.['minlength']) {
+                {{ 'auth.err.passwordMinLength' | translate }}
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <div class="auth-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ error() }}</span>
+          </div>
+        }
+
+        <button mat-flat-button class="auth-submit" type="submit"
+                [disabled]="loginForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <span class="btn-loading">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>{{ 'auth.signingIn' | translate }}</span>
+            </span>
+          } @else {
+            <mat-icon>login</mat-icon>
+            <span>{{ 'auth.signIn' | translate }}</span>
+          }
         </button>
-        @if (password?.invalid && password?.touched) {
-          <mat-error>
-            @if (password?.errors?.['required']) {
-              {{ 'auth.err.passwordRequired' | translate }}
-            } @else if (password?.errors?.['minlength']) {
-              {{ 'auth.err.passwordMinLength' | translate }}
-            }
-          </mat-error>
-        }
-      </mat-form-field>
+      </form>
 
-      @if (error()) {
-        <div class="auth-error" role="alert">
-          <mat-icon>error_outline</mat-icon>
-          <span>{{ error() }}</span>
-        </div>
-      }
-
-      <button mat-flat-button color="primary" type="submit" class="auth-submit"
-              [disabled]="loginForm.invalid || isLoading()">
-        @if (isLoading()) {
-          <span class="btn-loading">
-            <mat-spinner diameter="20"></mat-spinner>
-            <span>{{ 'auth.signingIn' | translate }}</span>
-          </span>
-        } @else {
-          {{ 'auth.signIn' | translate }}
-        }
-      </button>
-    </form>
-
-    <div class="auth-links">
-      <p>
-        {{ 'auth.noAccount' | translate }}
-        <a routerLink="/register">{{ 'auth.signUpLink' | translate }}</a>
-      </p>
-      <a class="auth-home" routerLink="/home">
-        <mat-icon>arrow_back</mat-icon>
-        <span>{{ 'auth.backToHome' | translate }}</span>
-      </a>
+      <div class="auth-links">
+        <p>
+          {{ 'auth.noAccount' | translate }}
+          <a routerLink="/register" class="signup-link">{{ 'auth.signUpLink' | translate }}</a>
+        </p>
+        <a class="auth-home" routerLink="/home">
+          <mat-icon>arrow_back</mat-icon>
+          <span>{{ 'auth.backToHome' | translate }}</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>

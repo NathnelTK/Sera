@@ -2,42 +2,66 @@
 // Professional, clean, modern design with Ethiopian/African business aesthetics
 
 :root {
-  // Primary Colors - Professional Blue/Teal palette
-  --afriwork-primary: #0D6EFD;
-  --afriwork-primary-dark: #0B5ED7;
-  --afriwork-primary-light: #3D8BFD;
-  
+  // Primary Colors - Electric Indigo / Tech Blue modern palette
+  --afriwork-primary: #2563eb;
+  --afriwork-primary-dark: #1d4ed8;
+  --afriwork-primary-light: #60a5fa;
+  --afriwork-primary-glow: rgba(37, 99, 235, 0.22);
+
+  // Modern Gradients
+  --afriwork-gradient-primary: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+  --afriwork-gradient-accent: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  --afriwork-gradient-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --afriwork-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f172a 100%);
+  --afriwork-gradient-subtle: linear-gradient(180deg, rgba(239, 246, 255, 0.7) 0%, rgba(248, 250, 252, 1) 100%);
+
   // Secondary Colors - Warm Accent
-  --afriwork-secondary: #FF6B35;
-  --afriwork-secondary-dark: #E85A2A;
-  --afriwork-secondary-light: #FF8C5A;
-  
-  // Neutral Colors
-  --afriwork-dark: #1A1A2E;
-  --afriwork-gray-dark: #2D2D44;
-  --afriwork-gray: #6B7280;
-  --afriwork-gray-light: #E5E7EB;
-  --afriwork-light: #F9FAFB;
-  --afriwork-white: #FFFFFF;
-  
+  --afriwork-secondary: #f59e0b;
+  --afriwork-secondary-dark: #d97706;
+  --afriwork-secondary-light: #fbbf24;
+
+  // Ethiopian Cultural Color Accents
+  --afriwork-et-green: #059669;
+  --afriwork-et-yellow: #f59e0b;
+  --afriwork-et-red: #ef4444;
+
+  // Slate Neutral Colors
+  --afriwork-dark: #0f172a;
+  --afriwork-dark-card: #1e293b;
+  --afriwork-gray-dark: #334155;
+  --afriwork-gray: #64748b;
+  --afriwork-gray-light: #e2e8f0;
+  --afriwork-border: #e2e8f0;
+  --afriwork-border-subtle: rgba(226, 232, 240, 0.8);
+  --afriwork-light: #f8fafc;
+  --afriwork-white: #ffffff;
+
+  // Glassmorphism tokens
+  --afriwork-glass-bg: rgba(255, 255, 255, 0.82);
+  --afriwork-glass-border: rgba(255, 255, 255, 0.7);
+  --afriwork-glass-dark-bg: rgba(15, 23, 42, 0.75);
+  --afriwork-glass-dark-border: rgba(255, 255, 255, 0.1);
+
   // Success/Error/Warning
-  --afriwork-success: #10B981;
-  --afriwork-success-light: #D1FAE5;
-  --afriwork-error: #EF4444;
-  --afriwork-error-light: #FEE2E2;
-  --afriwork-warning: #F59E0B;
-  --afriwork-warning-light: #FEF3C7;
-  
-  // Typography
-  --afriwork-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --afriwork-success: #10b981;
+  --afriwork-success-light: #d1fae5;
+  --afriwork-error: #ef4444;
+  --afriwork-error-light: #fee2e2;
+  --afriwork-warning: #f59e0b;
+  --afriwork-warning-light: #fef3c7;
+
+  // Cool Modern Typography
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --afriwork-font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --afriwork-font-size-xs: 0.75rem;
   --afriwork-font-size-sm: 0.875rem;
   --afriwork-font-size-base: 1rem;
+  --afriwork-font-size-md: 1rem;
   --afriwork-font-size-lg: 1.125rem;
   --afriwork-font-size-xl: 1.25rem;
   --afriwork-font-size-2xl: 1.5rem;
-  --afriwork-font-size-3xl: 1.875rem;
-  
+  --afriwork-font-size-3xl: 2rem;
+
   // Spacing
   --afriwork-spacing-xs: 0.25rem;
   --afriwork-spacing-sm: 0.5rem;
@@ -45,24 +69,26 @@
   --afriwork-spacing-lg: 1.5rem;
   --afriwork-spacing-xl: 2rem;
   --afriwork-spacing-2xl: 3rem;
-  
+
   // Border Radius
-  --afriwork-radius-sm: 0.25rem;
-  --afriwork-radius-md: 0.5rem;
-  --afriwork-radius-lg: 0.75rem;
-  --afriwork-radius-xl: 1rem;
+  --afriwork-radius-sm: 0.375rem;
+  --afriwork-radius-md: 0.625rem;
+  --afriwork-radius-lg: 0.875rem;
+  --afriwork-radius-xl: 1.25rem;
+  --afriwork-radius-2xl: 1.75rem;
   --afriwork-radius-full: 9999px;
-  
-  // Shadows
-  --afriwork-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --afriwork-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --afriwork-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --afriwork-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  
+
+  // Modern Multi-layered Shadows
+  --afriwork-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --afriwork-shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  --afriwork-shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+  --afriwork-shadow-xl: 0 20px 32px -6px rgba(15, 23, 42, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+  --afriwork-shadow-glow: 0 0 25px rgba(37, 99, 235, 0.2);
+
   // Transitions
-  --afriwork-transition-fast: 150ms ease-in-out;
-  --afriwork-transition-base: 200ms ease-in-out;
-  --afriwork-transition-slow: 300ms ease-in-out;
+  --afriwork-transition-fast: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+  --afriwork-transition-base: 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  --afriwork-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // Global Reset and Base Styles
@@ -87,10 +113,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-// Typography
+// Modern Typography
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--afriwork-dark);
   margin-bottom: var(--afriwork-spacing-md);
 }
 
@@ -469,7 +498,8 @@ html[lang='am'] body {
 
 // Brand text selection.
 ::selection {
-  background: rgba(13, 110, 253, 0.18);
+  background: rgba(37, 99, 235, 0.2);
+  color: var(--afriwork-primary-dark);
 }
 
 // Route transition — the outlet's active page fades/rises in on navigation.
@@ -477,3 +507,63 @@ html[lang='am'] body {
 .route-host {
   display: block;
 }
+
+// Modern Visual & Motion Extensions
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.25); }
+  50% { box-shadow: 0 0 28px rgba(99, 102, 241, 0.5); }
+}
+
+@keyframes badgeShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.float-animation {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+.glass-card {
+  background: var(--afriwork-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--afriwork-glass-border);
+  border-radius: var(--afriwork-radius-xl);
+  box-shadow: var(--afriwork-shadow-lg);
+}
+
+.glow-card {
+  transition: transform var(--afriwork-transition-base), box-shadow var(--afriwork-transition-base), border-color var(--afriwork-transition-base);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--afriwork-shadow-xl), var(--afriwork-shadow-glow);
+    border-color: rgba(37, 99, 235, 0.35);
+  }
+}
+
+.gradient-title {
+  background: var(--afriwork-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.modern-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--afriwork-radius-full);
+  font-size: var(--afriwork-font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all var(--afriwork-transition-fast);
+}
+

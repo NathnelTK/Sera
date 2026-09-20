@@ -1,27 +1,85 @@
 <div class="employers">
-  <!-- Hero -->
+  <!-- Modern Hero with AI Executive Dashboard Visual -->
   <section class="hero">
-    <div class="hero-inner afriwork-container afriwork-fade-in">
-      <div class="et-accent-bar" aria-hidden="true"></div>
-      <h1 class="hero-title">{{ 'employers.hero.title' | translate }}</h1>
-      <p class="hero-subtitle">{{ 'employers.hero.subtitle' | translate }}</p>
-      <div class="hero-actions">
-        <button mat-flat-button type="button" class="hero-primary" (click)="openEmployerPortal()">
-          {{ 'employers.hero.primary' | translate }}
-        </button>
-        <a mat-stroked-button href="#how" class="hero-secondary">
-          {{ 'employers.hero.secondary' | translate }}
-        </a>
+    <div class="afriwork-container">
+      <div class="hero-grid afriwork-fade-in">
+        <div class="hero-content">
+          <div class="hero-pill-badge">
+            <span class="pulse-dot"></span>
+            <span>ENTERPRISE & SMB HIRING PLATFORM</span>
+          </div>
+
+          <h1 class="hero-title">
+            {{ 'employers.hero.title' | translate }}
+          </h1>
+
+          <p class="hero-subtitle">
+            {{ 'employers.hero.subtitle' | translate }}
+          </p>
+
+          <div class="hero-actions">
+            <button mat-flat-button type="button" class="hero-primary" (click)="openEmployerPortal()">
+              <mat-icon>business_center</mat-icon>
+              <span>{{ 'employers.hero.primary' | translate }}</span>
+            </button>
+            <a mat-stroked-button href="#how" class="hero-secondary">
+              <span>{{ 'employers.hero.secondary' | translate }}</span>
+              <mat-icon>expand_more</mat-icon>
+            </a>
+          </div>
+
+          <div class="hero-stats-row">
+            <div class="stat-box">
+              <span class="stat-number">8x</span>
+              <span class="stat-text">Faster Time-to-Hire</span>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat-box">
+              <span class="stat-number">100%</span>
+              <span class="stat-text">Fayda Verified</span>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat-box">
+              <span class="stat-number">94%</span>
+              <span class="stat-text">Offer Acceptance</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual-wrapper">
+          <div class="hero-visual-glow"></div>
+          <div class="hero-image-card float-animation">
+            <img src="/images/employers-hero.jpg" alt="Executive Talent Acquisition Suite" class="hero-img" loading="eager" />
+            <div class="floating-badge badge-top-right">
+              <mat-icon class="badge-icon">insights</mat-icon>
+              <div>
+                <span class="badge-title">AI Predictive Scoring</span>
+                <span class="badge-sub">Top 5% Talent Match</span>
+              </div>
+            </div>
+            <div class="floating-badge badge-bottom-left">
+              <mat-icon class="badge-icon green-icon">verified</mat-icon>
+              <div>
+                <span class="badge-title">Zero Fake Profiles</span>
+                <span class="badge-sub">Biometric Guarantee</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Value props -->
   <section class="section afriwork-container">
-    <h2 class="section-title">{{ 'employers.value.title' | translate }}</h2>
-    <div class="value-grid">
+    <div class="section-header">
+      <div class="et-accent-bar" aria-hidden="true"></div>
+      <h2 class="section-title">{{ 'employers.value.title' | translate }}</h2>
+      <p class="section-subtitle">Everything you need to source, assess, and hire exceptional Ethiopian talent</p>
+    </div>
+    <div class="value-grid afriwork-stagger">
       @for (v of valueProps; track v.titleKey) {
-        <div class="value-card">
+        <div class="value-card glow-card">
           <div class="value-icon"><mat-icon>{{ v.icon }}</mat-icon></div>
           <h3>{{ v.titleKey | translate }}</h3>
           <p>{{ v.descKey | translate }}</p>
@@ -33,11 +91,15 @@
   <!-- How it works -->
   <section id="how" class="section section-tint">
     <div class="afriwork-container">
-      <h2 class="section-title">{{ 'employers.how.title' | translate }}</h2>
-      <div class="steps-grid">
+      <div class="section-header">
+        <div class="et-accent-bar" aria-hidden="true"></div>
+        <h2 class="section-title">{{ 'employers.how.title' | translate }}</h2>
+        <p class="section-subtitle">A seamless 3-step pipeline from job requisition to signed offer</p>
+      </div>
+      <div class="steps-grid afriwork-stagger">
         @for (step of steps; track step.n) {
-          <div class="step-card">
-            <div class="step-number">{{ step.n }}</div>
+          <div class="step-card glow-card">
+            <div class="step-badge">0{{ step.n }}</div>
             <h3>{{ step.titleKey | translate }}</h3>
             <p>{{ step.descKey | translate }}</p>
           </div>
@@ -49,12 +111,13 @@
   <!-- Job-seeker cross-link -->
   <section class="seeker-band">
     <div class="afriwork-container seeker-band-inner">
-      <div>
+      <div class="seeker-text">
+        <span class="seeker-tag">FOR CANDIDATES & PROFESSIONALS</span>
         <h2>{{ 'employers.seeker.title' | translate }}</h2>
         <p>{{ 'employers.seeker.subtitle' | translate }}</p>
       </div>
       <a mat-stroked-button routerLink="/jobs" class="seeker-link">
-        {{ 'employers.seeker.button' | translate }}
+        <span>{{ 'employers.seeker.button' | translate }}</span>
         <mat-icon iconPositionEnd>arrow_forward</mat-icon>
       </a>
     </div>
@@ -62,10 +125,17 @@
 
   <!-- CTA -->
   <section class="cta">
-    <div class="afriwork-container cta-inner">
-      <h2>{{ 'employers.cta.title' | translate }}</h2>
-      <p>{{ 'employers.cta.subtitle' | translate }}</p>
-      <a mat-flat-button routerLink="/register" class="cta-primary">{{ 'employers.cta.primary' | translate }}</a>
+    <div class="afriwork-container">
+      <div class="cta-card">
+        <div class="cta-inner">
+          <h2>{{ 'employers.cta.title' | translate }}</h2>
+          <p>{{ 'employers.cta.subtitle' | translate }}</p>
+          <a mat-flat-button routerLink="/register" class="cta-primary">
+            <mat-icon>bolt</mat-icon>
+            <span>{{ 'employers.cta.primary' | translate }}</span>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 

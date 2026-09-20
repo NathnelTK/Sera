@@ -1,245 +1,222 @@
-<div class="dashboard-container">
-  <div class="header">
-    <span class="et-accent-bar"></span>
-    <h1>{{ 'dash.applicant.title' | translate }}</h1>
-    <p>{{ 'dash.welcome' | translate:{ name: currentUser()?.email } }}</p>
+<div class="dashboard-page afriwork-fade-in">
+  <!-- Career Growth Hero Banner with AI Visual -->
+  <div class="dashboard-banner">
+    <div class="afriwork-container">
+      <div class="banner-grid">
+        <div class="banner-text">
+          <div class="banner-pill">
+            <span class="status-dot"></span>
+            <span>Ethiopian Talent Hub</span>
+          </div>
+          <h1 class="banner-title">{{ 'dash.applicant.title' | translate }}</h1>
+          <p class="banner-sub">{{ 'dash.welcome' | translate:{ name: currentUser()?.email } }}</p>
+          <div class="banner-highlights">
+            <div class="highlight-item">
+              <mat-icon>verified</mat-icon>
+              <span>Fayda ID {{ isVerified() ? 'Verified' : 'Ready' }}</span>
+            </div>
+            <div class="highlight-item">
+              <mat-icon>auto_awesome</mat-icon>
+              <span>AI Job Match Active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-visual-wrapper">
+          <div class="banner-img-card float-animation">
+            <img src="/images/career-growth.jpg" alt="Career Growth Milestones" class="banner-img" />
+            <div class="banner-overlay-badge">
+              <mat-icon>trending_up</mat-icon>
+              <span>Milestone: Ready for Top Roles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <section class="discovery-panel">
-    <div class="section-heading">
-      <div>
-        <h2>{{ 'dash.discovery.title' | translate }}</h2>
-        <p>{{ 'dash.discovery.desc' | translate }}</p>
+  <div class="dashboard-container afriwork-container">
+    <!-- Discovery Panel -->
+    <section class="discovery-panel glass-card">
+      <div class="section-heading">
+        <div class="heading-text">
+          <h2>{{ 'dash.discovery.title' | translate }}</h2>
+          <p>{{ 'dash.discovery.desc' | translate }}</p>
+        </div>
+        <button mat-flat-button class="explore-btn" (click)="navigateToJobs()">
+          <mat-icon>search</mat-icon>
+          <span>{{ 'dash.discovery.action' | translate }}</span>
+        </button>
       </div>
-      <button mat-flat-button color="primary" (click)="navigateToJobs()">
-        <mat-icon>search</mat-icon>{{ 'dash.discovery.action' | translate }}
-      </button>
-    </div>
 
-    <div class="category-links" aria-label="Popular job categories">
-      @for (category of ['Technology', 'Healthcare', 'Finance', 'Engineering', 'Marketing', 'Hospitality']; track category) {
-        <button mat-stroked-button type="button" (click)="navigateToCategory(category)">{{ category }}</button>
-      }
-    </div>
-
-    @if (isLoadingJobs()) {
-      <div class="discovery-loading"><mat-spinner diameter="30" />{{ 'common.loading' | translate }}</div>
-    } @else if (jobsError()) {
-      <div class="discovery-empty"><mat-icon>error_outline</mat-icon>{{ jobsError() }}</div>
-      <button mat-button type="button" (click)="reloadJobs()">{{ 'common.retry' | translate }}</button>
-    } @else if (publishedJobs().length) {
-      <div class="recent-jobs">
-        @for (job of publishedJobs(); track job.id) {
-          <button class="recent-job" type="button" (click)="navigateToJob(job.id)">
-            <span class="recent-job-title">{{ job.title }}</span>
-            <span>{{ job.companyName || job.recruiterName }}</span>
-            @if (jobLocation(job)) { <span class="recent-job-location"><mat-icon>location_on</mat-icon>{{ jobLocation(job) }}</span> }
-          </button>
+      <div class="category-links" aria-label="Popular job categories">
+        @for (category of ['Technology', 'Healthcare', 'Finance', 'Engineering', 'Marketing', 'Hospitality']; track category) {
+          <button type="button" class="category-pill-btn" (click)="navigateToCategory(category)">{{ category }}</button>
         }
       </div>
-    } @else {
-      <p class="discovery-empty">{{ 'dash.discovery.empty' | translate }}</p>
-    }
-  </section>
 
-  <!-- Stats Overview -->
-  <div class="stats-grid afriwork-stagger">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-content">
-          <mat-icon class="stat-icon applications">work</mat-icon>
-          <div class="stat-info">
-            <div class="stat-number">{{ totalApplications() }}</div>
-            <div class="stat-label">{{ 'dash.stat.total' | translate }}</div>
-          </div>
+      @if (isLoadingJobs()) {
+        <div class="discovery-loading"><mat-spinner diameter="28" /><span>{{ 'common.loading' | translate }}</span></div>
+      } @else if (jobsError()) {
+        <div class="discovery-empty"><mat-icon>error_outline</mat-icon><span>{{ jobsError() }}</span></div>
+        <button mat-button type="button" (click)="reloadJobs()">{{ 'common.retry' | translate }}</button>
+      } @else if (publishedJobs().length) {
+        <div class="recent-jobs">
+          @for (job of publishedJobs(); track job.id) {
+            <button class="recent-job glow-card" type="button" (click)="navigateToJob(job.id)">
+              <div class="job-item-left">
+                <span class="recent-job-title">{{ job.title }}</span>
+                <span class="recent-job-company">{{ job.companyName || job.recruiterName }}</span>
+              </div>
+              @if (jobLocation(job)) {
+                <span class="recent-job-location"><mat-icon>location_on</mat-icon>{{ jobLocation(job) }}</span>
+              }
+              <mat-icon class="recent-arrow">arrow_forward</mat-icon>
+            </button>
+          }
         </div>
-      </mat-card-content>
-    </mat-card>
+      } @else {
+        <p class="discovery-empty">{{ 'dash.discovery.empty' | translate }}</p>
+      }
+    </section>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-content">
-          <mat-icon class="stat-icon pending">schedule</mat-icon>
-          <div class="stat-info">
-            <div class="stat-number">{{ pendingApplications() }}</div>
-            <div class="stat-label">{{ 'dash.stat.pending' | translate }}</div>
-          </div>
+    <!-- Stats Overview -->
+    <div class="stats-grid afriwork-stagger">
+      <div class="stat-card glow-card">
+        <div class="stat-icon applications"><mat-icon>work</mat-icon></div>
+        <div class="stat-info">
+          <div class="stat-number">{{ totalApplications() }}</div>
+          <div class="stat-label">{{ 'dash.stat.total' | translate }}</div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-content">
-          <mat-icon class="stat-icon accepted">check_circle</mat-icon>
-          <div class="stat-info">
-            <div class="stat-number">{{ acceptedApplications() }}</div>
-            <div class="stat-label">{{ 'dash.stat.accepted' | translate }}</div>
-          </div>
+      <div class="stat-card glow-card">
+        <div class="stat-icon pending"><mat-icon>schedule</mat-icon></div>
+        <div class="stat-info">
+          <div class="stat-number">{{ pendingApplications() }}</div>
+          <div class="stat-label">{{ 'dash.stat.pending' | translate }}</div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-content">
-          <mat-icon class="stat-icon interviews">event</mat-icon>
-          <div class="stat-info">
-            <div class="stat-number">{{ totalInterviews() }}</div>
-            <div class="stat-label">{{ 'dash.stat.interviews' | translate }}</div>
-          </div>
+      <div class="stat-card glow-card">
+        <div class="stat-icon accepted"><mat-icon>check_circle</mat-icon></div>
+        <div class="stat-info">
+          <div class="stat-number">{{ acceptedApplications() }}</div>
+          <div class="stat-label">{{ 'dash.stat.accepted' | translate }}</div>
         </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      </div>
 
-  <!-- Quick Actions -->
-  <div class="dashboard-grid afriwork-stagger">
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToApplications()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.applications.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.applications.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">folder_open</mat-icon>
-          <div class="card-stats">
-            <span class="stat">{{ 'dash.count.total' | translate:{ count: totalApplications() } }}</span>
-            <span class="stat">{{ 'dash.count.pending' | translate:{ count: pendingApplications() } }}</span>
-          </div>
+      <div class="stat-card glow-card">
+        <div class="stat-icon interviews"><mat-icon>event</mat-icon></div>
+        <div class="stat-info">
+          <div class="stat-number">{{ totalInterviews() }}</div>
+          <div class="stat-label">{{ 'dash.stat.interviews' | translate }}</div>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.applications.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
+    </div>
 
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToProfile()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.profile.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.profile.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">person</mat-icon>
-          <div class="card-hint">{{ 'dash.profile.hint' | translate }}</div>
+    <!-- Quick Actions -->
+    <div class="dashboard-grid afriwork-stagger">
+      <div class="action-card glow-card" (click)="navigateToApplications()">
+        <div class="card-header-row">
+          <div class="action-icon-box blue-box"><mat-icon>folder_open</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.profile.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+        <h3 class="card-title">{{ 'dash.applications.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.applications.desc' | translate }}</p>
+        <div class="card-stats-row">
+          <span class="stat-badge">{{ 'dash.count.total' | translate:{ count: totalApplications() } }}</span>
+          <span class="stat-badge">{{ 'dash.count.pending' | translate:{ count: pendingApplications() } }}</span>
+        </div>
+      </div>
 
-    <mat-card class="dashboard-card verification-card afriwork-hoverable" (click)="navigateToVerification()">
-      <mat-card-header>
-        <mat-card-title>{{ 'fayda.card.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'fayda.card.subtitle' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">verified_user</mat-icon>
+      <div class="action-card glow-card" (click)="navigateToProfile()">
+        <div class="card-header-row">
+          <div class="action-icon-box purple-box"><mat-icon>person</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
+        </div>
+        <h3 class="card-title">{{ 'dash.profile.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.profile.desc' | translate }}</p>
+        <span class="card-hint-text">{{ 'dash.profile.hint' | translate }}</span>
+      </div>
+
+      <div class="action-card glow-card" (click)="navigateToVerification()">
+        <div class="card-header-row">
+          <div class="action-icon-box green-box"><mat-icon>verified_user</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
+        </div>
+        <h3 class="card-title">{{ 'fayda.card.title' | translate }}</h3>
+        <p class="card-desc">{{ 'fayda.card.subtitle' | translate }}</p>
+        <div class="card-extra">
           @if (isVerified()) {
             <span class="verify-badge verified"><mat-icon>check_circle</mat-icon>{{ 'fayda.status.approved' | translate }}</span>
           } @else if (verificationPending()) {
             <span class="verify-badge pending"><mat-icon>hourglass_top</mat-icon>{{ 'fayda.status.pending' | translate }}</span>
           } @else {
-            <div class="card-hint">{{ 'fayda.card.hint' | translate }}</div>
+            <span class="card-hint-text">{{ 'fayda.card.hint' | translate }}</span>
           }
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ (isVerified() ? 'fayda.card.view' : 'fayda.card.action') | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
 
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToJobs()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.jobs.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.jobs.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">search</mat-icon>
-          <div class="card-hint">{{ 'dash.jobs.hint' | translate }}</div>
+      <div class="action-card glow-card" (click)="navigateToJobs()">
+        <div class="card-header-row">
+          <div class="action-icon-box indigo-box"><mat-icon>search</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.jobs.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+        <h3 class="card-title">{{ 'dash.jobs.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.jobs.desc' | translate }}</p>
+        <span class="card-hint-text">{{ 'dash.jobs.hint' | translate }}</span>
+      </div>
 
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToInterviews()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.interviews.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.interviews.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">video_call</mat-icon>
-          <div class="card-stats">
-            <span class="stat">{{ 'dash.count.total' | translate:{ count: totalInterviews() } }}</span>
-            <span class="stat">{{ 'dash.count.upcoming' | translate:{ count: upcomingInterviews().length } }}</span>
-          </div>
+      <div class="action-card glow-card" (click)="navigateToInterviews()">
+        <div class="card-header-row">
+          <div class="action-icon-box amber-box"><mat-icon>video_call</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.interviews.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToDocuments()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.documents.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.documents.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">description</mat-icon>
-          <div class="card-hint">{{ 'dash.documents.hint' | translate }}</div>
+        <h3 class="card-title">{{ 'dash.interviews.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.interviews.desc' | translate }}</p>
+        <div class="card-stats-row">
+          <span class="stat-badge">{{ 'dash.count.total' | translate:{ count: totalInterviews() } }}</span>
+          <span class="stat-badge">{{ 'dash.count.upcoming' | translate:{ count: upcomingInterviews().length } }}</span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.documents.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
 
-    <mat-card class="dashboard-card notification-card afriwork-hoverable" (click)="navigateToNotifications()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.notifications.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.notifications.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <div class="notification-icon-wrapper">
-            <mat-icon class="card-icon">notifications</mat-icon>
+      <div class="action-card glow-card" (click)="navigateToDocuments()">
+        <div class="card-header-row">
+          <div class="action-icon-box teal-box"><mat-icon>description</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
+        </div>
+        <h3 class="card-title">{{ 'dash.documents.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.documents.desc' | translate }}</p>
+        <span class="card-hint-text">{{ 'dash.documents.hint' | translate }}</span>
+      </div>
+
+      <div class="action-card glow-card" (click)="navigateToNotifications()">
+        <div class="card-header-row">
+          <div class="action-icon-box rose-box">
+            <mat-icon>notifications</mat-icon>
             @if (unreadNotifications() > 0) {
-              <span class="notification-badge">{{ unreadNotifications() > 99 ? '99+' : unreadNotifications() }}</span>
+              <span class="unread-dot"></span>
             }
           </div>
-          <div class="card-stats">
-            <span class="stat">{{ 'dash.count.unread' | translate:{ count: unreadNotifications() } }}</span>
-          </div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.notifications.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+        <h3 class="card-title">{{ 'dash.notifications.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.notifications.desc' | translate }}</p>
+        <div class="card-stats-row">
+          <span class="stat-badge unread-badge">{{ 'dash.count.unread' | translate:{ count: unreadNotifications() } }}</span>
+        </div>
+      </div>
 
-    <mat-card class="dashboard-card afriwork-hoverable" (click)="navigateToAiTools()">
-      <mat-card-header>
-        <mat-card-title>{{ 'dash.ai.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'dash.ai.desc' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-content">
-          <mat-icon class="card-icon">psychology</mat-icon>
-          <div class="card-hint">{{ 'dash.ai.hint' | translate }}</div>
+      <div class="action-card glow-card" (click)="navigateToAiTools()">
+        <div class="card-header-row">
+          <div class="action-icon-box violet-box"><mat-icon>psychology</mat-icon></div>
+          <span class="action-arrow"><mat-icon>chevron_right</mat-icon></span>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">{{ 'dash.ai.action' | translate }}</button>
-      </mat-card-actions>
-    </mat-card>
+        <h3 class="card-title">{{ 'dash.ai.title' | translate }}</h3>
+        <p class="card-desc">{{ 'dash.ai.desc' | translate }}</p>
+        <span class="card-hint-text">{{ 'dash.ai.hint' | translate }}</span>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,139 +1,213 @@
-<div class="job-detail afriwork-container afriwork-fade-in">
-  <a routerLink="/jobs" class="back-link">
-    <mat-icon>arrow_back</mat-icon>
-    <span>{{ 'wf.job.back' | translate }}</span>
-  </a>
+<div class="job-detail-page afriwork-fade-in">
+  <div class="job-detail-container afriwork-container">
+    <a routerLink="/jobs" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>{{ 'wf.job.back' | translate }}</span>
+    </a>
 
-  @if (isLoading() && !job()) {
-    <div class="state">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>{{ 'common.loading' | translate }}</p>
-    </div>
-  } @else if (!job()) {
-    <div class="state">
-      <mat-icon class="state-icon">search_off</mat-icon>
-      <p>{{ 'wf.job.notFound' | translate }}</p>
-      <a mat-stroked-button routerLink="/jobs">{{ 'wf.job.back' | translate }}</a>
-    </div>
-  } @else {
-    <div class="layout">
-      <!-- Main column -->
-      <article class="main">
-        <header class="job-head">
-          <div class="et-accent-bar"></div>
-          <h1>{{ job()!.title }}</h1>
-          <p class="company">{{ job()!.companyName || job()!.recruiterName }}</p>
+    @if (isLoading() && !job()) {
+      <div class="state-card">
+        <mat-spinner diameter="44"></mat-spinner>
+        <p>{{ 'common.loading' | translate }}</p>
+      </div>
+    } @else if (!job()) {
+      <div class="state-card">
+        <mat-icon class="state-icon">search_off</mat-icon>
+        <p>{{ 'wf.job.notFound' | translate }}</p>
+        <a mat-flat-button color="primary" routerLink="/jobs">{{ 'wf.job.back' | translate }}</a>
+      </div>
+    } @else {
+      <div class="layout">
+        <!-- Main column -->
+        <article class="main-column">
+          <header class="job-header-card">
+            <div class="header-top-row">
+              <div class="company-monogram">
+                <span>{{ (job()!.companyName || job()!.recruiterName || 'T').charAt(0).toUpperCase() }}</span>
+              </div>
+              <div class="header-title-block">
+                <div class="et-accent-bar"></div>
+                <h1 class="job-title">{{ job()!.title }}</h1>
+                <p class="company-title">{{ job()!.companyName || job()!.recruiterName }}</p>
+              </div>
+              <span class="status-badge" [class]="'wf-chip wf-chip--' + jobStatusColor(job()!.status)">
+                {{ jobStatusKey(job()!.status) | translate }}
+              </span>
+            </div>
 
-          <div class="meta">
-            <span class="wf-chip" [class]="'wf-chip wf-chip--' + jobStatusColor(job()!.status)">
-              {{ jobStatusKey(job()!.status) | translate }}
-            </span>
-            <span class="meta-item"><mat-icon>work</mat-icon>{{ jobTypeKey(job()!.jobType) | translate }}</span>
-            <span class="meta-item"><mat-icon>schedule</mat-icon>{{ workModeKey(job()!.workMode) | translate }}</span>
-            <span class="meta-item"><mat-icon>business_center</mat-icon>{{ experienceLevelKey(job()!.experienceLevel) | translate }}</span>
-            @if (job()!.minSalary || job()!.maxSalary) {
-              <span class="meta-item"><mat-icon>payments</mat-icon>{{ formatSalary(job()!) }}</span>
+            <div class="meta-row">
+              <span class="meta-pill">
+                <mat-icon>work</mat-icon>
+                <span>{{ jobTypeKey(job()!.jobType) | translate }}</span>
+              </span>
+              <span class="meta-pill">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ workModeKey(job()!.workMode) | translate }}</span>
+              </span>
+              <span class="meta-pill">
+                <mat-icon>trending_up</mat-icon>
+                <span>{{ experienceLevelKey(job()!.experienceLevel) | translate }}</span>
+              </span>
+              @if (job()!.minSalary || job()!.maxSalary) {
+                <span class="meta-pill salary-pill">
+                  <mat-icon>payments</mat-icon>
+                  <span>{{ formatSalary(job()!) }}</span>
+                </span>
+              }
+            </div>
+
+            @if (job()!.deadline) {
+              <div class="deadline-banner">
+                <mat-icon>event</mat-icon>
+                <span>{{ 'wf.job.deadline' | translate: { date: (job()!.deadline | date: 'mediumDate') } }}</span>
+              </div>
+            }
+          </header>
+
+          <section class="detail-section">
+            <div class="section-heading-row">
+              <mat-icon class="sec-icon">description</mat-icon>
+              <h2>{{ 'wf.job.overview' | translate }}</h2>
+            </div>
+            <div class="prose-card">
+              <p class="prose">{{ job()!.description }}</p>
+            </div>
+          </section>
+
+          @if (job()!.requirements) {
+            <section class="detail-section">
+              <div class="section-heading-row">
+                <mat-icon class="sec-icon">checklist</mat-icon>
+                <h2>{{ 'wf.job.requirements' | translate }}</h2>
+              </div>
+              <div class="prose-card">
+                <p class="prose">{{ job()!.requirements }}</p>
+              </div>
+            </section>
+          }
+
+          @if (job()!.benefits) {
+            <section class="detail-section">
+              <div class="section-heading-row">
+                <mat-icon class="sec-icon">star_rate</mat-icon>
+                <h2>{{ 'wf.job.benefits' | translate }}</h2>
+              </div>
+              <div class="prose-card">
+                <p class="prose">{{ job()!.benefits }}</p>
+              </div>
+            </section>
+          }
+        </article>
+
+        <!-- Apply column -->
+        <aside class="apply-column">
+          <div class="apply-card glass-card">
+            @if (isApplicant()) {
+              <button mat-stroked-button class="full save-btn" type="button" (click)="toggleSaved()" [disabled]="saving()">
+                <mat-icon>{{ saved() ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                <span>{{ (saved() ? 'saved.removeBookmark' : 'saved.bookmark') | translate }}</span>
+              </button>
+            }
+
+            @if (hasApplied()) {
+              <div class="applied-state">
+                <div class="applied-check-icon">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+                <h3>{{ 'wf.job.applied' | translate }}</h3>
+                <p>{{ 'wf.job.appliedBody' | translate }}</p>
+                <a mat-flat-button class="view-app-btn" [routerLink]="['/applicant/applications', appliedId()]">
+                  <span>{{ 'wf.job.viewApplication' | translate }}</span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </a>
+              </div>
+            } @else if (canApply()) {
+              <div class="apply-heading">
+                <h3>{{ 'wf.job.applyTitle' | translate }}</h3>
+                <div class="apply-tabs">
+                  <button type="button" class="tab-btn" [class.active]="applicationMode() === 'quick'" (click)="applicationMode.set('quick')">
+                    <mat-icon>bolt</mat-icon>
+                    <span>{{ 'wf.job.quickApply' | translate }}</span>
+                  </button>
+                  <button type="button" class="tab-btn" [class.active]="applicationMode() === 'manual'" (click)="applicationMode.set('manual')">
+                    <mat-icon>edit_note</mat-icon>
+                    <span>{{ 'wf.job.manualApply' | translate }}</span>
+                  </button>
+                </div>
+              </div>
+
+              @if (applicationMode() === 'quick') {
+                <p class="apply-hint">{{ 'wf.job.quickApplyHint' | translate }}</p>
+              } @else {
+                <p class="apply-hint">{{ 'wf.job.manualApplyHint' | translate }}</p>
+              }
+
+              @if (applicantDocuments().length) {
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>{{ 'wf.job.selectCv' | translate }}</mat-label>
+                  <mat-select [value]="selectedCvId()" (selectionChange)="selectedCvId.set($event.value)">
+                    @for (document of applicantDocuments(); track document.id) {
+                      <mat-option [value]="document.id">{{ document.fileName }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              } @else {
+                <div class="cv-alert">
+                  <mat-icon>warning</mat-icon>
+                  <div>
+                    <span>{{ 'wf.job.cvRequired' | translate }}</span>
+                    <a routerLink="/applicant/documents">{{ 'documents.title' | translate }}</a>
+                  </div>
+                </div>
+              }
+
+              <form [formGroup]="coverForm" (ngSubmit)="apply()" class="apply-form">
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>{{ 'wf.job.coverLetter' | translate }}</mat-label>
+                  <textarea matInput rows="5" formControlName="coverLetter"
+                            [placeholder]="'wf.job.coverLetterHint' | translate"></textarea>
+                </mat-form-field>
+
+                @if (applyError()) {
+                  <div class="form-error-banner">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>{{ applyError() }}</span>
+                  </div>
+                }
+
+                <button mat-flat-button class="submit-application-btn" type="submit"
+                        [disabled]="submitting() || coverForm.invalid || !selectedCvId()">
+                  @if (submitting()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                  } @else {
+                    <mat-icon>send</mat-icon>
+                    <span>{{ 'wf.job.apply' | translate }}</span>
+                  }
+                </button>
+              </form>
+            } @else if (isRecruiter()) {
+              <div class="recruiter-notice">
+                <mat-icon>visibility</mat-icon>
+                <p>{{ 'wf.job.recruiterHint' | translate }}</p>
+              </div>
+            } @else if (!isAuthenticated()) {
+              <div class="guest-apply-block">
+                <h3>{{ 'wf.job.applyTitle' | translate }}</h3>
+                <p class="apply-hint">{{ 'wf.job.signInHint' | translate }}</p>
+                <button mat-flat-button class="sign-in-apply-btn" (click)="signInToApply()">
+                  <mat-icon>login</mat-icon>
+                  <span>{{ 'wf.job.signInToApply' | translate }}</span>
+                </button>
+              </div>
+            } @else {
+              <div class="closed-notice">
+                <mat-icon>lock</mat-icon>
+                <p>{{ 'wf.job.closed' | translate }}</p>
+              </div>
             }
           </div>
-          @if (job()!.deadline) {
-            <p class="deadline">
-              <mat-icon>event</mat-icon>
-              {{ 'wf.job.deadline' | translate: { date: (job()!.deadline | date: 'mediumDate') } }}
-            </p>
-          }
-        </header>
-
-        <section class="section">
-          <h2>{{ 'wf.job.overview' | translate }}</h2>
-          <p class="prose">{{ job()!.description }}</p>
-        </section>
-
-        @if (job()!.requirements) {
-          <section class="section">
-            <h2>{{ 'wf.job.requirements' | translate }}</h2>
-            <p class="prose">{{ job()!.requirements }}</p>
-          </section>
-        }
-
-        @if (job()!.benefits) {
-          <section class="section">
-            <h2>{{ 'wf.job.benefits' | translate }}</h2>
-            <p class="prose">{{ job()!.benefits }}</p>
-          </section>
-        }
-      </article>
-
-      <!-- Apply column -->
-      <aside class="apply">
-          <mat-card class="apply-card">
-            @if (isApplicant()) {
-              <button mat-stroked-button class="full save-button" type="button" (click)="toggleSaved()" [disabled]="saving()">
-                <mat-icon>{{ saved() ? 'bookmark' : 'bookmark_border' }}</mat-icon>
-                {{ (saved() ? 'saved.removeBookmark' : 'saved.bookmark') | translate }}
-              </button>
-            }
-            @if (hasApplied()) {
-            <div class="applied">
-              <mat-icon class="ok">check_circle</mat-icon>
-              <h3>{{ 'wf.job.applied' | translate }}</h3>
-              <p>{{ 'wf.job.appliedBody' | translate }}</p>
-              <a mat-flat-button color="primary" [routerLink]="['/applicant/applications', appliedId()]">
-                {{ 'wf.job.viewApplication' | translate }}
-              </a>
-            </div>
-          } @else if (canApply()) {
-            <h3>{{ 'wf.job.applyTitle' | translate }}</h3>
-            <div class="apply-modes">
-              <button mat-button type="button" [class.active]="applicationMode() === 'quick'" (click)="applicationMode.set('quick')">{{ 'wf.job.quickApply' | translate }}</button>
-              <button mat-button type="button" [class.active]="applicationMode() === 'manual'" (click)="applicationMode.set('manual')">{{ 'wf.job.manualApply' | translate }}</button>
-            </div>
-            @if (applicationMode() === 'quick') { <p class="hint">{{ 'wf.job.quickApplyHint' | translate }}</p> }
-            @else { <p class="hint">{{ 'wf.job.manualApplyHint' | translate }}</p> }
-            @if (applicantDocuments().length) {
-              <mat-form-field appearance="outline" class="full">
-                <mat-label>{{ 'wf.job.selectCv' | translate }}</mat-label>
-                <mat-select [value]="selectedCvId()" (selectionChange)="selectedCvId.set($event.value)">
-                  @for (document of applicantDocuments(); track document.id) { <mat-option [value]="document.id">{{ document.fileName }}</mat-option> }
-                </mat-select>
-              </mat-form-field>
-            } @else { <p class="form-error">{{ 'wf.job.cvRequired' | translate }} <a routerLink="/applicant/documents">{{ 'documents.title' | translate }}</a></p> }
-            <form [formGroup]="coverForm" (ngSubmit)="apply()">
-              <mat-form-field appearance="outline" class="full">
-                <mat-label>{{ 'wf.job.coverLetter' | translate }}</mat-label>
-                <textarea matInput rows="6" formControlName="coverLetter"
-                          [placeholder]="'wf.job.coverLetterHint' | translate"></textarea>
-              </mat-form-field>
-              @if (applyError()) {
-                <p class="form-error">{{ applyError() }}</p>
-              }
-              <button mat-flat-button color="primary" class="full" type="submit"
-                      [disabled]="submitting() || coverForm.invalid || !selectedCvId()">
-                @if (submitting()) {
-                  <mat-spinner diameter="18"></mat-spinner>
-                } @else {
-                  {{ 'wf.job.apply' | translate }}
-                }
-              </button>
-            </form>
-          } @else if (isRecruiter()) {
-            <div class="notice">
-              <mat-icon>info</mat-icon>
-              <p>{{ 'wf.job.recruiterHint' | translate }}</p>
-            </div>
-          } @else if (!isAuthenticated()) {
-            <h3>{{ 'wf.job.applyTitle' | translate }}</h3>
-            <p class="hint">{{ 'wf.job.signInHint' | translate }}</p>
-            <button mat-flat-button color="primary" class="full" (click)="signInToApply()">
-              {{ 'wf.job.signInToApply' | translate }}
-            </button>
-          } @else {
-            <div class="notice">
-              <mat-icon>lock</mat-icon>
-              <p>{{ 'wf.job.closed' | translate }}</p>
-            </div>
-          }
-        </mat-card>
-      </aside>
-    </div>
-  }
+        </aside>
+      </div>
+    }
+  </div>
 </div>

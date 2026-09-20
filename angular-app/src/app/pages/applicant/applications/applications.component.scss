@@ -1,5 +1,6 @@
 .applications {
-  padding: var(--afriwork-spacing-lg) var(--afriwork-spacing-md);
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: 4rem;
 }
 
 .state {
@@ -51,11 +52,15 @@
   gap: var(--afriwork-spacing-md);
   padding: var(--afriwork-spacing-md);
   cursor: pointer;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-xl);
+  box-shadow: var(--afriwork-shadow-sm);
+  transition: all var(--afriwork-transition-base);
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
+    border-color: rgba(37, 99, 235, .4);
+    box-shadow: var(--afriwork-shadow-lg);
+    transform: translateY(-3px);
   }
 }
 
