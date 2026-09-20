@@ -180,4 +180,14 @@ export class JobApplicationsComponent {
   dismissFlash(): void {
     this.flash.set(null);
   }
+
+  scoreParts(candidate: JobApplicationSummary): { label: string; value: number }[] {
+    return [
+      { label: 'Skills match', value: candidate.skillsMatch ?? candidate.matchScore ?? 0 },
+      { label: 'Experience match', value: candidate.experienceMatch ?? candidate.matchScore ?? 0 },
+      { label: 'Education match', value: candidate.educationMatch ?? candidate.matchScore ?? 0 },
+      { label: 'Requirements match', value: candidate.requirementsMatch ?? candidate.matchScore ?? 0 },
+      { label: 'Location / availability', value: candidate.locationMatch ?? candidate.matchScore ?? 0 },
+    ];
+  }
 }

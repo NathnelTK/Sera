@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { JobsStore } from '../../../stores/jobs.store';
 import { JobFormPayload } from '../../../services/jobs.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -19,6 +20,7 @@ import {
   WorkMode,
   WORK_MODE_OPTIONS,
 } from '../../../core/workflow/workflow';
+import { DistributionChannel } from '../../../services/distribution.service';
 
 @Component({
   selector: 'app-job-create',
@@ -34,6 +36,7 @@ import {
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     TranslatePipe,
   ],
   templateUrl: './job-create.component.html',
@@ -55,6 +58,12 @@ export class JobCreateComponent {
   isLoading = computed(() => this.jobsStore.isLoading());
   error = computed(() => this.jobsStore.error());
   saved = signal(false);
+  readonly channels = [
+    { value: DistributionChannel.Website, label: 'TalentOS Website' },
+    { value: DistributionChannel.Telegram, label: 'Telegram' },
+    { value: DistributionChannel.LinkedIn, label: 'LinkedIn' },
+  ];
+  readonly selectedChannels = signal<DistributionChannel[]>([DistributionChannel.Website]);
 
   form = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(200)]],
@@ -127,7 +136,13 @@ export class JobCreateComponent {
       if (ok) this.router.navigate(['/recruiter/jobs']);
     } else {
       const id = await this.jobsStore.createJob(payload);
-      if (id) this.router.navigate(['/recruiter/jobs']);
+      if (id) this.router.navigate(['/recruiter/jobs', id, 'distribution'], { queryParams: { channels: this.selectedChannels().join(',') } });
     }
+  }
+
+  toggleChannel(channel: DistributionChannel): void {
+    this.selectedChannels.update(selected => selected.includes(channel)
+      ? selected.filter(value => value !== channel)
+      : [...selected, channel]);
   }
 }

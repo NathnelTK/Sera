@@ -12,6 +12,7 @@ import { InterviewsStore } from '../../../stores/interviews.store';
 import { NotificationsStore } from '../../../stores/notifications.store';
 import { VerificationStore } from '../../../stores/verification.store';
 import { JobsStore } from '../../../stores/jobs.store';
+import { ProfileStore } from '../../../stores/profile.store';
 import { JobSummary } from '../../../services/jobs.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
@@ -38,6 +39,7 @@ export class DashboardComponent {
   private notificationsStore = inject(NotificationsStore);
   private verificationStore = inject(VerificationStore);
   private jobsStore = inject(JobsStore);
+  private profileStore = inject(ProfileStore);
 
   // Signals from stores
   currentUser = computed(() => this.authStore.currentUser());
@@ -64,8 +66,8 @@ export class DashboardComponent {
   isLoadingInterviews = computed(() => this.interviewsStore.isLoading());
   isLoadingNotifications = computed(() => this.notificationsStore.isLoading());
   publishedJobs = computed(() => this.jobsStore.publishedJobs().slice(0, 6));
-  isLoadingJobs = computed(() => this.jobsStore.isLoading());
-  jobsError = computed(() => this.jobsStore.error());
+  isLoadingJobs = computed(() => this.jobsStore.isLoadingPublished());
+  jobsError = computed(() => this.jobsStore.publishedError());
   
   constructor() {
     // Read the current Fayda verification status once (non-reactive — avoids signal writes in an effect).
@@ -78,6 +80,7 @@ export class DashboardComponent {
         this.interviewsStore.loadMyInterviews();
         this.notificationsStore.loadNotifications();
         this.jobsStore.loadPublishedJobs();
+        this.profileStore.loadProfile();
       }
     });
   }

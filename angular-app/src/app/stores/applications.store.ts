@@ -44,7 +44,7 @@ export class ApplicationsStore {
     this.error.set(null);
     try {
       const list = await firstValueFrom(this.service.getMy());
-      this.applications.set(list ?? []);
+      this.applications.set(Array.isArray(list) ? list : []);
       return true;
     } catch (err) {
       this.error.set(this.messageFrom(err, 'wf.error.loadApplications'));

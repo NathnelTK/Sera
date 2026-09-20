@@ -76,6 +76,15 @@ Status: implementation in progress.
 
 Status: implemented in `feat/applicant-professional-profile`; awaiting review.
 
+### Profile History Editing
+
+Status: implemented in `feat/editable-profile-history`; awaiting review.
+
+- Education and experience entries can be removed through an authenticated self-profile endpoint.
+- Updates are validated for required fields, year/date ranges, and collection limits.
+- Child collections are loaded as tracked entities so replacement/removal persists correctly.
+- Add-entry forms remain a follow-up UI enhancement; existing entries are editable through the profile workflow and the endpoint supports full replacement payloads.
+
 ### Scope
 
 - Move Fayda verification to a dedicated applicant route and navigation item.

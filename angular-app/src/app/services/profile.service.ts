@@ -84,4 +84,8 @@ export class ProfileService {
   updateMyApplicantProfile(profile: ApplicantProfileUpdate): Observable<void> {
     return this.http.put<void>(`${environment.apiUrl}/applicants/me`, profile);
   }
+
+  updateHistory(educations: Education[], experiences: Experience[]): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/applicants/me/history`, { educations, experiences });
+  }
 }

@@ -18,6 +18,8 @@ export class JobsStore {
   // State
   isLoading = signal(false);
   error = signal<string | null>(null);
+  isLoadingPublished = signal(false);
+  publishedError = signal<string | null>(null);
   jobs = signal<JobSummary[]>([]);
   myJobs = signal<JobSummary[]>([]);
   currentJob = signal<JobDetails | null>(null);
@@ -51,7 +53,18 @@ export class JobsStore {
   }
 
   async loadPublishedJobs(): Promise<boolean> {
-    return this.loadJobs(1, 50);
+    this.isLoadingPublished.set(true);
+    this.publishedError.set(null);
+    try {
+      const res = await firstValueFrom(this.service.getJobs(1, 50));
+      this.jobs.set(res?.items ?? []);
+      return true;
+    } catch (err) {
+      this.publishedError.set(this.messageFrom(err, 'wf.error.loadJobs'));
+      return false;
+    } finally {
+      this.isLoadingPublished.set(false);
+    }
   }
 
   async loadJobById(id: string): Promise<boolean> {

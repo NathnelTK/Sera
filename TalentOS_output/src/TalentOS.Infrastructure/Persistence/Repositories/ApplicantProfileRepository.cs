@@ -10,7 +10,7 @@ public sealed class ApplicantProfileRepository : BaseRepository<ApplicantProfile
     public ApplicantProfileRepository(TalentOSDbContext context) : base(context) { }
 
     public async Task<ApplicantProfile?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
-        => await DbSet.Include(a => a.User).Include(a => a.Location).Include(a => a.CVs).FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken);
+        => await DbSet.Include(a => a.User).Include(a => a.Location).Include(a => a.CVs).Include(a => a.Educations).Include(a => a.Experiences).FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken);
 
     public async Task<(IReadOnlyList<ApplicantProfile> Profiles, int TotalCount)> DiscoverAsync(
         int skip, int take, string? search, string? location, string? skill, bool openToWorkOnly,

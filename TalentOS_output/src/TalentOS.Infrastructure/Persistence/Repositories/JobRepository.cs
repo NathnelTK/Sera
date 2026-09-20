@@ -55,7 +55,33 @@ public sealed class JobRepository : BaseRepository<Job>, IJobRepository
         if (!string.IsNullOrWhiteSpace(category))
         {
             var categoryTerm = category.Trim().ToLowerInvariant();
-            query = query.Where(j => j.Category != null && j.Category.Name.ToLower() == categoryTerm);
+            var technologyTerms = new[]
+            {
+                "technology", "tech", "it", "software", "web", "backend", "frontend",
+                "devops", "cybersecurity", "cyber security", "developer", "engineering"
+            };
+
+            if (technologyTerms.Contains(categoryTerm))
+            {
+                // Older seeded jobs do not all have a Category relationship. Keep those jobs
+                // discoverable while the data is being normalized by matching the job's domain.
+                query = query.Where(j =>
+                    (j.Category != null && (j.Category.Name.ToLower() == "technology" ||
+                                             j.Category.Name.ToLower() == "tech" ||
+                                             j.Category.Name.ToLower() == "it")) ||
+                    j.Title.ToLower().Contains("software") ||
+                    j.Title.ToLower().Contains("developer") ||
+                    j.Title.ToLower().Contains("devops") ||
+                    j.Title.ToLower().Contains("cyber") ||
+                    j.Title.ToLower().Contains("it support") ||
+                    j.Title.ToLower().Contains("web ") ||
+                    j.Description.ToLower().Contains("software development") ||
+                    j.Description.ToLower().Contains("information technology"));
+            }
+            else
+            {
+                query = query.Where(j => j.Category != null && j.Category.Name.ToLower() == categoryTerm);
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(location))

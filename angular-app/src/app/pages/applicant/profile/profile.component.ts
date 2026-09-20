@@ -43,6 +43,7 @@ export class ProfileComponent {
   readonly editing = signal(false);
   readonly error = signal<string | null>(null);
   readonly saved = signal(false);
+  readonly historyEditing = signal(false);
 
   readonly completion = computed(() => {
     const profile = this.profile();
@@ -107,6 +108,17 @@ export class ProfileComponent {
     this.editing.set(false);
     this.saved.set(false);
   }
+
+  async saveHistory(): Promise<void> {
+    const profile = this.profile(); if (!profile) return;
+    this.saving.set(true); this.error.set(null);
+    try { await firstValueFrom(this.profiles.updateHistory(profile.educations, profile.experiences)); this.historyEditing.set(false); this.saved.set(true); await this.load(); }
+    catch { this.error.set('profile.error.save'); }
+    finally { this.saving.set(false); }
+  }
+
+  removeEducation(id: string): void { this.profile.update(p => p ? { ...p, educations: p.educations.filter(x => x.id !== id) } : p); }
+  removeExperience(id: string): void { this.profile.update(p => p ? { ...p, experiences: p.experiences.filter(x => x.id !== id) } : p); }
 
   async save(): Promise<void> {
     if (this.form.invalid) {

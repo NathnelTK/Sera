@@ -1,5 +1,5 @@
 <div class="notifications-page afriwork-container afriwork-fade-in">
-  <header><div><h1>{{ 'page.notifications.title' | translate }}</h1><p>{{ 'page.notifications.desc' | translate }}</p></div>@if (store.unreadCount()) { <button mat-stroked-button (click)="markAllRead()">{{ 'notifications.markAll' | translate }}</button> }</header>
+  <header><div><span class="et-accent-bar"></span><h1>{{ 'page.notifications.title' | translate }}</h1><p>{{ 'page.notifications.desc' | translate }}</p></div>@if (store.unreadCount()) { <button mat-stroked-button (click)="markAllRead()">{{ 'notifications.markAll' | translate }}</button> }</header>
   @if (loading()) { <div class="state"><mat-spinner diameter="42" /><span>{{ 'common.loading' | translate }}</span></div> }
   @else if (error()) { <div class="state error"><mat-icon>error_outline</mat-icon><span>{{ error() }}</span><button mat-button (click)="load()">{{ 'common.retry' | translate }}</button></div> }
   @else if (!store.hasNotifications()) { <div class="state"><mat-icon>notifications_none</mat-icon><span>{{ 'notifications.empty' | translate }}</span></div> }

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +19,7 @@ import { FooterComponent } from '../../core/layout/footer/footer.component';
   styleUrl: './employers.component.scss',
 })
 export class EmployersComponent {
+  private readonly router = inject(Router);
   readonly valueProps = [
     { icon: 'verified_user', titleKey: 'employers.value.verifiedTitle', descKey: 'employers.value.verifiedDesc' },
     { icon: 'view_kanban', titleKey: 'employers.value.pipelineTitle', descKey: 'employers.value.pipelineDesc' },
@@ -29,4 +31,8 @@ export class EmployersComponent {
     { n: 2, titleKey: 'employers.how.step2Title', descKey: 'employers.how.step2Desc' },
     { n: 3, titleKey: 'employers.how.step3Title', descKey: 'employers.how.step3Desc' },
   ];
+
+  openEmployerPortal(): void {
+    this.router.navigate(['/recruiter/dashboard']);
+  }
 }

@@ -1,179 +1,589 @@
-.dashboard-container {
-  padding: var(--afriwork-spacing-xl);
-  max-width: 1200px;
-  margin: 0 auto;
+.dashboard-page {
+  min-height: calc(100vh - 72px);
+  background: var(--afriwork-gray-50, #f8fafc);
+  padding-bottom: 4rem;
+}
 
-  .header {
-    margin-bottom: var(--afriwork-spacing-xl);
+/* Hero Banner */
+.dashboard-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  color: #ffffff;
+  padding: 2.75rem 0 3.25rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
-    .et-accent-bar {
-      margin-bottom: var(--afriwork-spacing-md);
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.28) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 70%);
+    top: -120px;
+    right: 15%;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
 
-    h1 {
-      color: var(--afriwork-dark);
-      margin-bottom: var(--afriwork-spacing-xs);
-    }
+.banner-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
 
-    p {
-      color: var(--afriwork-gray);
-      margin: 0;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.banner-text {
+  position: relative;
+  z-index: 2;
+
+  .banner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #93c5fd;
+    margin-bottom: 1rem;
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseGlow 2.5s infinite;
     }
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--afriwork-spacing-md);
-    margin-bottom: var(--afriwork-spacing-xl);
-
-    .stat-card {
-      mat-card-content {
-        padding: var(--afriwork-spacing-md);
-
-        .stat-content {
-          display: flex;
-          align-items: center;
-          gap: var(--afriwork-spacing-md);
-
-          .stat-icon {
-            font-size: 1.75rem;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-
-            &.applications {
-              background-color: rgba(13, 110, 253, 0.1);
-              color: var(--afriwork-primary);
-            }
-
-            &.pending {
-              background-color: var(--afriwork-warning-light);
-              color: var(--afriwork-warning);
-            }
-
-            &.accepted {
-              background-color: var(--afriwork-success-light);
-              color: var(--afriwork-success);
-            }
-
-            &.interviews {
-              background-color: rgba(255, 107, 53, 0.12);
-              color: var(--afriwork-secondary);
-            }
-          }
-
-          .stat-info {
-            .stat-number {
-              font-size: var(--afriwork-font-size-2xl);
-              font-weight: 700;
-              color: var(--afriwork-dark);
-              line-height: 1.1;
-            }
-
-            .stat-label {
-              font-size: var(--afriwork-font-size-sm);
-              color: var(--afriwork-gray);
-            }
-          }
-        }
-      }
-    }
+  .banner-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.75rem, 3vw, 2.35rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
   }
 
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--afriwork-spacing-lg);
+  .banner-sub {
+    font-size: 1rem;
+    color: #cbd5e1;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
 
-    .dashboard-card {
-      cursor: pointer;
+  .banner-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
 
-      .card-content {
-        display: flex;
-        align-items: center;
-        gap: var(--afriwork-spacing-md);
-        min-height: 56px;
+    .highlight-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.85rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #e2e8f0;
 
-        .card-icon {
-          font-size: 2rem;
-          width: 2rem;
-          height: 2rem;
-          color: var(--afriwork-primary);
-          flex-shrink: 0;
-        }
-
-        .card-stats {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-
-          .stat {
-            font-size: var(--afriwork-font-size-sm);
-            color: var(--afriwork-gray);
-          }
-        }
-
-        .card-hint {
-          font-size: var(--afriwork-font-size-sm);
-          color: var(--afriwork-gray);
-        }
-
-        .notification-icon-wrapper {
-          position: relative;
-          display: inline-flex;
-          flex-shrink: 0;
-
-          .notification-badge {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            background-color: var(--afriwork-secondary);
-            color: var(--afriwork-white);
-            border-radius: var(--afriwork-radius-full);
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            box-sizing: border-box;
-          }
-        }
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #38bdf8;
       }
     }
   }
 }
 
-/* Fayda verification status badge (scoped to this component) */
+.banner-visual-wrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+
+  .banner-img-card {
+    position: relative;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    max-width: 440px;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
+
+    .banner-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover .banner-img {
+      transform: scale(1.04);
+    }
+
+    .banner-overlay-badge {
+      position: absolute;
+      bottom: 0.85rem;
+      left: 0.85rem;
+      right: 0.85rem;
+      padding: 0.6rem 0.9rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #f1f5f9;
+
+      mat-icon {
+        color: #34d399;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+.float-animation {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+/* Dashboard Content Container */
+.dashboard-container {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Discovery Panel */
+.discovery-panel {
+  padding: 1.75rem 2rem;
+  background: #ffffff;
+  border: 1px solid var(--afriwork-gray-200, #e2e8f0);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+
+    .heading-text {
+      h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 0.25rem;
+      }
+      p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0;
+      }
+    }
+
+    .explore-btn {
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: #ffffff;
+      border-radius: 9999px;
+      padding: 0 1.25rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      }
+    }
+  }
+
+  .category-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+
+    .category-pill-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+      }
+    }
+  }
+
+  .discovery-loading, .discovery-empty {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 0;
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+
+  .recent-jobs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.85rem;
+
+    .recent-job {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.25s ease;
+
+      &:hover {
+        border-color: #93c5fd;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.12);
+
+        .recent-arrow {
+          transform: translateX(3px);
+          color: #2563eb;
+        }
+      }
+
+      .job-item-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        min-width: 0;
+
+        .recent-job-title {
+          font-weight: 700;
+          font-size: 0.9rem;
+          color: #0f172a;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .recent-job-company {
+          font-size: 0.8rem;
+          color: #64748b;
+        }
+      }
+
+      .recent-job-location {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        white-space: nowrap;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      .recent-arrow {
+        color: #cbd5e1;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease, color 0.2s ease;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+/* Stats Overview */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.25rem;
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      mat-icon {
+        font-size: 26px;
+        width: 26px;
+        height: 26px;
+      }
+
+      &.applications {
+        background: #eff6ff;
+        color: #2563eb;
+      }
+
+      &.pending {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      &.accepted {
+        background: #ecfdf5;
+        color: #059669;
+      }
+
+      &.interviews {
+        background: #f3e8ff;
+        color: #7c3aed;
+      }
+    }
+
+    .stat-info {
+      .stat-number {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+      }
+
+      .stat-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-top: 0.2rem;
+      }
+    }
+  }
+}
+
+/* Dashboard Action Cards Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.25rem;
+
+  .action-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px -6px rgba(37, 99, 235, 0.12);
+      border-color: #bfdbfe;
+
+      .action-arrow {
+        color: #2563eb;
+        transform: translateX(3px);
+      }
+    }
+
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.15rem;
+
+      .action-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+
+        &.blue-box { background: #eff6ff; color: #2563eb; }
+        &.purple-box { background: #f5f3ff; color: #7c3aed; }
+        &.green-box { background: #ecfdf5; color: #059669; }
+        &.indigo-box { background: #eef2ff; color: #4f46e5; }
+        &.amber-box { background: #fef3c7; color: #d97706; }
+        &.teal-box { background: #f0fdfa; color: #0d9488; }
+        &.rose-box { background: #fff1f2; color: #e11d48; }
+        &.violet-box { background: #faf5ff; color: #9333ea; }
+
+        .unread-dot {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: #ef4444;
+          border: 2px solid #ffffff;
+        }
+      }
+
+      .action-arrow {
+        color: #cbd5e1;
+        transition: transform 0.2s ease, color 0.2s ease;
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.35rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.45;
+      margin: 0 0 1rem;
+      flex-grow: 1;
+    }
+
+    .card-stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+
+      .stat-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.65rem;
+        background: #f1f5f9;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #475569;
+
+        &.unread-badge {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+      }
+    }
+
+    .card-hint-text {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-top: auto;
+    }
+
+    .card-extra {
+      margin-top: auto;
+    }
+  }
+}
+
+/* Fayda Status Badge */
 .verify-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  gap: 0.3rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
 
   mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
   }
 
   &.verified {
-    background-color: #e6f4ea;
-    color: var(--afriwork-et-green);
+    background: #dcfce7;
+    color: #15803d;
   }
 
   &.pending {
-    background-color: #fff4e5;
-    color: #b26a00;
+    background: #fef3c7;
+    color: #b45309;
   }
 }

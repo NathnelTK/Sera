@@ -63,4 +63,12 @@ export class NavbarComponent {
     if (this.auth.isApplicant()) return '/applicant/dashboard';
     return '/home';
   }
+
+  homeLink(): string {
+    return this.auth.isRecruiter()
+      ? '/recruiter/dashboard'
+      : this.auth.isApplicant()
+        ? '/applicant/dashboard'
+        : '/home';
+  }
 }

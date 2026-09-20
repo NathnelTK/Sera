@@ -40,6 +40,10 @@ export class DashboardComponent {
     this.router.navigate(['/recruiter/profile']);
   }
 
+  navigateToSettings() {
+    this.router.navigate(['/recruiter/settings']);
+  }
+
   navigateToNotifications() {
     this.router.navigate(['/recruiter/notifications']);
   }

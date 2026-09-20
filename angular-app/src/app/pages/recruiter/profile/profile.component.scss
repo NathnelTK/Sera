@@ -1,0 +1,6 @@
+
+.profile-page { max-width: 900px; padding-top: 32px; padding-bottom: 64px; }
+header { margin-bottom: 24px; } h1 { margin: 0 0 8px; } header p { color: var(--afriwork-gray); }
+.status-card { margin-bottom: 20px; background: #101632; color: white; } .status-card mat-card-content { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; } .status-card mat-icon { color: #a78bfa; } .status-card strong, .status-card span { display: block; } .status-card p { flex-basis: 100%; opacity: .8; margin: 4px 0 0; } .status { margin-top: 4px; color: #fbbf24; } .status-2 { color: #4ade80; } .status-3 { color: #fb7185; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 20px; } .wide { grid-column: 1 / -1; } .actions { display: flex; justify-content: flex-end; gap: 12px; } .error-banner, .success { padding: 14px; margin-bottom: 16px; border-radius: 8px; } .error-banner { background: #fff1f2; color: #be123c; } .success { background: #ecfdf5; color: #047857; } .state { min-height: 180px; display: grid; place-content: center; justify-items: center; gap: 12px; }
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } }

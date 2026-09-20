@@ -17,16 +17,18 @@
 }
 
 .navbar {
-  background: #fff;
-  border-bottom: 1px solid var(--afriwork-border);
-  box-shadow: var(--afriwork-shadow-sm);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
 }
 
 .navbar-inner {
   display: flex;
   align-items: center;
   gap: var(--afriwork-spacing-md);
-  height: 64px;
+  height: 68px;
 }
 
 .brand {
@@ -35,14 +37,21 @@
   gap: 10px;
   text-decoration: none;
   flex-shrink: 0;
+  transition: transform var(--afriwork-transition-fast);
+
+  &:hover {
+    transform: scale(1.02);
+  }
 }
 
 .brand-mark {
   display: block;
   border-radius: var(--afriwork-radius-md);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
 .brand-text {
+  font-family: var(--font-heading);
   font-size: var(--afriwork-font-size-lg);
   font-weight: 700;
   color: var(--afriwork-dark);
@@ -52,12 +61,19 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   margin-left: var(--afriwork-spacing-sm);
+}
+
+.nav-links a {
+  border-radius: var(--afriwork-radius-full);
+  font-weight: 500;
+  transition: all var(--afriwork-transition-fast);
 }
 
 .nav-links a.active {
   color: var(--afriwork-primary);
+  background: rgba(37, 99, 235, 0.08);
   font-weight: 600;
 }
 
@@ -69,8 +85,17 @@
 }
 
 .cta {
-  background: var(--afriwork-primary);
-  color: #fff;
+  background: var(--afriwork-gradient-primary);
+  color: #fff !important;
+  border-radius: var(--afriwork-radius-full);
+  padding: 0 var(--afriwork-spacing-lg);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all var(--afriwork-transition-fast);
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    transform: translateY(-1px);
+  }
 }
 
 .account-email {

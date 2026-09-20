@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { ProfileService, Profile, ApplicantProfile, RecruiterProfile } from '../services/profile.service';
+import { ProfileService, ApplicantProfile } from '../services/profile.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +11,16 @@ export class ProfileStore {
   // State
   isLoading = signal(false);
   error = signal<string | null>(null);
-  profile = signal<Profile | null>(null);
+  profile = signal<ApplicantProfile | null>(null);
   
   // Computed
   hasProfile = computed(() => this.profile() !== null);
   isApplicantProfile = computed(() => {
     const prof = this.profile();
-    return prof && 'skills' in prof;
+    return prof !== null;
   });
   isRecruiterProfile = computed(() => {
-    const prof = this.profile();
-    return prof && 'company' in prof;
+    return false;
   });
   
   async loadProfile() {
@@ -28,7 +28,7 @@ export class ProfileStore {
     this.error.set(null);
     
     try {
-      const profile = await this.profileService.getProfile().toPromise();
+      const profile = await firstValueFrom(this.profileService.getMyApplicantProfile());
       if (profile) {
         this.profile.set(profile);
       }
@@ -41,15 +41,15 @@ export class ProfileStore {
     }
   }
   
-  async updateProfile(profileData: Partial<Profile>) {
+  async updateProfile(profileData: Partial<ApplicantProfile>) {
     this.isLoading.set(true);
     this.error.set(null);
     
     try {
-      const updatedProfile = await this.profileService.updateProfile(profileData).toPromise();
-      if (updatedProfile) {
-        this.profile.set(updatedProfile);
-      }
+      const current = this.profile();
+      if (!current) return false;
+      await firstValueFrom(this.profileService.updateMyApplicantProfile({ ...current, ...profileData }));
+      await this.loadProfile();
       return true;
     } catch (err: any) {
       this.error.set(err.message || 'Failed to update profile');

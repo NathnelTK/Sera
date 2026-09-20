@@ -111,16 +111,17 @@
       <section class="profile-section wide-section">
         <h3><mat-icon>business_center</mat-icon>{{ 'profile.experience' | translate }}</h3>
         @for (item of p.experiences; track item.id) {
-          <article class="timeline-item"><strong>{{ item.title }}</strong><span>{{ item.companyName }}</span><small>{{ item.startDate | date:'MMM y' }} – {{ item.isCurrentPosition ? ('profile.present' | translate) : (item.endDate | date:'MMM y') }}</small><p>{{ item.description }}</p></article>
+          <article class="timeline-item"><strong>{{ item.title }}</strong><span>{{ item.companyName }}</span><small>{{ item.startDate | date:'MMM y' }} – {{ item.isCurrentPosition ? ('profile.present' | translate) : (item.endDate | date:'MMM y') }}</small><p>{{ item.description }}</p>@if (historyEditing()) { <button mat-button color="warn" type="button" (click)="removeExperience(item.id)">{{ 'common.remove' | translate }}</button> }</article>
         } @empty { <p class="empty">{{ 'profile.empty.experience' | translate }}</p> }
       </section>
 
       <section class="profile-section wide-section">
         <h3><mat-icon>school</mat-icon>{{ 'profile.education' | translate }}</h3>
         @for (item of p.educations; track item.id) {
-          <article class="timeline-item"><strong>{{ item.degree }} · {{ item.fieldOfStudy }}</strong><span>{{ item.institution }}</span><small>{{ item.startYear }} – {{ item.isOngoing ? ('profile.present' | translate) : item.endYear }}</small></article>
+          <article class="timeline-item"><strong>{{ item.degree }} · {{ item.fieldOfStudy }}</strong><span>{{ item.institution }}</span><small>{{ item.startYear }} – {{ item.isOngoing ? ('profile.present' | translate) : item.endYear }}</small>@if (historyEditing()) { <button mat-button color="warn" type="button" (click)="removeEducation(item.id)">{{ 'common.remove' | translate }}</button> }</article>
         } @empty { <p class="empty">{{ 'profile.empty.education' | translate }}</p> }
       </section>
+      @if (historyEditing()) { <div class="history-actions"><button mat-button type="button" (click)="historyEditing.set(false)">{{ 'common.cancel' | translate }}</button><button mat-flat-button color="primary" type="button" (click)="saveHistory()">{{ 'common.save' | translate }}</button></div> }
     </div>
     }
   }

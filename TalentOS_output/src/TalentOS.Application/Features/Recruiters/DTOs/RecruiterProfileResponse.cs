@@ -15,5 +15,6 @@ public sealed record RecruiterProfileResponse(
     RecruiterType RecruiterType,
     string? CompanyName,
     Guid? CompanyId,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    VerificationStatus VerificationStatus
 );
