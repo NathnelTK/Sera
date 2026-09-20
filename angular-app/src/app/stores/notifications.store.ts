@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { NotificationsService, Notification, NotificationsResponse } from '../services/notifications.service';
+import { NotificationsService, Notification } from '../services/notifications.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,22 +12,32 @@ export class NotificationsStore {
   isLoading = signal(false);
   error = signal<string | null>(null);
   notifications = signal<Notification[]>([]);
+  hasLoaded = signal(false);
   
   // Computed
   hasNotifications = computed(() => this.notifications().length > 0);
-  unreadCount = computed(() => this.notifications().filter(n => !n.is_read).length);
-  unreadNotifications = computed(() => this.notifications().filter(n => !n.is_read));
-  readNotifications = computed(() => this.notifications().filter(n => n.is_read));
+  unreadCount = computed(() => this.notifications().filter(n => !n.isRead).length);
+  unreadNotifications = computed(() => this.notifications().filter(n => !n.isRead));
+  readNotifications = computed(() => this.notifications().filter(n => n.isRead));
   
   async loadNotifications(unreadOnly = false) {
     this.isLoading.set(true);
     this.error.set(null);
     
     try {
-      const response = await this.notificationsService.getNotifications(unreadOnly).toPromise();
-      if (response) {
-        this.notifications.set(response.items);
+      const response = await firstValueFrom(this.notificationsService.getNotifications(unreadOnly));
+      const incoming = response ?? [];
+      if (unreadOnly) {
+        // An unread-count refresh must not replace the full notification history.
+        this.notifications.update(current => {
+          const byId = new Map(current.map(notification => [notification.id, notification]));
+          incoming.forEach(notification => byId.set(notification.id, notification));
+          return [...byId.values()];
+        });
+      } else {
+        this.notifications.set(incoming);
       }
+      this.hasLoaded.set(true);
       return true;
     } catch (err: any) {
       this.error.set(err.message || 'Failed to load notifications');
@@ -36,14 +47,14 @@ export class NotificationsStore {
     }
   }
   
-  async markAsRead(notificationIds: string[]) {
+  async markAsRead(notificationId: string) {
     this.isLoading.set(true);
     this.error.set(null);
     
     try {
-      await this.notificationsService.markAsRead(notificationIds).toPromise();
+      await firstValueFrom(this.notificationsService.markAsRead(notificationId));
       this.notifications.update(notifs => 
-        notifs.map(n => notificationIds.includes(n.id) ? { ...n, is_read: true } : n)
+        notifs.map(n => n.id === notificationId ? { ...n, isRead: true, readAt: new Date().toISOString() } : n)
       );
       return true;
     } catch (err: any) {
@@ -55,9 +66,9 @@ export class NotificationsStore {
   }
   
   async markAllAsRead() {
-    const unreadIds = this.notifications().filter(n => !n.is_read).map(n => n.id);
-    if (unreadIds.length > 0) {
-      return this.markAsRead(unreadIds);
+    const unreadIds = this.notifications().filter(n => !n.isRead).map(n => n.id);
+    for (const id of unreadIds) {
+      if (!(await this.markAsRead(id))) return false;
     }
     return true;
   }

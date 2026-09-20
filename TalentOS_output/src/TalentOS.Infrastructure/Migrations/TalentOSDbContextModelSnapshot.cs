@@ -682,6 +682,55 @@ namespace TalentOS.Infrastructure.Migrations
                     b.ToTable("JobApplications");
                 });
 
+            modelBuilder.Entity("TalentOS.Domain.Entities.JobDistribution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Channel")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderReference")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId", "Channel")
+                        .IsUnique();
+
+                    b.ToTable("JobDistributions");
+                });
+
             modelBuilder.Entity("TalentOS.Domain.Entities.JobSkill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -884,6 +933,34 @@ namespace TalentOS.Infrastructure.Migrations
                     b.ToTable("RecruiterProfiles");
                 });
 
+            modelBuilder.Entity("TalentOS.Domain.Entities.SavedJob", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicantProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("ApplicantProfileId", "JobId")
+                        .IsUnique();
+
+                    b.ToTable("SavedJobs");
+                });
+
             modelBuilder.Entity("TalentOS.Domain.Entities.Skill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1014,12 +1091,19 @@ namespace TalentOS.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<string>("DecodedPayloadJson")
+                        .HasColumnType("text");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(500)
@@ -1030,6 +1114,9 @@ namespace TalentOS.Infrastructure.Migrations
 
                     b.Property<Guid?>("ReviewedBy")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("SignatureVerified")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -1246,6 +1333,17 @@ namespace TalentOS.Infrastructure.Migrations
                     b.Navigation("Job");
                 });
 
+            modelBuilder.Entity("TalentOS.Domain.Entities.JobDistribution", b =>
+                {
+                    b.HasOne("TalentOS.Domain.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+                });
+
             modelBuilder.Entity("TalentOS.Domain.Entities.JobSkill", b =>
                 {
                     b.HasOne("TalentOS.Domain.Entities.Job", "Job")
@@ -1302,6 +1400,25 @@ namespace TalentOS.Infrastructure.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TalentOS.Domain.Entities.SavedJob", b =>
+                {
+                    b.HasOne("TalentOS.Domain.Entities.ApplicantProfile", "ApplicantProfile")
+                        .WithMany()
+                        .HasForeignKey("ApplicantProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TalentOS.Domain.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicantProfile");
+
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("TalentOS.Domain.Entities.Skill", b =>

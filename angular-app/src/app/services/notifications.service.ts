@@ -5,18 +5,14 @@ import { environment } from '../../environments/environment';
 
 export interface Notification {
   id: string;
-  user_id: string;
+  userId?: string;
   title: string;
   message: string;
-  type: 'Application' | 'Interview' | 'Job' | 'System';
-  related_id?: string;
-  is_read: boolean;
-  created_at: string;
-}
-
-export interface NotificationsResponse {
-  items: Notification[];
-  total: number;
+  notificationType: string;
+  actionUrl?: string;
+  isRead: boolean;
+  readAt?: string;
+  createdAt: string;
 }
 
 @Injectable({
@@ -25,18 +21,13 @@ export interface NotificationsResponse {
 export class NotificationsService {
   constructor(private http: HttpClient) {}
 
-  getNotifications(unreadOnly = false): Observable<NotificationsResponse> {
-    const url = unreadOnly 
-      ? `${environment.apiUrl}/notifications?unreadOnly=true`
-      : `${environment.apiUrl}/notifications`;
-    
-    return this.http.get<NotificationsResponse>(url);
+  getNotifications(unreadOnly = false): Observable<Notification[]> {
+    return this.http.get<Notification[]>(`${environment.apiUrl}/notifications`, {
+      params: unreadOnly ? { unreadOnly: 'true' } : {},
+    });
   }
 
-  markAsRead(notificationIds: string[]): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/notifications`, {
-      notificationIds,
-      markAsRead: true
-    });
+  markAsRead(id: string): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/notifications/${id}/read`, {});
   }
 }

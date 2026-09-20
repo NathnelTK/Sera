@@ -25,10 +25,14 @@ public sealed class JobsController : BaseApiController
         [FromQuery] int pageSize = 10,
         [FromQuery] string? search = null,
         [FromQuery] string? sortBy = null,
+        [FromQuery] string? category = null,
+        [FromQuery] string? location = null,
+        [FromQuery] JobType? jobType = null,
+        [FromQuery] WorkMode? workMode = null,
         CancellationToken ct = default)
     {
         var filter = new PaginationFilter { PageNumber = page, PageSize = pageSize, SearchTerm = search, SortBy = sortBy };
-        return FromResult(await Mediator.Send(new SearchJobsQuery(filter), ct));
+        return FromResult(await Mediator.Send(new SearchJobsQuery(filter, category, location, jobType, workMode), ct));
     }
 
     /// <summary>Get job details by ID.</summary>
@@ -96,7 +100,7 @@ public sealed class JobsController : BaseApiController
     public async Task<IActionResult> Mine(CancellationToken ct)
     {
         // We need the recruiter profile ID; return empty if not found
-        var recruiterId = GetRecruiterProfileId();
+        var recruiterId = await GetRecruiterProfileId(ct);
         if (recruiterId is null) return Unauthorized();
         return FromResult(await Mediator.Send(new GetRecruiterJobsQuery(recruiterId.Value), ct));
     }
@@ -109,9 +113,11 @@ public sealed class JobsController : BaseApiController
         => FromResult(await Mediator.Send(new GetJobApplicationsQuery(id), ct));
 
     // Placeholder — real implementation should resolve via RecruiterProfile lookup
-    private Guid? GetRecruiterProfileId()
+    private async Task<Guid?> GetRecruiterProfileId(CancellationToken ct)
     {
-        var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        return Guid.TryParse(claim, out var id) ? id : null;
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var id)) return null;
+        var recruiters = HttpContext.RequestServices.GetRequiredService<TalentOS.Domain.Interfaces.IRecruiterProfileRepository>();
+        return (await recruiters.GetByUserIdAsync(id, ct))?.Id;
     }
 }

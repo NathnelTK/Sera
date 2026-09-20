@@ -15,7 +15,16 @@ public sealed class SearchJobsQueryHandler : IRequestHandler<SearchJobsQuery, Re
     public async Task<Result<PagedList<JobSummaryResponse>>> Handle(SearchJobsQuery request, CancellationToken cancellationToken)
     {
         var filter = request.Filter;
-        var (jobs, totalCount) = await _jobs.GetPublishedAsync(filter.Skip, filter.EffectivePageSize, filter.SearchTerm, filter.SortBy, cancellationToken);
+        var (jobs, totalCount) = await _jobs.GetPublishedAsync(
+            filter.Skip,
+            filter.EffectivePageSize,
+            filter.SearchTerm,
+            filter.SortBy,
+            request.Category,
+            request.Location,
+            request.JobType,
+            request.WorkMode,
+            cancellationToken);
 
         var dtos = jobs.Select(j => new JobSummaryResponse(
             j.Id, j.Title, j.Description,
@@ -23,7 +32,10 @@ public sealed class SearchJobsQueryHandler : IRequestHandler<SearchJobsQuery, Re
             j.MinimumSalary, j.MaximumSalary, j.SalaryCurrency,
             j.Status, j.DeadlineAt, j.CreatedAt,
             j.Recruiter != null ? $"{j.Recruiter.FirstName} {j.Recruiter.LastName}" : string.Empty,
-            j.Company?.Name)).ToList();
+            j.Company?.Name,
+            j.Category?.Name,
+            j.Location?.City,
+            j.Location?.Country)).ToList();
 
         return Result<PagedList<JobSummaryResponse>>.Success(new PagedList<JobSummaryResponse>(dtos, totalCount, filter.EffectivePageNumber, filter.EffectivePageSize));
     }

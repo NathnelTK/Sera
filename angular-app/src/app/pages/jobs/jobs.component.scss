@@ -1,100 +1,392 @@
-.jobs-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.jobs-page {
+  min-height: 80vh;
+  background: var(--afriwork-light);
+  padding-bottom: var(--afriwork-spacing-2xl);
+}
 
-  .header {
+.jobs-header-section {
+  background: linear-gradient(180deg, #eef4ff 0%, #f8fafc 100%);
+  padding: clamp(2rem, 4vw, 3rem) 0 1.5rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  margin-bottom: var(--afriwork-spacing-xl);
+
+  .et-accent-bar {
+    margin-bottom: var(--afriwork-spacing-sm);
+  }
+
+  .header-title-row {
     display: flex;
+    align-items: flex-end;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+    gap: var(--afriwork-spacing-md);
+    flex-wrap: wrap;
 
     h1 {
-      color: #333;
+      margin: 0 0 0.25rem;
+      font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+      font-weight: 800;
     }
 
-    .btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.25rem;
-      cursor: pointer;
-
-      &.btn-refresh {
-        background-color: #4299e1;
-        color: white;
-      }
+    .header-subtitle {
+      color: var(--afriwork-gray);
+      margin: 0;
+      font-size: var(--afriwork-font-size-base);
     }
-  }
 
-  .loading, .error, .no-jobs {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
+    .jobs-count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #ffffff;
+      border: 1px solid var(--afriwork-border);
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--afriwork-radius-full);
+      font-size: var(--afriwork-font-size-sm);
+      font-weight: 600;
+      color: var(--afriwork-dark);
+      box-shadow: var(--afriwork-shadow-sm);
 
-  .error {
-    color: #e53e3e;
-  }
-
-  .jobs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-
-    .job-card {
-      background: white;
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      }
-
-      h2 {
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-        font-size: 1.25rem;
-      }
-
-      .company {
-        color: #4a5568;
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-      }
-
-      .location {
-        color: #718096;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .salary {
-        color: #48bb78;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-      }
-
-      .status {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-
-        &.status-published {
-          background-color: #c6f6d5;
-          color: #22543d;
-        }
-
-        &.status-draft {
-          background-color: #fed7d7;
-          color: #742a2a;
-        }
+      .count-num {
+        background: var(--afriwork-primary);
+        color: #ffffff;
+        border-radius: var(--afriwork-radius-full);
+        padding: 0.1rem 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 700;
       }
     }
   }
 }
+
+.jobs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Search & Filter Panel */
+.search-panel {
+  background: #ffffff;
+  border-radius: var(--afriwork-radius-xl);
+  padding: 1.25rem;
+  border: 1px solid var(--afriwork-border);
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.06);
+  margin-bottom: var(--afriwork-spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  .search-primary-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--afriwork-spacing-md);
+  }
+
+  .search-secondary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: var(--afriwork-spacing-md);
+    align-items: center;
+  }
+
+  .filter-field {
+    width: 100%;
+    margin: 0;
+
+    mat-icon {
+      color: var(--afriwork-gray);
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 52px;
+
+    .apply-filter-btn {
+      background: var(--afriwork-gradient-primary);
+      color: #ffffff !important;
+      border-radius: var(--afriwork-radius-lg);
+      font-weight: 600;
+      height: 48px;
+      padding: 0 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: all var(--afriwork-transition-fast);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+      }
+    }
+
+    .clear-filter-btn {
+      height: 48px;
+      border-radius: var(--afriwork-radius-lg);
+      color: var(--afriwork-gray);
+
+      &:hover {
+        color: var(--afriwork-dark);
+        background: rgba(15, 23, 42, 0.05);
+      }
+    }
+  }
+}
+
+/* States */
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: #ffffff;
+  border-radius: var(--afriwork-radius-xl);
+  border: 1px solid var(--afriwork-border);
+  gap: var(--afriwork-spacing-md);
+}
+
+.empty-state {
+  .empty-icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--afriwork-primary);
+
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  p {
+    color: var(--afriwork-gray);
+    margin: 0;
+    max-width: 420px;
+  }
+}
+
+/* Jobs Grid */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--afriwork-spacing-lg);
+}
+
+.job-card {
+  background: #ffffff;
+  border: 1px solid var(--afriwork-border);
+  border-radius: var(--afriwork-radius-xl);
+  padding: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  transition: all var(--afriwork-transition-base);
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--afriwork-primary);
+    box-shadow: 0 16px 32px -4px rgba(37, 99, 235, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+
+    .company-avatar {
+      background: var(--afriwork-gradient-primary);
+      color: #ffffff;
+      transform: scale(1.05);
+    }
+
+    .view-btn {
+      color: var(--afriwork-primary);
+      transform: translateX(3px);
+    }
+  }
+
+  .job-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+
+    .company-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--afriwork-radius-lg);
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+      color: var(--afriwork-primary);
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--afriwork-transition-fast);
+    }
+
+    .job-header-info {
+      flex: 1;
+      min-width: 0;
+
+      .job-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0 0 0.2rem;
+        color: var(--afriwork-dark);
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .company-name {
+        font-size: 0.88rem;
+        color: var(--afriwork-gray);
+        font-weight: 500;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .verified-pill {
+      color: #059669;
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .job-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--afriwork-radius-full);
+      font-size: 0.76rem;
+      font-weight: 600;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+
+      &.type-badge {
+        background: rgba(37, 99, 235, 0.08);
+        color: #1d4ed8;
+      }
+
+      &.mode-badge {
+        background: rgba(124, 58, 237, 0.08);
+        color: #6d28d9;
+      }
+
+      &.exp-badge {
+        background: rgba(245, 158, 11, 0.1);
+        color: #b45309;
+      }
+    }
+  }
+
+  .job-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+    font-size: 0.84rem;
+    gap: 0.5rem;
+
+    .job-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--afriwork-gray);
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: var(--afriwork-gray);
+      }
+    }
+
+    .job-salary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 700;
+      color: #059669;
+      background: rgba(5, 150, 105, 0.08);
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--afriwork-radius-md);
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        color: #059669;
+      }
+    }
+
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-weight: 600;
+      color: var(--afriwork-dark);
+      margin-left: auto;
+      transition: all var(--afriwork-transition-fast);
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .search-panel {
+    .search-primary-row,
+    .search-secondary-row {
+      grid-template-columns: 1fr;
+    }
+
+    .filter-actions {
+      flex-direction: row;
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

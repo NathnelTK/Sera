@@ -28,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IJobRepository, JobRepository>();
         services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+        services.AddScoped<IJobDistributionRepository, JobDistributionRepository>();
+        services.AddScoped<ISavedJobRepository, SavedJobRepository>();
         services.AddScoped<IApplicantProfileRepository, ApplicantProfileRepository>();
         services.AddScoped<IRecruiterProfileRepository, RecruiterProfileRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -42,7 +44,13 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
-        services.AddScoped<IAiService, StubAiService>();
+        services.AddScoped<IPdfTextExtractor, PdfTextExtractor>();
+        services.AddScoped<IAiService, LocalAiService>();
+        services.AddHttpClient("LocalAi", client =>
+        {
+            client.BaseAddress = new Uri(configuration["AI:OllamaUrl"] ?? "http://localhost:11434/");
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
 
         // JWT Authentication
         var jwtSettings = configuration.GetSection("JwtSettings");

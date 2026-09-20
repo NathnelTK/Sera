@@ -1,0 +1,11 @@
+<div class="saved-page afriwork-container afriwork-fade-in">
+  <header><span class="et-accent-bar"></span><h1>{{ 'saved.title' | translate }}</h1><p>{{ 'saved.subtitle' | translate }}</p></header>
+  @if (loading()) { <div class="state"><mat-spinner diameter="42" /><span>{{ 'common.loading' | translate }}</span></div> }
+  @else if (error()) { <div class="state error"><mat-icon>error_outline</mat-icon><span>{{ 'saved.error' | translate }}</span><button mat-button (click)="load()">{{ 'common.retry' | translate }}</button></div> }
+  @else if (!jobs().length) { <div class="state"><mat-icon>bookmark_border</mat-icon><span>{{ 'saved.empty' | translate }}</span><a mat-flat-button color="primary" routerLink="/jobs">{{ 'saved.browse' | translate }}</a></div> }
+  @else { <div class="grid afriwork-stagger">@for (job of jobs(); track job.jobId) {
+    <mat-card class="saved-card"><mat-card-header><div class="company-avatar">{{ (job.companyName || 'T').charAt(0).toUpperCase() }}</div><div><mat-card-title>{{ job.title }}</mat-card-title><mat-card-subtitle>{{ job.companyName || ('saved.companyUnknown' | translate) }}</mat-card-subtitle></div><mat-icon class="bookmark">bookmark</mat-icon></mat-card-header>
+    <mat-card-content><span class="meta-pill">{{ jobTypeKey(job.jobType) | translate }}</span><span class="meta-pill purple">{{ workModeKey(job.workMode) | translate }}</span><small>{{ 'saved.savedOn' | translate:{ date: (job.savedAt | date:'mediumDate') } }}</small></mat-card-content>
+    <mat-card-actions><a mat-button color="primary" [routerLink]="['/jobs', job.jobId]">{{ 'saved.view' | translate }} <mat-icon>arrow_forward</mat-icon></a><button mat-button color="warn" (click)="remove(job)" [disabled]="removing() === job.jobId">{{ 'saved.remove' | translate }}</button></mat-card-actions></mat-card>
+  }</div> }
+</div>

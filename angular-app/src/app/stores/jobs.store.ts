@@ -1,133 +1,191 @@
-import { Injectable, signal, computed, inject, effect } from '@angular/core';
-import { JobsService, Job, PagedResponse } from '../services/jobs.service';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { firstValueFrom, Observable } from 'rxjs';
+import {
+  JobsService,
+  JobSummary,
+  JobDetails,
+  JobFormPayload,
+  JobSearchFilters,
+} from '../services/jobs.service';
+import { TranslationService } from '../core/i18n/translation.service';
+import { JobStatus } from '../core/workflow/workflow';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class JobsStore {
-  private jobsService = inject(JobsService);
-  
+  private service = inject(JobsService);
+  private i18n = inject(TranslationService);
+
   // State
   isLoading = signal(false);
   error = signal<string | null>(null);
-  jobs = signal<Job[]>([]);
-  currentJob = signal<Job | null>(null);
-  pagination = signal({ page: 1, pageSize: 10, total: 0, totalPages: 0 });
-  
+  isLoadingPublished = signal(false);
+  publishedError = signal<string | null>(null);
+  jobs = signal<JobSummary[]>([]);
+  myJobs = signal<JobSummary[]>([]);
+  currentJob = signal<JobDetails | null>(null);
+  pagination = signal({ currentPage: 1, pageSize: 10, totalCount: 0, totalPages: 0 });
+
   // Computed
   hasJobs = computed(() => this.jobs().length > 0);
-  publishedJobs = computed(() => this.jobs().filter(job => job.status === 'Published'));
-  
-  constructor() {
-    // Initialize with published jobs
-    this.loadPublishedJobs();
-  }
-  
-  async loadJobs(page: number = 1, pageSize: number = 10, search?: string) {
+  publishedJobs = computed(() => this.jobs().filter((j) => j.status === JobStatus.Published));
+
+  async loadJobs(page = 1, pageSize = 10, filters: JobSearchFilters = {}): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const response = await this.jobsService.getJobs(page, pageSize, search).toPromise();
-      if (response) {
-        this.jobs.set(response.items);
+      const res = await firstValueFrom(this.service.getJobs(page, pageSize, filters));
+      if (res) {
+        this.jobs.set(res.items ?? []);
         this.pagination.set({
-          page: response.page,
-          pageSize: response.pageSize,
-          total: response.total,
-          totalPages: response.totalPages
+          currentPage: res.currentPage,
+          pageSize: res.pageSize,
+          totalCount: res.totalCount,
+          totalPages: res.totalPages,
         });
       }
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to load jobs');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.loadJobs'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async loadPublishedJobs() {
-    return this.loadJobs(1, 50);
+
+  async loadPublishedJobs(): Promise<boolean> {
+    this.isLoadingPublished.set(true);
+    this.publishedError.set(null);
+    try {
+      const res = await firstValueFrom(this.service.getJobs(1, 50));
+      this.jobs.set(res?.items ?? []);
+      return true;
+    } catch (err) {
+      this.publishedError.set(this.messageFrom(err, 'wf.error.loadJobs'));
+      return false;
+    } finally {
+      this.isLoadingPublished.set(false);
+    }
   }
-  
-  async loadJobById(id: string) {
+
+  async loadJobById(id: string): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const job = await this.jobsService.getJobById(id).toPromise();
-      if (job) {
-        this.currentJob.set(job);
-      }
+      const job = await firstValueFrom(this.service.getJobById(id));
+      this.currentJob.set(job ?? null);
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to load job');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.loadJob'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async createJob(job: Partial<Job>) {
+
+  async loadMyJobs(): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const createdJob = await this.jobsService.createJob(job).toPromise();
-      if (createdJob) {
-        this.jobs.update(jobs => [...jobs, createdJob]);
-      }
+      const list = await firstValueFrom(this.service.getMyJobs());
+      this.myJobs.set(list ?? []);
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to create job');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.loadJobs'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async updateJob(id: string, job: Partial<Job>) {
+
+  /** Create a draft job. Returns the new job id, or null on failure. */
+  async createJob(job: JobFormPayload): Promise<string | null> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      const updatedJob = await this.jobsService.updateJob(id, job).toPromise();
-      if (updatedJob) {
-        this.jobs.update(jobs => jobs.map(j => j.id === id ? { ...j, ...updatedJob } : j));
-        if (this.currentJob()?.id === id) {
-          this.currentJob.set({ ...this.currentJob()!, ...updatedJob });
-        }
-      }
-      return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to update job');
-      return false;
+      const created = await firstValueFrom(this.service.createJob(job));
+      return created?.id ?? null;
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.saveJob'));
+      return null;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  async deleteJob(id: string) {
+
+  async updateJob(id: string, job: JobFormPayload): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
-    
     try {
-      await this.jobsService.deleteJob(id).toPromise();
-      this.jobs.update(jobs => jobs.filter(j => j.id !== id));
-      if (this.currentJob()?.id === id) {
-        this.currentJob.set(null);
-      }
+      await firstValueFrom(this.service.updateJob(id, job));
       return true;
-    } catch (err: any) {
-      this.error.set(err.message || 'Failed to delete job');
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.saveJob'));
       return false;
     } finally {
       this.isLoading.set(false);
     }
   }
-  
-  clearCurrentJob() {
+
+  async publishJob(id: string): Promise<boolean> {
+    return this.mutateStatus(id, () => this.service.publishJob(id), JobStatus.Published);
+  }
+
+  async closeJob(id: string): Promise<boolean> {
+    return this.mutateStatus(id, () => this.service.closeJob(id), JobStatus.Closed);
+  }
+
+  async deleteJob(id: string): Promise<boolean> {
+    this.isLoading.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.service.deleteJob(id));
+      this.myJobs.update((jobs) => jobs.filter((j) => j.id !== id));
+      return true;
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.saveJob'));
+      return false;
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  clearCurrentJob(): void {
     this.currentJob.set(null);
+  }
+
+  private async mutateStatus(
+    id: string,
+    action: () => Observable<void>,
+    newStatus: JobStatus,
+  ): Promise<boolean> {
+    this.isLoading.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(action());
+      this.myJobs.update((jobs) =>
+        jobs.map((j) => (j.id === id ? { ...j, status: newStatus } : j)),
+      );
+      const current = this.currentJob();
+      if (current?.id === id) {
+        this.currentJob.set({ ...current, status: newStatus });
+      }
+      return true;
+    } catch (err) {
+      this.error.set(this.messageFrom(err, 'wf.error.saveJob'));
+      return false;
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  private messageFrom(err: unknown, fallbackKey: string): string {
+    const body = (err as { error?: unknown })?.error;
+    if (typeof body === 'string' && body.trim()) return body;
+    if (body && typeof body === 'object') {
+      const problem = body as { error?: string; title?: string; detail?: string };
+      const msg = problem.error ?? problem.detail ?? problem.title;
+      if (msg) return msg;
+    }
+    return this.i18n.instant(fallbackKey);
   }
 }

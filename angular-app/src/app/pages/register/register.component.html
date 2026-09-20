@@ -1,83 +1,125 @@
-<div class="register-container">
-  <div class="register-card">
-    <h1>Register</h1>
-    <p class="subtitle">Create your account</p>
+<div class="auth-page afriwork-fade-in">
+  <div class="auth-wrapper glass-card">
+    <div class="auth-visual-side">
+      <div class="visual-content">
+        <div class="auth-pill-badge">
+          <mat-icon>verified</mat-icon>
+          <span>Official Fayda ID Ready</span>
+        </div>
+        <h2>Join Ethiopia's Leading Verified Career Platform</h2>
+        <p>Whether you are looking for your next breakthrough role or seeking top Ethiopian engineers, designers, and managers.</p>
+        <div class="visual-image-box float-animation">
+          <img src="/images/auth-visual.jpg" alt="Digital Identity and Verified Credentials" class="auth-side-img" />
+        </div>
+      </div>
+    </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="Enter your email" />
-        @if (email?.invalid && email?.touched) {
-          <mat-error>
-            @if (email?.errors?.['required']) {
-              Email is required
-            } @else if (email?.errors?.['email']) {
-              Please enter a valid email
-            }
-          </mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password" placeholder="Enter your password (min 8 characters)" />
-        @if (password?.invalid && password?.touched) {
-          <mat-error>
-            @if (password?.errors?.['required']) {
-              Password is required
-            } @else if (password?.errors?.['minlength']) {
-              Password must be at least 8 characters
-            }
-          </mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput formControlName="confirmPassword" type="password" placeholder="Confirm your password" />
-        @if (confirmPassword?.invalid && confirmPassword?.touched) {
-          <mat-error>
-            @if (confirmPassword?.errors?.['required']) {
-              Please confirm your password
-            } @else if (confirmPassword?.errors?.['mismatch']) {
-              Passwords do not match
-            }
-          </mat-error>
-        }
-      </mat-form-field>
-
-      <div class="role-selection">
-        <mat-label>I want to register as:</mat-label>
-        <mat-radio-group formControlName="role">
-          <mat-radio-button value="Applicant">Applicant</mat-radio-button>
-          <mat-radio-button value="Recruiter">Recruiter</mat-radio-button>
-        </mat-radio-group>
+    <div class="auth-card-side">
+      <div class="auth-brand">
+        <span class="et-accent-bar"></span>
+        <h1>{{ 'auth.register.title' | translate }}</h1>
+        <p class="auth-subtitle">{{ 'auth.register.subtitle' | translate }}</p>
       </div>
 
-      @if (error()) {
-        <div class="error-message">
-          {{ error() }}
-        </div>
-      }
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <fieldset class="role-select">
+          <legend>{{ 'auth.roleLegend' | translate }}</legend>
+          <mat-radio-group formControlName="role" class="role-options">
+            <mat-radio-button value="Applicant" color="primary" class="role-radio">
+              {{ 'auth.roleApplicant' | translate }}
+            </mat-radio-button>
+            <mat-radio-button value="Recruiter" color="primary" class="role-radio">
+              {{ 'auth.roleRecruiter' | translate }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </fieldset>
 
-      <button
-        mat-raised-button
-        type="submit"
-        class="submit-button"
-        [disabled]="registerForm.invalid || isLoading()"
-      >
-        @if (isLoading()) {
-          <mat-spinner diameter="20"></mat-spinner>
-          <span>Creating account...</span>
-        } @else {
-          Register
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>{{ 'auth.email' | translate }}</mat-label>
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          <input matInput formControlName="email" type="email" autocomplete="email"
+                 [placeholder]="'auth.emailPlaceholder' | translate" />
+          @if (email?.invalid && email?.touched) {
+            <mat-error>
+              @if (email?.errors?.['required']) {
+                {{ 'auth.err.emailRequired' | translate }}
+              } @else if (email?.errors?.['email']) {
+                {{ 'auth.err.emailInvalid' | translate }}
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>{{ 'auth.password' | translate }}</mat-label>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input matInput formControlName="password"
+                 [type]="showPassword() ? 'text' : 'password'" autocomplete="new-password"
+                 [placeholder]="'auth.passwordCreatePlaceholder' | translate" />
+          <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1"
+                  [attr.aria-label]="'auth.password' | translate">
+            <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
+          @if (password?.invalid && password?.touched) {
+            <mat-error>
+              @if (password?.errors?.['required']) {
+                {{ 'auth.err.passwordRequired' | translate }}
+              } @else if (password?.errors?.['minlength']) {
+                {{ 'auth.err.passwordMinLength' | translate }}
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input matInput formControlName="confirmPassword"
+                 [type]="showPassword() ? 'text' : 'password'" autocomplete="new-password"
+                 [placeholder]="'auth.confirmPasswordPlaceholder' | translate" />
+          @if (confirmPassword?.invalid && confirmPassword?.touched) {
+            <mat-error>
+              @if (confirmPassword?.errors?.['required']) {
+                {{ 'auth.err.confirmRequired' | translate }}
+              } @else if (confirmPassword?.errors?.['mismatch']) {
+                {{ 'auth.err.passwordMismatch' | translate }}
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <div class="auth-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ error() }}</span>
+          </div>
         }
-      </button>
-    </form>
 
-    <div class="links">
-      <p>Already have an account? <a (click)="navigateToLogin()">Login</a></p>
-      <p><a (click)="navigateToHome()">Back to Home</a></p>
+        <button mat-flat-button class="auth-submit" type="submit"
+                [disabled]="registerForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <span class="btn-loading">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>{{ 'auth.creatingAccount' | translate }}</span>
+            </span>
+          } @else {
+            <mat-icon>person_add</mat-icon>
+            <span>{{ 'auth.createAccount' | translate }}</span>
+          }
+        </button>
+      </form>
+
+      <div class="auth-links">
+        <p>
+          {{ 'auth.haveAccount' | translate }}
+          <a routerLink="/login" class="signin-link">{{ 'auth.signInLink' | translate }}</a>
+        </p>
+        <a class="auth-home" routerLink="/home">
+          <mat-icon>arrow_back</mat-icon>
+          <span>{{ 'auth.backToHome' | translate }}</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>

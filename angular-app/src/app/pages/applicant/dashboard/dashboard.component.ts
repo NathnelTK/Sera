@@ -10,6 +10,11 @@ import { AuthStore } from '../../../stores/auth.store';
 import { ApplicationsStore } from '../../../stores/applications.store';
 import { InterviewsStore } from '../../../stores/interviews.store';
 import { NotificationsStore } from '../../../stores/notifications.store';
+import { VerificationStore } from '../../../stores/verification.store';
+import { JobsStore } from '../../../stores/jobs.store';
+import { ProfileStore } from '../../../stores/profile.store';
+import { JobSummary } from '../../../services/jobs.service';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +25,8 @@ import { NotificationsStore } from '../../../stores/notifications.store';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    TranslatePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -31,10 +37,17 @@ export class DashboardComponent {
   private applicationsStore = inject(ApplicationsStore);
   private interviewsStore = inject(InterviewsStore);
   private notificationsStore = inject(NotificationsStore);
-  
+  private verificationStore = inject(VerificationStore);
+  private jobsStore = inject(JobsStore);
+  private profileStore = inject(ProfileStore);
+
   // Signals from stores
   currentUser = computed(() => this.authStore.currentUser());
   isAuthenticated = computed(() => this.authStore.isAuthenticated());
+
+  // Identity verification (Fayda)
+  isVerified = computed(() => this.verificationStore.isApproved());
+  verificationPending = computed(() => this.verificationStore.isPending());
   
   // Application stats
   totalApplications = computed(() => this.applicationsStore.applications().length);
@@ -52,14 +65,22 @@ export class DashboardComponent {
   isLoadingApplications = computed(() => this.applicationsStore.isLoading());
   isLoadingInterviews = computed(() => this.interviewsStore.isLoading());
   isLoadingNotifications = computed(() => this.notificationsStore.isLoading());
+  publishedJobs = computed(() => this.jobsStore.publishedJobs().slice(0, 6));
+  isLoadingJobs = computed(() => this.jobsStore.isLoadingPublished());
+  jobsError = computed(() => this.jobsStore.publishedError());
   
   constructor() {
+    // Read the current Fayda verification status once (non-reactive — avoids signal writes in an effect).
+    void this.verificationStore.loadStatus();
+
     // Load data on component init
     effect(() => {
       if (this.isAuthenticated()) {
         this.applicationsStore.loadMyApplications();
         this.interviewsStore.loadMyInterviews();
         this.notificationsStore.loadNotifications();
+        this.jobsStore.loadPublishedJobs();
+        this.profileStore.loadProfile();
       }
     });
   }
@@ -72,8 +93,28 @@ export class DashboardComponent {
     this.router.navigate(['/applicant/profile']);
   }
 
+  navigateToVerification() {
+    this.router.navigate(['/applicant/verification']);
+  }
+
   navigateToJobs() {
     this.router.navigate(['/jobs']);
+  }
+
+  navigateToCategory(category: string) {
+    this.router.navigate(['/jobs'], { queryParams: { category } });
+  }
+
+  navigateToJob(jobId: string) {
+    this.router.navigate(['/jobs', jobId]);
+  }
+
+  jobLocation(job: JobSummary): string {
+    return [job.locationCity, job.locationCountry].filter(Boolean).join(', ');
+  }
+
+  reloadJobs() {
+    void this.jobsStore.loadPublishedJobs();
   }
 
   navigateToInterviews() {
@@ -92,13 +133,6 @@ export class DashboardComponent {
     this.router.navigate(['/applicant/ai-tools']);
   }
 
-  async logout() {
-    const success = await this.authStore.logout();
-    if (success) {
-      this.router.navigate(['/login']);
-    }
-  }
-  
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });

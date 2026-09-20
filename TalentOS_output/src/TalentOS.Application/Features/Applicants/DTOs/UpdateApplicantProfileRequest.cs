@@ -10,5 +10,9 @@ public sealed record UpdateApplicantProfileRequest(
     string? LinkedInUrl,
     string? GitHubUrl,
     string? PortfolioUrl,
+    string? LocationCity,
+    string? LocationCountry,
+    string? LocationState,
+    string? LocationPostalCode,
     bool IsOpenToWork
 );

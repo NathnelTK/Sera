@@ -35,7 +35,7 @@ public sealed class DocumentsController : BaseApiController
     }
 
     /// <summary>Get document metadata by ID.</summary>
-    [Authorize]
+    [Authorize(Roles = "Applicant")]
     [HttpGet("{id:guid}", Name = "GetDocumentById")]
     [ProducesResponseType(typeof(DocumentResponse), 200)]
     [ProducesResponseType(404)]
@@ -50,7 +50,27 @@ public sealed class DocumentsController : BaseApiController
     [HttpGet("applicant/{applicantProfileId:guid}")]
     [ProducesResponseType(typeof(IReadOnlyList<DocumentResponse>), 200)]
     public async Task<IActionResult> GetByApplicant(Guid applicantProfileId, CancellationToken ct)
-        => FromResult(await Mediator.Send(new GetMyDocumentsQuery(applicantProfileId), ct));
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null) return Unauthorized();
+        var profile = await Mediator.Send(new TalentOS.Application.Features.Applicants.Queries.GetMyApplicantProfile.GetMyApplicantProfileQuery(userId.Value), ct);
+        return profile.IsSuccess
+            ? FromResult(await Mediator.Send(new GetMyDocumentsQuery(profile.Value!.Id), ct))
+            : BadRequest(new { error = profile.Error });
+    }
+
+    /// <summary>Get documents owned by the current applicant.</summary>
+    [Authorize(Roles = "Applicant")]
+    [HttpGet("mine")]
+    public async Task<IActionResult> GetMine(CancellationToken ct)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null) return Unauthorized();
+        var profile = await Mediator.Send(new TalentOS.Application.Features.Applicants.Queries.GetMyApplicantProfile.GetMyApplicantProfileQuery(userId.Value), ct);
+        return profile.IsSuccess
+            ? FromResult(await Mediator.Send(new GetMyDocumentsQuery(profile.Value!.Id), ct))
+            : BadRequest(new { error = profile.Error });
+    }
 
     /// <summary>Delete a document. Owner only.</summary>
     [Authorize]

@@ -1,0 +1,13 @@
+<section class="coming-soon afriwork-scale-in">
+  <span class="cs-icon"><mat-icon>{{ icon }}</mat-icon></span>
+  <span class="cs-badge">{{ 'comingSoon.badge' | translate }}</span>
+  <h1>{{ title | translate }}</h1>
+  <p class="cs-lead">{{ description | translate }}</p>
+  <p class="cs-note">{{ 'comingSoon.body' | translate }}</p>
+  @if (backLink) {
+    <a mat-flat-button color="primary" [routerLink]="backLink">
+      <mat-icon>arrow_back</mat-icon>
+      <span>{{ 'comingSoon.back' | translate }}</span>
+    </a>
+  }
+</section>

@@ -13,13 +13,17 @@ public sealed class UploadDocumentCommandHandler : IRequestHandler<UploadDocumen
     private readonly IFileStorageService _fileStorage;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UploadDocumentCommandHandler> _logger;
+    private readonly IApplicantProfileRepository _applicants;
+    private readonly IPdfTextExtractor _pdf;
 
-    public UploadDocumentCommandHandler(IDocumentRepository documents, IFileStorageService fileStorage, IUnitOfWork unitOfWork, ILogger<UploadDocumentCommandHandler> logger)
+    public UploadDocumentCommandHandler(IDocumentRepository documents, IFileStorageService fileStorage, IUnitOfWork unitOfWork, ILogger<UploadDocumentCommandHandler> logger, IApplicantProfileRepository applicants, IPdfTextExtractor pdf)
     {
         _documents = documents;
         _fileStorage = fileStorage;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _applicants = applicants;
+        _pdf = pdf;
     }
 
     public async Task<Result<Guid>> Handle(UploadDocumentCommand request, CancellationToken cancellationToken)
@@ -27,6 +31,10 @@ public sealed class UploadDocumentCommandHandler : IRequestHandler<UploadDocumen
         const long MaxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
         if (request.FileSizeBytes > MaxFileSizeBytes)
             return Result<Guid>.Failure("File size exceeds the 10 MB limit.");
+
+        // Use a tracked profile here because the resume CV is added to its collection.
+        var applicant = await _applicants.GetByUserIdAsync(request.UserId, cancellationToken);
+        if (applicant is null) return Result<Guid>.Failure("Applicant profile not found.");
 
         string fileUrl;
         try
@@ -42,7 +50,7 @@ public sealed class UploadDocumentCommandHandler : IRequestHandler<UploadDocumen
         var document = new Document
         {
             UploadedByUserId = request.UserId,
-            ApplicantProfileId = request.ApplicantProfileId,
+            ApplicantProfileId = applicant.Id,
             DocumentType = request.DocumentType,
             FileName = request.FileName,
             FileUrl = fileUrl,
@@ -52,6 +60,24 @@ public sealed class UploadDocumentCommandHandler : IRequestHandler<UploadDocumen
         };
 
         _documents.Add(document);
+        if (request.DocumentType == TalentOS.Domain.Enums.DocumentType.Resume)
+        {
+            string? rawText = null;
+            if (string.Equals(request.ContentType, "application/pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                request.FileStream.Position = 0;
+                rawText = await _pdf.ExtractAsync(request.FileStream, cancellationToken);
+            }
+            applicant.CVs.Add(new CV
+            {
+                ApplicantProfileId = applicant.Id,
+                FileName = request.FileName,
+                FileUrl = fileUrl,
+                FileSizeBytes = request.FileSizeBytes,
+                IsPrimary = !applicant.CVs.Any(c => c.IsPrimary),
+                RawTextContent = rawText
+            });
+        }
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result<Guid>.Success(document.Id);
     }

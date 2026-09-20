@@ -1,1 +1,102 @@
-<p>job-applications works!</p>
+<div class="pipeline afriwork-container afriwork-fade-in">
+  <a routerLink="/recruiter/jobs" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    <span>{{ 'wf.pipeline.back' | translate }}</span>
+  </a>
+
+  <header class="head">
+    <div class="et-accent-bar"></div>
+    <h1>{{ 'wf.pipeline.title' | translate }}</h1>
+    @if (jobTitle()) {
+      <p class="job-title">{{ jobTitle() }}</p>
+    }
+    <p class="subtitle">{{ 'wf.pipeline.subtitle' | translate }}</p>
+  </header>
+
+  @if (flash()) {
+    <div class="banner ok">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ flash() }}</span>
+      <button mat-icon-button (click)="dismissFlash()"><mat-icon>close</mat-icon></button>
+    </div>
+  }
+  @if (mutationError()) {
+    <div class="banner err">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ mutationError() }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="state">
+      <mat-icon class="state-icon">error_outline</mat-icon>
+      <p>{{ loadError() }}</p>
+      <button mat-stroked-button (click)="loadCandidates()">{{ 'common.retry' | translate }}</button>
+    </div>
+  } @else if (!hasCandidates()) {
+    <div class="state">
+      <mat-icon class="state-icon">group_off</mat-icon>
+      <p>{{ 'wf.pipeline.empty' | translate }}</p>
+    </div>
+  } @else {
+    <div class="board">
+      @for (col of columns(); track col.status) {
+        <section class="column">
+          <header class="col-head">
+            <span class="wf-chip" [class]="'wf-chip wf-chip--' + col.color">{{ col.key | translate }}</span>
+            <span class="count">{{ col.items.length }}</span>
+          </header>
+
+          <div class="col-body">
+            @for (c of col.items; track c.applicationId) {
+              <mat-card class="cand" [class.busy]="busyId() === c.applicationId">
+                <p class="name">{{ c.applicantName }}</p>
+                @if (c.matchScore != null) {
+                 <p class="match">
+                    <mat-icon>insights</mat-icon>
+                    {{ 'wf.pipeline.match' | translate }}: {{ (c.matchScore * 100) | number: '1.0-0' }}%
+                 </p>
+                 <details class="score-details">
+                   <summary>Why this score?</summary>
+                   @for (part of scoreParts(c); track part.label) { <div class="score-row"><span>{{ part.label }}</span><strong>{{ part.value * 100 | number:'1.0-0' }}%</strong></div> }
+                   @if (c.matchExplanation) { <p>{{ c.matchExplanation }}</p> }
+                   <a [routerLink]="['/recruiter/talent', c.applicantProfileId]">Go to Profile</a>
+                 </details>
+                }
+                <p class="applied">{{ 'wf.pipeline.appliedOn' | translate: { date: (c.appliedAt | date: 'mediumDate') } }}</p>
+
+                <div class="actions">
+                  <button mat-stroked-button [matMenuTriggerFor]="moveMenu"
+                          [disabled]="busyId() === c.applicationId">
+                    {{ 'wf.pipeline.moveTo' | translate }}
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <mat-menu #moveMenu="matMenu">
+                    @for (t of moveTargets(c.status); track t) {
+                      <button mat-menu-item (click)="move(c, t)">
+                        {{ applicationStatusKey(t) | translate }}
+                      </button>
+                    }
+                  </mat-menu>
+
+                  @if (canSchedule(c)) {
+                    <button mat-button color="primary" (click)="schedule(c)"
+                            [disabled]="busyId() === c.applicationId">
+                      <mat-icon>event</mat-icon>
+                      {{ 'wf.pipeline.schedule' | translate }}
+                    </button>
+                  }
+                </div>
+              </mat-card>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+</div>

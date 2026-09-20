@@ -1,132 +1,168 @@
-<div class="home-container">
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-        </svg>
-        <span class="logo-text">TalentOS</span>
-      </div>
-      <nav class="nav">
-        <button mat-button (click)="navigateToJobs()">Find Jobs</button>
-        @if (!isAuthenticated()) {
-          <button mat-button (click)="navigateToLogin()">Sign In</button>
-          <button mat-raised-button color="primary" (click)="navigateToRegister()">Join Now</button>
-        } @else {
-          <button mat-raised-button color="primary" (click)="navigateToDashboard()">Dashboard</button>
-        }
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
+<div class="home">
+  <!-- Hero with modern split layout & AI visual -->
   <section class="hero">
-    <div class="hero-content">
-      <div class="hero-text">
-        <h1 class="hero-title">Find the right job or internship for you</h1>
-        <p class="hero-subtitle">Connecting talented professionals with top companies worldwide</p>
-        <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-number">10M+</div>
-            <div class="stat-label">Active Jobs</div>
+    <div class="afriwork-container">
+      <div class="hero-grid afriwork-fade-in">
+        <div class="hero-content">
+          <div class="hero-pill-badge">
+            <span class="pulse-dot"></span>
+            <span>Ethiopia's Next-Gen Talent & Job Ecosystem</span>
           </div>
-          <div class="stat">
-            <div class="stat-number">500K+</div>
-            <div class="stat-label">Companies</div>
+
+          <h1 class="hero-title">
+            {{ 'home.hero.title' | translate }}
+          </h1>
+
+          <p class="hero-subtitle">
+            {{ 'home.hero.subtitle' | translate }}
+          </p>
+
+          <form class="search-card" [formGroup]="searchForm" (ngSubmit)="search()">
+            <div class="search-inputs">
+              <mat-form-field class="search-field" appearance="outline" subscriptSizing="dynamic">
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput formControlName="keyword" [placeholder]="'home.search.keyword' | translate" />
+              </mat-form-field>
+              <div class="search-divider" aria-hidden="true"></div>
+              <mat-form-field class="search-field" appearance="outline" subscriptSizing="dynamic">
+                <mat-icon matPrefix>location_on</mat-icon>
+                <input matInput formControlName="location" [placeholder]="'home.search.location' | translate" />
+              </mat-form-field>
+            </div>
+            <button mat-flat-button class="search-btn" type="submit">
+              <mat-icon>search</mat-icon>
+              <span>{{ 'home.search.button' | translate }}</span>
+            </button>
+          </form>
+
+          <div class="hero-quick-tags">
+            <span class="tags-label">Trending:</span>
+            <button type="button" class="tag-chip" (click)="searchCategory('Technology')">Software & AI</button>
+            <button type="button" class="tag-chip" (click)="searchCategory('Finance')">Fintech & Banking</button>
+            <button type="button" class="tag-chip" (click)="searchCategory('Healthcare')">Healthcare</button>
+            <button type="button" class="tag-chip" (click)="searchCategory('Engineering')">Engineering</button>
           </div>
-          <div class="stat">
-            <div class="stat-number">2M+</div>
-            <div class="stat-label">Professionals</div>
+
+          <div class="hero-stats-row">
+            <div class="hero-stat-item">
+              <span class="stat-value">15,000+</span>
+              <span class="stat-title">Verified Jobs</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat-item">
+              <span class="stat-value">99.4%</span>
+              <span class="stat-title">Match Accuracy</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat-item">
+              <span class="stat-value">Fayda ID</span>
+              <span class="stat-title">Biometric Trust</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="hero-image">
-        <div class="image-placeholder">
-          <svg class="hero-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-          <div class="image-text">Your Career Journey Starts Here</div>
+
+        <div class="hero-visual-wrapper">
+          <div class="hero-visual-backdrop"></div>
+          <div class="hero-image-card float-animation">
+            <img src="/images/OIP.webp" alt="Ethiopian Young Tech Professionals in Modern Tech Hub" class="hero-img" loading="eager" />
+            <div class="floating-overlay-card overlay-top-left">
+              <div class="overlay-icon ai-glow"><mat-icon>psychology</mat-icon></div>
+              <div>
+                <span class="overlay-title">AI Matching Engine</span>
+                <span class="overlay-sub">98% Fit Score</span>
+              </div>
+            </div>
+            <div class="floating-overlay-card overlay-bottom-right">
+              <div class="overlay-icon verify-glow"><mat-icon>verified_user</mat-icon></div>
+              <div>
+                <span class="overlay-title">Fayda Verified</span>
+                <span class="overlay-sub">100% Authenticated</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section class="features">
-    <div class="features-content">
-      <h2 class="section-title">Why Choose TalentOS?</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/>
-            </svg>
+  <!-- Popular categories -->
+  <section class="section afriwork-container">
+    <div class="section-header">
+      <div class="et-accent-bar" aria-hidden="true"></div>
+      <h2 class="section-title">{{ 'home.categories.title' | translate }}</h2>
+      <p class="section-subtitle">Discover high-demand opportunities tailored to your career goals</p>
+    </div>
+    <div class="category-grid afriwork-stagger">
+      @for (cat of categories; track cat.labelKey) {
+        <button class="category-card glow-card" type="button" (click)="searchCategory(cat.query)">
+          <div class="category-icon-wrapper">
+            <mat-icon>{{ cat.icon }}</mat-icon>
           </div>
-          <h3 class="feature-title">Smart Matching</h3>
-          <p class="feature-description">AI-powered job recommendations based on your skills and preferences</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Network Building</h3>
-          <p class="feature-description">Connect with recruiters and industry professionals worldwide</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Professional Profiles</h3>
-          <p class="feature-description">Showcase your skills, experience, and achievements effectively</p>
-        </div>
-      </div>
+          <span class="category-name">{{ cat.labelKey | translate }}</span>
+          <span class="category-arrow"><mat-icon>arrow_forward</mat-icon></span>
+        </button>
+      }
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="cta-content">
-      <h2 class="cta-title">Ready to take the next step in your career?</h2>
-      <p class="cta-subtitle">Join millions of professionals who have found their dream jobs on TalentOS</p>
-      <div class="cta-buttons">
-        @if (!isAuthenticated()) {
-          <button mat-raised-button color="primary" class="cta-button" (click)="navigateToRegister()">Get Started Free</button>
+  <!-- Value props -->
+  <section class="section section-tint">
+    <div class="afriwork-container">
+      <div class="section-header">
+        <div class="et-accent-bar" aria-hidden="true"></div>
+        <h2 class="section-title">{{ 'home.value.title' | translate }}</h2>
+        <p class="section-subtitle">Why job seekers and enterprises trust TalentOS across Ethiopia</p>
+      </div>
+      <div class="value-grid afriwork-stagger">
+        @for (v of valueProps; track v.titleKey) {
+          <div class="value-card glow-card">
+            <div class="value-icon"><mat-icon>{{ v.icon }}</mat-icon></div>
+            <h3>{{ v.titleKey | translate }}</h3>
+            <p>{{ v.descKey | translate }}</p>
+          </div>
         }
-        <button mat-raised-button color="accent" class="cta-button" (click)="navigateToJobs()">Browse Jobs</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Employer cross-link -->
+  <section class="employer-band">
+    <div class="afriwork-container employer-band-inner">
+      <div class="employer-band-text">
+        <span class="band-tag">FOR EMPLOYERS & RECRUITERS</span>
+        <h2>{{ 'home.employer.title' | translate }}</h2>
+        <p>{{ 'home.employer.subtitle' | translate }}</p>
+      </div>
+      <a mat-stroked-button routerLink="/employers" class="employer-link">
+        <span>{{ 'home.employer.button' | translate }}</span>
+        <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="afriwork-container">
+      <div class="cta-card">
+        <div class="cta-glow"></div>
+        <div class="cta-inner">
+          <h2>{{ 'home.cta.title' | translate }}</h2>
+          <p>{{ 'home.cta.subtitle' | translate }}</p>
+          <div class="cta-actions">
+            <a mat-flat-button routerLink="/register" class="cta-primary">
+              <mat-icon>rocket_launch</mat-icon>
+              <span>{{ 'home.cta.primary' | translate }}</span>
+            </a>
+            <a mat-stroked-button routerLink="/jobs" class="cta-secondary">
+              <span>{{ 'home.cta.secondary' | translate }}</span>
+              <mat-icon>arrow_forward</mat-icon>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4 class="footer-title">TalentOS</h4>
-        <p class="footer-text">Your modern recruitment platform</p>
-      </div>
-      <div class="footer-section">
-        <h4 class="footer-title">For Job Seekers</h4>
-        <button mat-button class="footer-link" (click)="navigateToJobs()">Browse Jobs</button>
-        <button mat-button class="footer-link" (click)="navigateToRegister()">Create Profile</button>
-      </div>
-      <div class="footer-section">
-        <h4 class="footer-title">For Employers</h4>
-        <button mat-button class="footer-link" (click)="navigateToLogin()">Post Jobs</button>
-        <button mat-button class="footer-link" (click)="navigateToRegister()">Find Talent</button>
-      </div>
-      <div class="footer-section">
-        <h4 class="footer-title">Company</h4>
-        <button mat-button class="footer-link">About Us</button>
-        <button mat-button class="footer-link">Contact</button>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2024 TalentOS. All rights reserved.</p>
-    </div>
-  </footer>
+  <app-footer />
 </div>
